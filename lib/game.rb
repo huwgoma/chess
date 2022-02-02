@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GameText
+module GameTextable
   def tutorial_message
     <<-HEREDOC
 Welcome to Chess!
@@ -24,10 +24,22 @@ To begin, please select one of the following game options:
 end
 
 class Game
-  include GameText
+  include GameTextable
   
   def initialize
     puts tutorial_message
     puts game_mode_message
+  end
+
+  def create_players
+  end
+
+  def select_color(player)
+    puts "#{player}, would you like to play as [B] Black or [W] White?"
+    input = gets.chomp.upcase
+    return input if ['B', 'W'].include?(input)
+    
+    puts 'Please enter [B] for Black or [W] for White!'
+    select_color(player)
   end
 end
