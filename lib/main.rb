@@ -2,4 +2,5 @@
 require 'pry'
 Dir.glob('./lib/*.rb').each { |file| require file unless file.include?('main') }
 
-Game.new
+game = Game.new
+game.play_game

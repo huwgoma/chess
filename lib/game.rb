@@ -27,12 +27,15 @@ class Game
   include GameTextable
   
   def initialize
+    puts tutorial_message
+    puts game_mode_message
+  end
+
+  def play_game
     pre_game
   end
 
   def pre_game
-    puts tutorial_message
-    puts game_mode_message
     create_players
   end
 
@@ -48,9 +51,14 @@ class Game
   def select_color(player)
     puts "#{player}, would you like to play as [B] Black or [W] White?"
     input = gets.chomp.upcase
+
     return input if ['B', 'W'].include?(input)
 
     puts 'Please enter [B] for Black or [W] for White!'
     select_color(player)
+  end
+
+  def create_board
+  
   end
 end

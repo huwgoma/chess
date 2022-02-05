@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require './lib/game'
 require './lib/player'
+require './lib/board'
 
 describe Game do
   before do
@@ -57,7 +58,7 @@ describe Game do
     context "when given a valid input (either 'B' or 'W')" do
       it 'returns the given input' do
         allow(game_color).to receive(:gets).and_return('W')
-
+        
         expect(game_color.select_color(name)).to eq('W')
       end
     end
@@ -87,4 +88,12 @@ describe Game do
       end
     end
   end
+
+  # describe '#create_board' do
+  #   let(:game_board) { described_class.new }
+  #   it 'sends #new to the Board class' do
+  #     board = class_double(Board)
+  #     allow(board).to_receive(:new)
+  #   end
+  # end
 end
