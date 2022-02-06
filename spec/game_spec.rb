@@ -2,6 +2,7 @@
 require './lib/game'
 require './lib/player'
 require './lib/board'
+require './lib/cell'
 
 describe Game do
   before do

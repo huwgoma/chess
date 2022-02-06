@@ -5,6 +5,7 @@ class Board
     @columns = { }
     @rows = { }
     initialize_cells
+    #initialize_pieces
   end
 
   def initialize_cells(x = 8, y = 8)
