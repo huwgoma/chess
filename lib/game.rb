@@ -24,9 +24,9 @@ To begin, please select one of the following game options:
 end
 
 class Game
-  def initialize(board = Board.new, current_player = :W)
+  def initialize(board = Board.new, current_turn = :W)
     @board = board
-    @current_player = current_player
+    @current_turn = current_turn
   end
 
   def play_game
@@ -37,7 +37,8 @@ class Game
   ## start_game - Game Setup
   def start_game
     create_players
-    
+    @board.initialize_cells
+    #initialize_pieces
   end
 
   def create_players
