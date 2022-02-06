@@ -4,6 +4,7 @@ class Board
   def initialize
     @columns = { }
     @rows = { }
+    initialize_cells
   end
 
   def initialize_cells(x = 8, y = 8)

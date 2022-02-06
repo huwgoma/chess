@@ -30,17 +30,10 @@ class Game
   end
 
   def play_game
-    start_game
-  end
-
-
-  ## start_game - Game Setup
-  def start_game
     create_players
-    @board.initialize_cells
-    #initialize_pieces
   end
 
+  ## Game Setup
   def create_players
     2.times do | player_count |
       puts "Player #{player_count+1}, please enter your name."
