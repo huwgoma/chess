@@ -7,6 +7,8 @@ describe Player do
 
   describe '::list' do
     it 'returns an array of all Player objects' do
+      player_one = described_class.new('Lei', :W)
+      player_two = described_class.new('Hugo', :B)
       expect(Player.list).to eq([player_one, player_two])
     end
   end
