@@ -2,8 +2,8 @@
 require './lib/player'
 
 describe Player do
-  let(:player_one) { described_class.new('Lei', 'W') }
-  let(:player_two) { described_class.new('Hugo', 'B') }
+  let(:player_one) { described_class.new('Lei', :W) }
+  let(:player_two) { described_class.new('Hugo', :B) }
 
   describe '::list' do
     it 'returns an array of all Player objects' do

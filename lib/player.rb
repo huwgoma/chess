@@ -18,6 +18,6 @@ class Player
   
 
   def white?
-    @color == 'W'
+    @color == :W
   end
 end

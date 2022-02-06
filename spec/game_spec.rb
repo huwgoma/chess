@@ -59,7 +59,7 @@ describe Game do
       it 'returns the given input' do
         allow(game_color).to receive(:gets).and_return('W')
         
-        expect(game_color.select_color(name)).to eq('W')
+        expect(game_color.select_color(name)).to eq(:W)
       end
     end
 
@@ -67,7 +67,7 @@ describe Game do
       it 'returns the input capitalized' do
         allow(game_color).to receive(:gets).and_return('b')
 
-        expect(game_color.select_color(name)).to eq('B')
+        expect(game_color.select_color(name)).to eq(:B)
       end
     end
 
@@ -84,16 +84,9 @@ describe Game do
       end
 
       it 'calls itself until a valid input is given, then returns said input' do
-        expect(game_color.select_color(name)).to eq('W')
+        expect(game_color.select_color(name)).to eq(:W)
       end
     end
   end
 
-  # describe '#create_board' do
-  #   let(:game_board) { described_class.new }
-  #   it 'sends #new to the Board class' do
-  #     board = class_double(Board)
-  #     allow(board).to_receive(:new)
-  #   end
-  # end
 end

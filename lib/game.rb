@@ -24,26 +24,27 @@ To begin, please select one of the following game options:
 end
 
 class Game
-  include GameTextable
-  
-  def initialize
-    puts tutorial_message
-    puts game_mode_message
+  def initialize(board = Board.new, current_player = :W)
+    @board = board
+    @current_player = current_player
   end
 
   def play_game
-    pre_game
+    start_game
   end
 
-  def pre_game
+
+  ## start_game - Game Setup
+  def start_game
     create_players
+    
   end
 
   def create_players
     2.times do | player_count |
       puts "Player #{player_count+1}, please enter your name."
       name = gets.chomp
-      color = player_count.zero? ? select_color(name) : Player.list[0].white? ? 'B' : 'W'
+      color = player_count.zero? ? select_color(name) : Player.list[0].white? ? :B : :W
       Player.new(name, color)
     end
   end
@@ -52,13 +53,10 @@ class Game
     puts "#{player}, would you like to play as [B] Black or [W] White?"
     input = gets.chomp.upcase
 
-    return input if ['B', 'W'].include?(input)
+    return input.to_sym if ['B', 'W'].include?(input)
 
     puts 'Please enter [B] for Black or [W] for White!'
     select_color(player)
   end
 
-  def create_board
-  
-  end
 end
