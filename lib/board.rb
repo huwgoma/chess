@@ -4,7 +4,6 @@ class Board
   def initialize
     @columns = { }
     @rows = { }
-    initialize_cells
     #initialize_pieces
   end
 
@@ -16,5 +15,14 @@ class Board
         Cell.new(column, row)
       end
     end
+  end
+
+  def set_columns(x = 8, y = 8)
+    
+    
+  end
+
+  def set_rows
+
   end
 end
