@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Cell
+  attr_reader :column, :row
 
   @@list = []
 

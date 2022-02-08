@@ -32,7 +32,8 @@ class Game
   def play_game
     create_players
     @board.initialize_cells
-    #@board.initialize_pieces
+    binding.pry
+    @board.initialize_pieces
   end
 
   ## Game Setup

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Board
+  attr_reader :columns, :rows
+
   def initialize
     @columns = { }
     @rows = { }
@@ -17,12 +19,15 @@ class Board
     end
   end
 
-  def set_columns(x = 8, y = 8)
-    
-    
+  def set_columns_rows
+    Cell.list.each do | cell |
+      column = cell.column
+      row = cell.row
+      
+      @columns.has_key?(column) ? @columns[column] << cell : @columns[column] = [cell]
+      @rows.has_key?(row) ? @rows[row] << cell : @rows[row] = [cell]
+    end
   end
 
-  def set_rows
-
-  end
+  
 end

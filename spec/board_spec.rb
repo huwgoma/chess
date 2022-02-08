@@ -34,18 +34,37 @@ describe Board do
       end
     end
 
-    describe '#set_columns' do
+    describe '#set_columns_rows' do
       subject(:board_columns) { described_class.new }
-
-      it 'returns a Hash of Column-Cells' do
-        # @columns = { a: [Cell(a1), Cell(a2), Cell(a3), ... Cell(a8)], b: [Cell(b1)]}
+      subject(:board_rows) { described_class.new }
+      
+      before do
         cell = class_double(Cell).as_stubbed_const
-        allow(cell).to receive(:new)
-        cell_a1 = instance_double(Cell, column: 'a', row: 1)
-        
-        allow(cell).to receive(:list)
+        @cell_a1 = instance_double(Cell, 'a1', column: 'a', row: 1)
+        @cell_a2 = instance_double(Cell, 'a2', column: 'a', row: 2)
+        @cell_b1 = instance_double(Cell, 'b1', column: 'b', row: 1)
+        @cell_b2 = instance_double(Cell, 'b2', column: 'b', row: 2)
+        allow(cell).to receive(:list).and_return([@cell_a1, @cell_a2, @cell_b1, @cell_b2])
+      end
 
-        expect(board_columns.set_columns()).to eq(nil)
+      # @columns = { a: [Cell(a1), Cell(a2), Cell(a3), ... Cell(a8)], b: [Cell(b1)]}
+      it 'sets @columns to a Hash of Column-Cells' do
+        column_hash = {
+          'a' => [@cell_a1, @cell_a2],
+          'b' => [@cell_b1, @cell_b2]
+        }
+        
+        expect { board_columns.set_columns_rows }.to change { board_columns.columns }.to(column_hash)
+      end
+
+      # @rows = { 1: }
+      it 'sets @rows to a Hash of Row-Cells' do
+        row_hash = {
+          1 => [@cell_a1, @cell_b1],
+          2 => [@cell_a2, @cell_b2]
+        }
+
+        expect { board_rows.set_columns_rows }.to change { board_rows.rows }.to(row_hash)
       end
     end
   end
