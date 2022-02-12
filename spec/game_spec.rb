@@ -90,4 +90,7 @@ describe Game do
     end
   end
 
+  describe '#initialize_pieces' do
+
+  end
 end

@@ -6,7 +6,6 @@ class Board
   def initialize
     @columns = { }
     @rows = { }
-    #initialize_pieces
   end
 
   def initialize_cells(x = 8, y = 8)
@@ -19,6 +18,7 @@ class Board
     end
   end
 
+  #move to Cell?
   def set_columns_rows
     Cell.list.each do | cell |
       column = cell.column
@@ -29,5 +29,13 @@ class Board
     end
   end
 
-  
+  def find_cell(coords)
+    column = coords.split('')[0]
+    row = coords.split('')[1].to_i
+
+    column_cells = @columns[column]
+    row_cells = @rows[row]
+
+    (column_cells & row_cells)[0]
+  end
 end

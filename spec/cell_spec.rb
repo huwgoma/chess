@@ -10,4 +10,6 @@ describe Cell do
       expect(described_class.list).to eq([cell_a1, cell_a2])
     end
   end
+
+  
 end

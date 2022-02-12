@@ -15,8 +15,6 @@ class Player
     @@list
   end
 
-  
-
   def white?
     @color == :W
   end

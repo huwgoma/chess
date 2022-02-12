@@ -32,8 +32,9 @@ class Game
   def play_game
     create_players
     @board.initialize_cells
+    @board.set_columns_rows
     binding.pry
-    @board.initialize_pieces
+    initialize_pieces
   end
 
   ## Game Setup
@@ -54,6 +55,10 @@ class Game
 
     puts 'Please enter [B] for Black or [W] for White!'
     select_color(player)
+  end
+
+  def initialize_pieces(pieces)
+
   end
 
 end
