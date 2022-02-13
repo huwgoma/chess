@@ -15,4 +15,9 @@ class Cell
   def self.list
     @@list
   end
+
+  def self.clear_list
+    @@list = []
+  end
+
 end
