@@ -8,6 +8,11 @@ class Board
     @rows = { }
   end
 
+  def setup_board
+    initialize_cells
+    set_columns_rows
+  end
+
   def initialize_cells(x = 8, y = 8)
     x.times do | x |
       column = (x + 97).chr
@@ -18,15 +23,9 @@ class Board
     end
   end
 
-  #move to Cell?
   def set_columns_rows
-    Cell.list.each do | cell |
-      column = cell.column
-      row = cell.row
-      
-      @columns.has_key?(column) ? @columns[column] << cell : @columns[column] = [cell]
-      @rows.has_key?(row) ? @rows[row] << cell : @rows[row] = [cell]
-    end
+    @columns = Cell.sort_cells(:@column)
+    @rows = Cell.sort_cells(:@row)
   end
 
   def find_cell(coords)

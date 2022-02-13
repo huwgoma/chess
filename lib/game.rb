@@ -31,8 +31,7 @@ class Game
 
   def play_game
     create_players
-    @board.initialize_cells
-    @board.set_columns_rows
+    @board.setup_board
     initialize_pieces
   end
 

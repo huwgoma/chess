@@ -4,7 +4,7 @@ require './lib/cell'
 require 'pry'
 
 describe Board do
-  describe '#initialize' do
+  describe '#setup_board' do
     describe '#initialize_cells' do
       subject(:board_cells) { described_class.new }
 
@@ -40,32 +40,25 @@ describe Board do
       subject(:board_rows) { described_class.new }
       
       before do
-        cell = class_double(Cell).as_stubbed_const
+        @cell = class_double(Cell).as_stubbed_const
         @cell_a1 = instance_double(Cell, 'a1', column: 'a', row: 1)
         @cell_a2 = instance_double(Cell, 'a2', column: 'a', row: 2)
         @cell_b1 = instance_double(Cell, 'b1', column: 'b', row: 1)
         @cell_b2 = instance_double(Cell, 'b2', column: 'b', row: 2)
-        allow(cell).to receive(:list).and_return([@cell_a1, @cell_a2, @cell_b1, @cell_b2])
+        @column_hash = { 'a' => [@cell_a1, @cell_a2], 'b' => [@cell_b1, @cell_b2] }
+        @row_hash = { 1 => [@cell_a1, @cell_b1], 2 => [@cell_a2, @cell_b2] }
       end
 
       # @columns = { a: [Cell(a1), Cell(a2), Cell(a3), ... Cell(a8)], b: [Cell(b1)]}
       it 'sets @columns to a Hash of Column-Cells' do
-        column_hash = {
-          'a' => [@cell_a1, @cell_a2],
-          'b' => [@cell_b1, @cell_b2]
-        }
-        
-        expect { board_columns.set_columns_rows }.to change { board_columns.columns }.to(column_hash)
+        allow(@cell).to receive(:sort_cells).and_return(@column_hash)
+        expect { board_columns.set_columns_rows }.to change { board_columns.columns }.to(@column_hash)
       end
 
       # @rows = { 1: }
       it 'sets @rows to a Hash of Row-Cells' do
-        row_hash = {
-          1 => [@cell_a1, @cell_b1],
-          2 => [@cell_a2, @cell_b2]
-        }
-
-        expect { board_rows.set_columns_rows }.to change { board_rows.rows }.to(row_hash)
+        allow(@cell).to receive(:sort_cells).and_return(@row_hash)
+        expect { board_rows.set_columns_rows }.to change { board_rows.rows }.to(@row_hash)
       end
     end
 
@@ -80,10 +73,11 @@ describe Board do
         @cell_a2 = instance_double(Cell, 'a2', column: 'a', row: 2)
         @cell_b1 = instance_double(Cell, 'b1', column: 'b', row: 1)
         @cell_b2 = instance_double(Cell, 'b2', column: 'b', row: 2)
-        allow(cell).to receive(:list).and_return([@cell_a1, @cell_a2, @cell_b1, @cell_b2])
+        @column_hash = { 'a' => [@cell_a1, @cell_a2], 'b' => [@cell_b1, @cell_b2] }
+        @row_hash = { 1 => [@cell_a1, @cell_b1], 2 => [@cell_a2, @cell_b2] }
+        allow(cell).to receive(:sort_cells).and_return(@column_hash, @row_hash)
         
-        board_find.initialize_cells
-        board_find.set_columns_rows
+        board_find.setup_board
       end
 
       context 'when given a valid inbounds alphanumeric coordinate' do
@@ -99,7 +93,6 @@ describe Board do
           expect(board_find.find_cell(coords)).to be nil
         end
       end
-  
     end
   end
 end
