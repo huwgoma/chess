@@ -11,6 +11,8 @@ class Board
   def setup_board
     initialize_cells
     set_columns_rows
+    binding.pry
+    initialize_pieces()
   end
 
   def initialize_cells(x = 8, y = 8)
@@ -21,6 +23,11 @@ class Board
         Cell.new(column, row)
       end
     end
+  end
+
+
+  def initialize_pieces(pieces)
+
   end
 
   def set_columns_rows

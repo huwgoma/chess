@@ -1,10 +1,6 @@
 # frozen_string_literal: true
-require_relative 'game_text'
-
 
 class Game
-  include GameTextable
-  
   def initialize(board = Board.new, current_turn = :W)
     @board = board
     @current_turn = current_turn
@@ -13,7 +9,6 @@ class Game
   def play_game
     create_players
     @board.setup_board
-    initialize_pieces
   end
 
 
@@ -37,9 +32,4 @@ class Game
     puts 'Please enter [B] for Black or [W] for White!'
     select_color(player)
   end
-
-  def initialize_pieces(pieces)
-
-  end
-
 end
