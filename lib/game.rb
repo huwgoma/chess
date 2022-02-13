@@ -33,9 +33,10 @@ class Game
     create_players
     @board.initialize_cells
     @board.set_columns_rows
-    binding.pry
     initialize_pieces
   end
+
+
 
   ## Game Setup
   def create_players
