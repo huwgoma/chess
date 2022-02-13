@@ -30,12 +30,11 @@ class Board
   end
 
   def find_cell(coords)
-    column = coords.split('')[0]
-    row = coords.split('')[1].to_i
-
+    column, row = coords.split('')
     column_cells = @columns[column]
-    row_cells = @rows[row]
-
-    (column_cells & row_cells)[0]
+    row_cells = @rows[row.to_i]
+    
+    # If both column and row cells exist 
+    [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
   end
 end

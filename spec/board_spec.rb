@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require './lib/board'
 require './lib/cell'
+require 'pry'
 
 describe Board do
   describe '#initialize' do
@@ -69,6 +70,8 @@ describe Board do
     end
 
     describe '#find_cell' do
+      subject(:board_find) { described_class.new }
+
       before do
         cell = class_double(Cell).as_stubbed_const
         allow(cell).to receive(:new)
@@ -78,16 +81,22 @@ describe Board do
         @cell_b1 = instance_double(Cell, 'b1', column: 'b', row: 1)
         @cell_b2 = instance_double(Cell, 'b2', column: 'b', row: 2)
         allow(cell).to receive(:list).and_return([@cell_a1, @cell_a2, @cell_b1, @cell_b2])
+        
+        board_find.initialize_cells
+        board_find.set_columns_rows
       end
 
       context 'when given a valid inbounds alphanumeric coordinate' do
-        subject(:board_find) { described_class.new }
-        
         it 'returns the corresponding Cell object' do
-          board_find.initialize_cells
-          board_find.set_columns_rows
           coords = 'a1'
           expect(board_find.find_cell(coords)).to eq(@cell_a1)
+        end
+      end
+
+      context 'when given an invalid out of bounds coordinate' do
+        it 'returns nil' do
+          coords = 'h9'
+          expect(board_find.find_cell(coords)).to be nil
         end
       end
   
