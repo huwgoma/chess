@@ -7,6 +7,7 @@ class Game
   end
 
   def play_game
+    Piece.new
     create_players
     @board.setup_board
   end
