@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_relative 'pieces/piece'
 
 class Board
   attr_reader :columns, :rows
@@ -11,8 +12,7 @@ class Board
   def setup_board
     initialize_cells
     set_columns_rows
-    binding.pry
-    initialize_pieces()
+    initialize_pieces(Piece::INITIAL_PIECES)
   end
 
   def initialize_cells(x = 8, y = 8)
@@ -25,14 +25,15 @@ class Board
     end
   end
 
-
-  def initialize_pieces(pieces)
-
-  end
-
   def set_columns_rows
     @columns = Cell.sort_cells(:@column)
     @rows = Cell.sort_cells(:@row)
+  end
+
+
+
+  def initialize_pieces(pieces)
+    binding.pry
   end
 
   def find_cell(coords)
@@ -43,4 +44,6 @@ class Board
     # If both column and row cells exist 
     [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
   end
+
+  
 end

@@ -62,6 +62,19 @@ describe Board do
       end
     end
 
+    
+
+
+
+
+    # Looping Script Method
+    describe '#initialize_pieces' do
+      it "sends ::select_factory to Piece using the current piece's type" do
+        
+      end
+    end
+
+
     describe '#find_cell' do
       subject(:board_find) { described_class.new }
 
