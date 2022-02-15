@@ -21,4 +21,8 @@ describe Piece do
       end
     end
   end
+
+  describe '#update_position' do
+    
+  end
 end

@@ -26,4 +26,12 @@ class Piece
       raise 'unexpected_piece_type_error'
     end
   end
+
+  def update_position(cell)
+    
+  end
+end
+
+class Rook < Piece
+
 end

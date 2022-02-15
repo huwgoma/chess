@@ -5,8 +5,7 @@ class Board
   attr_reader :columns, :rows
 
   def initialize
-    @columns = { }
-    @rows = { }
+    
   end
 
   def setup_board
@@ -32,8 +31,13 @@ class Board
 
 
 
-  def initialize_pieces(pieces)
-    binding.pry
+  def place_pieces(pieces)
+    pieces.each do | coords, piece |
+      cell = find_cell(coords)
+      #binding.pry
+      piece_factory = Piece.select_factory(piece[:type])
+      
+    end
   end
 
   def find_cell(coords)
