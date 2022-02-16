@@ -4,7 +4,8 @@ require 'yaml'
 class Piece
   INITIAL_PIECES = YAML.load(YAML.load_file('lib/pieces/initial_pieces.yaml'))
 
-  def initialize
+  attr_reader :color, :position
+  def initialize(color, cell)
     
   end
   
@@ -28,7 +29,7 @@ class Piece
   end
 
   def update_position(cell)
-    
+
   end
 end
 

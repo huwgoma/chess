@@ -11,13 +11,20 @@ describe PieceFactory do
   end
 
   describe '#place_piece' do
-    subject(:piece_factory_place) { described_class.new }
+    context '#place_piece is called on an instance of a PieceFactory subclass' do
+      describe RookFactory do
+        subject(:rook_factory) { RookFactory.new }
+        before do  
+          allow(rook_factory).to receive(:create_piece).and_return(@rook)
+        end
 
-    it 'sends #update_position to the Piece subclass object' do
-      expect(@rook).to receive(:update_position)
-      color = :W
-      cell = @cell_a1
-      piece_factory_place.place_piece(color, cell)
+        it 'sends #update_position to the Piece subclass object' do
+          color = :W
+          cell = @cell_a1
+          expect(@rook).to receive(:update_position)
+          rook_factory.place_piece(color, cell)
+        end
+      end
     end
   end
 end

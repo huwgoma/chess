@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require './lib/pieces/piece'
 require './lib/pieces/piece_factories'
+require './lib/cell'
 
 
 describe Piece do
@@ -23,6 +24,17 @@ describe Piece do
   end
 
   describe '#update_position' do
+    before do
+      @color = :W
+      @cell = instance_double(Cell, column: 'a', row: 1)
+    end
     
+    subject(:piece_position) { described_class.new(@color, @cell) }
+    
+    context 'given a Cell object as a position' do
+      it "changes the Piece's @position to that Cell" do
+        expect { piece_position.update_position(@cell) }.to change { piece_position.position }.to(@cell)
+      end
+    end
   end
 end
