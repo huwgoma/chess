@@ -34,7 +34,3 @@ class Piece
     @position = cell
   end
 end
-
-class Rook < Piece
-
-end

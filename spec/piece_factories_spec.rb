@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require './lib/pieces/piece_factories'
 require './lib/pieces/piece'
+require './lib/pieces/rook'
 require './lib/cell'
-
 
 describe PieceFactory do
   before do

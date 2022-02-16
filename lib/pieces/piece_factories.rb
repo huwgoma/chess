@@ -35,26 +35,20 @@ class KnightFactory < PieceFactory
   end
 end
 
-class RookFactory < PieceFactory
+class BishopFactory < PieceFactory
   def create_piece(color, cell)
-    Rook.new(color, cell)
+    Bishop.new(color, cell)
   end
 end
 
-class RookFactory < PieceFactory
+class QueenFactory < PieceFactory
   def create_piece(color, cell)
-    Rook.new(color, cell)
+    Queen.new(color, cell)
   end
 end
 
-class RookFactory < PieceFactory
+class KingFactory < PieceFactory
   def create_piece(color, cell)
-    Rook.new(color, cell)
-  end
-end
-
-class RookFactory < PieceFactory
-  def create_piece(color, cell)
-    Rook.new(color, cell)
+    King.new(color, cell)
   end
 end

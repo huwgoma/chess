@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require './lib/cell'
 require './lib/pieces/piece'
-require 'pry'
+require './lib/pieces/rook'
 
 describe Cell do
   before do

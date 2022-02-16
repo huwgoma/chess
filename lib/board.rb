@@ -34,7 +34,6 @@ class Board
   def place_pieces(pieces)
     pieces.each do | coords, piece |
       cell = find_cell(coords)
-      #binding.pry
       piece_factory = Piece.select_factory(piece[:type])
       piece_factory.place_piece(piece[:color], cell)
     end
