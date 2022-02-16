@@ -31,10 +31,9 @@ describe Piece do
     
     subject(:piece_position) { described_class.new(@color, @cell) }
     
-    context 'given a Cell object as a position' do
-      it "changes the Piece's @position to that Cell" do
-        expect { piece_position.update_position(@cell) }.to change { piece_position.position }.to(@cell)
-      end
+    it "changes the Piece's @position to the given Cell" do
+      expect { piece_position.update_position(@cell) }.to change { piece_position.position }.to(@cell)
     end
+    
   end
 end

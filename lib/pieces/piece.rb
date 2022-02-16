@@ -6,7 +6,9 @@ class Piece
 
   attr_reader :color, :position
   def initialize(color, cell)
-    
+    @color = color
+    @initial = cell
+    @position = nil
   end
   
   def self.select_factory(type)
@@ -29,7 +31,7 @@ class Piece
   end
 
   def update_position(cell)
-
+    @position = cell
   end
 end
 

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require './lib/cell'
+require './lib/pieces/piece'
 require 'pry'
 
 describe Cell do
@@ -52,6 +53,15 @@ describe Cell do
       it 'returns nil' do
         expect(described_class.sort_cells('value')).to be_nil
       end
+    end
+  end
+
+  describe '#update_piece' do
+    subject(:cell_piece) { described_class.new('a', 1) }
+
+    it "updates the Cell's @piece to the given Piece object" do
+      rook_piece = instance_double(Rook)
+      expect { cell_piece.update_piece(rook_piece) }.to change { cell_piece.piece }.to(rook_piece)
     end
   end
   

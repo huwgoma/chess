@@ -10,6 +10,7 @@ class PieceFactory
     piece = create_piece(color, cell)
     
     piece.update_position(cell)
+    cell.update_piece(piece)
   end
 end
 

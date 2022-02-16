@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Cell
-  attr_reader :column, :row
+  attr_reader :column, :row, :piece
 
   @@list = []
 
@@ -27,5 +27,9 @@ class Cell
       cell_hash.has_key?(axis) ? cell_hash[axis] << cell : cell_hash[axis] = [cell]
       cell_hash
     end
+  end
+
+  def update_piece(piece)
+    @piece = piece
   end
 end

@@ -7,7 +7,9 @@ require './lib/cell'
 describe PieceFactory do
   before do
     @rook = instance_double(Rook)
+    allow(@rook).to receive(:update_position)
     @cell_a1 = instance_double(Cell, column: 'a', row: 1)
+    allow(@cell_a1).to receive(:update_piece)
   end
 
   describe '#place_piece' do
@@ -21,7 +23,14 @@ describe PieceFactory do
         it 'sends #update_position to the Piece subclass object' do
           color = :W
           cell = @cell_a1
-          expect(@rook).to receive(:update_position)
+          expect(@rook).to receive(:update_position).with(cell)
+          rook_factory.place_piece(color, cell)
+        end
+
+        it 'sends #update_piece to the Cell object' do
+          color = :W
+          cell = @cell_a1
+          expect(cell).to receive(:update_piece).with(@rook)
           rook_factory.place_piece(color, cell)
         end
       end
