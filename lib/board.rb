@@ -11,7 +11,7 @@ class Board
   def setup_board
     initialize_cells
     set_columns_rows
-    initialize_pieces(Piece::INITIAL_PIECES)
+    place_pieces(Piece::INITIAL_PIECES)
   end
 
   def initialize_cells(x = 8, y = 8)
@@ -36,7 +36,7 @@ class Board
       cell = find_cell(coords)
       #binding.pry
       piece_factory = Piece.select_factory(piece[:type])
-      
+      piece_factory.place_piece(piece[:color], cell)
     end
   end
 

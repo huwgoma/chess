@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 require './lib/pieces/piece'
 require 'pry'
+
+# Creator Class
 class PieceFactory
   # Factory Method
   def create_piece; end
@@ -14,9 +16,40 @@ class PieceFactory
   end
 end
 
+# Creator Subclasses
 class PawnFactory < PieceFactory
   def create_piece(color, cell)
+    Pawn.new(color, cell)
+  end
+end
 
+class RookFactory < PieceFactory
+  def create_piece(color, cell)
+    Rook.new(color, cell)
+  end
+end
+
+class KnightFactory < PieceFactory
+  def create_piece(color, cell)
+    Knight.new(color, cell)
+  end
+end
+
+class RookFactory < PieceFactory
+  def create_piece(color, cell)
+    Rook.new(color, cell)
+  end
+end
+
+class RookFactory < PieceFactory
+  def create_piece(color, cell)
+    Rook.new(color, cell)
+  end
+end
+
+class RookFactory < PieceFactory
+  def create_piece(color, cell)
+    Rook.new(color, cell)
   end
 end
 

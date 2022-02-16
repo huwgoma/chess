@@ -57,22 +57,25 @@ describe Board do
 
         board_pieces.instance_variable_set(:@columns, @columns)
         board_pieces.instance_variable_set(:@rows, @rows)
+
+        @rook_factory = instance_double(RookFactory)
+        allow(@rook_factory).to receive(:place_piece)
       end
       
       
       it "calls ::select_factory on Piece using the current piece's type" do
-        allow(@piece).to receive(:select_factory)
+        allow(@piece).to receive(:select_factory).and_return(@rook_factory)
         a1_type = :Rook
+
         expect(@piece).to receive(:select_factory).with(a1_type)
-        
         board_pieces.place_pieces(@pieces)
       end
 
       it "sends #place_piece to the PieceFactory subclass object" do
-        rook_factory = instance_double(RookFactory)
-        allow(@piece).to receive(:select_factory).and_return(rook_factory)
+        allow(@piece).to receive(:select_factory).and_return(@rook_factory)
         
-        expect(rook_factory).to receive(:place_piece)
+        expect(@rook_factory).to receive(:place_piece)
+        board_pieces.place_pieces(@pieces)
       end
     end
 
