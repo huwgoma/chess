@@ -2,8 +2,8 @@
 require 'pry'
 
 class String
-  # Default Grey BG
-  def bg_grey; "\u001b[100;1m#{self}\u001b[0m" end
+  # Default Black BG
+  def bg_black; "\u001b[100;1m#{self}\u001b[0m" end
 
   # Default White BG
   def bg_white; "\u001b[47;1m#{self}\u001b[0m" end
@@ -23,11 +23,27 @@ module Displayable
     print_order = set_print_order
     
     print_order.each do | cell |
-      binding.pry
+      #binding.pry
+      string = set_string(cell.piece)
+      # background = set_background(cell)
+      
     end
   end
 
   def set_print_order
     Hash[@rows.to_a.reverse].values.flatten
+  end
+
+  def set_string(piece)
+    #binding.pry
+    # is piece a Pawn (Pawn === piece)
+    case piece.class.to_s
+    when 'Pawn'
+      piece.color == :W ? '♙' : '♟'
+    end
+  end
+
+  def set_background(cell)
+
   end
 end
