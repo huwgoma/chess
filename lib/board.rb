@@ -1,12 +1,11 @@
 # frozen_string_literal: true
-require_relative 'pieces/piece'
+require './lib/pieces/piece'
+require './lib/display'
 
 class Board
-  attr_reader :columns, :rows
+  include Displayable
 
-  def initialize
-    
-  end
+  attr_reader :columns, :rows
 
   def setup_board
     initialize_cells
