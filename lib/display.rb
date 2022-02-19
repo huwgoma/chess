@@ -23,7 +23,6 @@ module Displayable
     print_order = set_print_order
     
     print_order.each do | cell |
-      #binding.pry
       string = set_string(cell.piece)
       # background = set_background(cell)
       
@@ -35,11 +34,22 @@ module Displayable
   end
 
   def set_string(piece)
-    #binding.pry
-    # is piece a Pawn (Pawn === piece)
     case piece.class.to_s
     when 'Pawn'
       piece.color == :W ? '♙' : '♟'
+    when 'Rook'
+      piece.color == :W ? '♖' : '♜'
+    when 'Knight'
+      piece.color == :W ? '♘' : '♞'
+    when 'Bishop'
+      piece.color == :W ? '♗' : '♝'
+    when 'Queen'
+      piece.color == :W ? '♕' : '♛'
+    when 'King'
+      piece.color == :W ? '♔' : '♚'
+    else
+      # piece.cell is in @active_piece's legal moves AND piece is nil? #=> ●
+      ''
     end
   end
 
