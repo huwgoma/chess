@@ -24,7 +24,7 @@ module Displayable
     
     print_order.each do | cell |
       string = set_string(cell.piece)
-      # background = set_background(cell)
+      background = set_background(cell)
       
     end
   end
@@ -55,5 +55,8 @@ module Displayable
 
   def set_background(cell)
 
+    # Default Backgrounds 
+    # Even cells - Black (100); Odd cells - White (47)
+    (cell.row + cell.column.ord).even? ? 100 : 47
   end
 end

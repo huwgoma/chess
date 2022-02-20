@@ -54,12 +54,14 @@ describe '#print_board' do
     end
   end
   
-
-
   describe '#set_background' do
     context 'for the default Black or White backgrounds' do
-      xit "returns 100 (Black) when the cell's @row plus @column is EVEN" do
+      it "returns 100 (Black) when the cell's @row + @column = EVEN" do
         expect(set_background(@cell_a1)).to eq(100)
+      end
+
+      it "returns 47(White) when the cell @row+@column is ODD" do
+        expect(set_background(@cell_a2)).to eq(47)
       end
     end
   end
