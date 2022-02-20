@@ -22,10 +22,12 @@ module Displayable
   def print_board
     print_order = set_print_order
     
-    print_order.each do | cell |
+    print_order.each_with_index do | cell, index |
+      print "\n" if (index % 8).zero?
+
       string = set_string(cell.piece)
       background = set_background(cell)
-      
+      print "\u001b[#{background};1m #{string} \u001b[0m"
     end
   end
 
@@ -49,7 +51,7 @@ module Displayable
       piece.color == :W ? '♔' : '♚'
     else
       # piece.cell is in @active_piece's legal moves AND piece is nil? #=> ●
-      ''
+      ' '
     end
   end
 
