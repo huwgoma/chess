@@ -28,8 +28,6 @@ class Board
     @rows = Cell.sort_cells(:@row)
   end
 
-
-
   def place_pieces(pieces)
     pieces.each do | coords, piece |
       cell = find_cell(coords)

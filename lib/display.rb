@@ -2,8 +2,16 @@
 require 'pry'
 
 class String
+
+  # Black String
+  def black; "\u001b[30;1m#{self}\u001b[0m" end
+
+  # White String
+  def white; "\u001b[37;1m#{self}\u001b[0m" end
+
   # Default Black BG
-  def bg_black; "\u001b[100;1m#{self}\u001b[0m" end
+  def bg_black; "\u001b[40;1m#{self}\u001b[0m" end
+  #100
 
   # Default White BG
   def bg_white; "\u001b[47;1m#{self}\u001b[0m" end
@@ -21,14 +29,15 @@ end
 module Displayable
   def print_board
     print_order = set_print_order
-    
     print_order.each_with_index do | cell, index |
-      print "\n" if (index % 8).zero?
-
+      print "\n\t #{cell.row} " if (index % 8).zero?
       string = set_string(cell.piece)
       background = set_background(cell)
       print "\u001b[#{background};1m #{string} \u001b[0m"
     end
+    print "\n\t   "
+    (' a '..' h ').each(&method(:print))
+    print "\n\n"
   end
 
   def set_print_order
@@ -38,17 +47,17 @@ module Displayable
   def set_string(piece)
     case piece.class.to_s
     when 'Pawn'
-      piece.color == :W ? '♙' : '♟'
+      piece.color == :W ? '♟': '♙'
     when 'Rook'
-      piece.color == :W ? '♖' : '♜'
+      piece.color == :W ? '♜': '♖'
     when 'Knight'
-      piece.color == :W ? '♘' : '♞'
+      piece.color == :W ? '♞': '♘' 
     when 'Bishop'
-      piece.color == :W ? '♗' : '♝'
+      piece.color == :W ? '♝': '♗'
     when 'Queen'
-      piece.color == :W ? '♕' : '♛'
+      piece.color == :W ? '♛': '♕'
     when 'King'
-      piece.color == :W ? '♔' : '♚'
+      piece.color == :W ? '♚': '♔'
     else
       # piece.cell is in @active_piece's legal moves AND piece is nil? #=> ●
       ' '
@@ -58,7 +67,7 @@ module Displayable
   def set_background(cell)
 
     # Default Backgrounds 
-    # Even cells - Black (100); Odd cells - White (47)
-    (cell.row + cell.column.ord).even? ? 100 : 47
+    # Even cells - Black (40); Odd cells - White (47)
+    (cell.row + cell.column.ord).even? ? 40 : 47
   end
 end

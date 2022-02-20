@@ -40,7 +40,7 @@ describe '#print_board' do
         expect(set_string(pawn_a2)).to eq('♟')
       end
   
-      it "returns ♙(White Pawn) when the @piece is a White Pawn" do
+      it "returns ♙.white (White Pawn) when the @piece is a White Pawn" do
         pawn_b2 = instance_double(Pawn, position: @cell_b2, color: :W)
         allow(pawn_b2).to receive(:class).and_return(Pawn)
         expect(set_string(pawn_b2)).to eq('♙')
@@ -49,15 +49,15 @@ describe '#print_board' do
   
     context "when the cell's @piece is nil (no piece)" do
       it "returns an empty string ('')" do
-        expect(set_string(nil)).to eq('')
+        expect(set_string(nil)).to eq(' ')
       end
     end
   end
   
   describe '#set_background' do
     context 'for the default Black or White backgrounds' do
-      it "returns 100 (Black) when the cell's @row + @column = EVEN" do
-        expect(set_background(@cell_a1)).to eq(100)
+      it "returns 40 (Black) when the cell's @row + @column = EVEN" do
+        expect(set_background(@cell_a1)).to eq(40)
       end
 
       it "returns 47(White) when the cell @row+@column is ODD" do
