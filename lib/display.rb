@@ -28,13 +28,18 @@ end
 
 module Displayable
   def print_board
+    # Clear the terminal every time the board is printed
+    system 'clear'
+
     print_order = set_print_order
+
     print_order.each_with_index do | cell, index |
       print "\n\t #{cell.row} " if (index % 8).zero?
       string = set_string(cell.piece)
       background = set_background(cell)
       print "\u001b[#{background};1m #{string} \u001b[0m"
     end
+    
     print "\n\t   "
     (' a '..' h ').each(&method(:print))
     print "\n\n"

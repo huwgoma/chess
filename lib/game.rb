@@ -10,8 +10,8 @@ class Game
     create_players
     @board.setup_board
     @board.print_board
-    # binding.pry
-    # game_loop
+    binding.pry
+    game_loop
   end
 
 
