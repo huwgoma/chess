@@ -14,8 +14,6 @@ class Game
     game_loop
   end
 
-
-
   ## Game Setup
   def create_players
     2.times do | player_count |
@@ -34,6 +32,11 @@ class Game
 
     puts 'Please enter [B] for Black or [W] for White!'
     select_color(player)
+  end
+
+  ## Core Game Loop
+  def game_loop
+
   end
 end
 

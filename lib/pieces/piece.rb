@@ -8,6 +8,7 @@ class Piece
   def initialize(color, cell)
     @color = color
     @initial = cell
+    @killed = false
     @position = nil
   end
   
