@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class Game
-  def initialize(board = Board.new, current_turn = :W)
+  
+  def initialize(board = Board.new, current_color = :W)
     @board = board
-    @current_turn = current_turn
+    @current_color = current_color
   end
 
   def play_game
     create_players
+    set_current_player
     @board.setup_board
     @board.print_board
     binding.pry
@@ -22,6 +24,10 @@ class Game
       color = player_count.zero? ? select_color(name) : Player.list[0].white? ? :B : :W
       Player.new(name, color)
     end
+  end
+
+  def set_current_player(color)
+    @current_player = Player.list.find { | player | player.color == color }
   end
 
   def select_color(player)

@@ -5,12 +5,13 @@ require './lib/display'
 class Board
   include Displayable
 
-  attr_reader :columns, :rows
+  attr_reader :columns, :rows, :active_piece
 
   def setup_board
     initialize_cells
     set_columns_rows
     place_pieces(Piece::INITIAL_PIECES)
+    @active_piece = nil
   end
 
   def initialize_cells(x = 8, y = 8)
@@ -44,6 +45,4 @@ class Board
     # If both column and row cells exist 
     [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
   end
-
-  
 end

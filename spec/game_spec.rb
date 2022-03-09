@@ -52,6 +52,26 @@ describe Game do
     end
   end
 
+  describe '#set_current_player' do
+    subject(:game_current_player) { described_class.new }
+
+    context 'when given a color (:W/:B)' do
+      before do
+        @player = class_double(Player).as_stubbed_const
+        @player_one = instance_double(Player, color: :W)
+        @player_two = instance_double(Player, color: :B)
+        allow(@player).to receive(:list).and_return([@player_one, @player_two])
+      end
+
+      it 'sets game@current_player to the Player object with that color' do
+        game_current_player.set_current_player(:W)
+        expect(game_current_player.instance_variable_get(:@current_player)).to eq(@player_one)
+      end
+    end
+  end
+
+
+
   describe '#select_color' do
     subject(:game_color) { described_class.new }
     let(:name) { 'Lei' }
