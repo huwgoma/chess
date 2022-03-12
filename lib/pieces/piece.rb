@@ -4,12 +4,15 @@ require 'yaml'
 class Piece
   INITIAL_PIECES = YAML.load(YAML.load_file('lib/pieces/initial_pieces.yaml'))
 
+  MOVEMENT = { }
+
   attr_reader :color, :position
   def initialize(color, cell)
     @color = color
     @initial = cell
     @killed = false
     @position = nil
+    @moves = initialize_moves
   end
   
   def self.select_factory(type)
@@ -33,5 +36,13 @@ class Piece
 
   def update_position(cell)
     @position = cell
+  end
+
+  def initialize_moves 
+    self.class::MOVEMENT.keys.reduce({}) do | hash, direction |
+      next hash if direction == :infinite
+      hash[direction] = Array.new
+      hash
+    end
   end
 end

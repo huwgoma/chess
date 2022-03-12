@@ -9,9 +9,11 @@ class Game
 
   def play_game
     create_players
-    set_current_player
+    set_current_player(@current_color)
+
     @board.setup_board
     @board.print_board
+    
     binding.pry
     game_loop
   end

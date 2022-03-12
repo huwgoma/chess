@@ -110,7 +110,8 @@ describe Game do
     end
   end
 
-  describe '#initialize_pieces' do
-
+  
+  describe '#game_loop' do
+    
   end
 end

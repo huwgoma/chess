@@ -34,6 +34,5 @@ describe Piece do
     it "changes the Piece's @position to the given Cell" do
       expect { piece_position.update_position(@cell) }.to change { piece_position.position }.to(@cell)
     end
-    
   end
 end

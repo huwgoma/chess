@@ -7,11 +7,11 @@ class Board
 
   attr_reader :columns, :rows, :active_piece
 
+  # Create Cells, set columns/rows for easier access, place Pieces on cells
   def setup_board
     initialize_cells
     set_columns_rows
     place_pieces(Piece::INITIAL_PIECES)
-    @active_piece = nil
   end
 
   def initialize_cells(x = 8, y = 8)
@@ -37,6 +37,11 @@ class Board
     end
   end
 
+  def generate_moves(piece)
+
+  end
+
+  # Utility function for finding any cell on the board given a set of coordinates
   def find_cell(coords)
     column, row = coords.split('')
     column_cells = @columns[column]
