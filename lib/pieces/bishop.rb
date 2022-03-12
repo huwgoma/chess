@@ -2,5 +2,11 @@
 require './lib/pieces/piece'
 
 class Bishop < Piece
-
+  MOVEMENT = { 
+    infinite: true,
+    top_right: { column: 1, row: 1 }, 
+    bot_right: { column: 1, row: -1 },
+    bot_left:  { column: -1, row: -1},
+    top_left:  { column: -1, row: 1 }
+  }
 end
