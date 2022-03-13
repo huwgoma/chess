@@ -109,33 +109,37 @@ describe Board do
 
   describe '#generate_valid_moves' do
     subject(:board_valid_moves) { described_class.new }
+
     # given a Piece, it will return a Hash of that Piece's
     # MOVEMENT directions and cells (array) - Fill Piece's @moves
     # cells (array) with Cells the Piece can move to
     describe '#generate_moves' do
       before do
-        @cell_e3 = instance_double(Cell, column: 'e', row: 3)
-        @cell_e4 = instance_double(Cell, column: 'e', row: 4)
-        @cell_d3 = instance_double(Cell, column: 'd', row: 3)
-        @cell_f3 = instance_double(Cell, column: 'f', row: 3)  
+        @cell_e3 = instance_double(Cell, 'e3', column: 'e', row: 3)
+        @cell_e4 = instance_double(Cell, 'e4', column: 'e', row: 4)
+        @cell_d3 = instance_double(Cell, 'd3', column: 'd', row: 3)
+        @cell_f3 = instance_double(Cell, 'f3', column: 'f', row: 3)  
       end
 
-      context "for a Piece of the Pawn subclass (Pawn e2, W)" do
+      context "for Pieces of the Pawn Subclass" do
+        
+      end
+      context "for a Piece of the Pawn subclass" do
         # Pawn color WHITE - Forward is +1; BLACK - Forward is -1
         before do
-          @pawn_cell = instance_double(Cell, column: 'e', row: 2)
-          @pawn = instance_double(Pawn, position: @pawn_cell, color: :W, class: Pawn)
+          @pawn_cell = instance_double(Cell, 'e2', column: 'e', row: 2)
+          @pawn = instance_double(Pawn, 'Pawne2', position: @pawn_cell, color: :W, class: Pawn)
 
           @empty_moves = { forward:[], initial:[], forward_left: [], forward_right: [] }
           allow(@pawn).to receive(:moves).and_return(@empty_moves)
 
-          @pawn_moves = {
-            forward:[@cell_e3], initial:[@cell_e4], forward_left: [@cell_d3], forward_right: [@cell_f3]
-          }
         end
 
         it "populates the empty cells array of Pawn@moves with its possible move cells" do
-          
+          allow(board_valid_moves).to receive(:find_cell).and_return(@cell_e3, @cell_e4, @cell_d3, @cell_f3)
+          @pawn_moves = {
+            forward:[@cell_e3], initial:[@cell_e4], forward_left: [@cell_d3], forward_right: [@cell_f3]
+          }
 
           expect(board_valid_moves.generate_moves(@pawn)).to eq(@pawn_moves)
         end

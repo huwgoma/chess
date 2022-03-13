@@ -49,13 +49,22 @@ class Board
   end
 
   def generate_moves(piece)
-    piece.moves.reduce({}) do | hash, (dir, cells) |
+    movement = piece.class::MOVEMENT
+    
+    piece.moves.each do | dir, cells |
       cells.clear
       
-      cells << 'a'
-      hash[dir] = cells
-      hash
+      1.times do | i |
+        column = piece.position.column.shift(1 * movement[dir][:column])
+        row = piece.position.row + (1 * movement[dir][:row])
+        cell = find_cell(column + row.to_s)
+        
+
+        cells << cell
+      end
+      
     end
+    #binding.pry
   end
 
   # Utility function for finding any cell on the board given a set of coordinates
