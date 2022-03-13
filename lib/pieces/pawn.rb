@@ -2,6 +2,8 @@
 require './lib/pieces/piece'
 
 class Pawn < Piece
+  attr_reader :row_direction, :forward
+
   MOVEMENT = {
     infinite: false,
     forward:       { column: 0, row: 1 },
@@ -9,4 +11,9 @@ class Pawn < Piece
     forward_left:  { column: -1, row: 1 },
     forward_right: { column: 1, row: 1 }
   }
+
+  def initialize(color, cell)
+    super
+    @forward = @color == :W ? 1 : -1 
+  end
 end

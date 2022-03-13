@@ -11,10 +11,9 @@ class Game
     create_players
     set_current_player(@current_color)
 
-    @board.setup_board
+    @board.prepare_board
     @board.print_board
     
-    binding.pry
     game_loop
   end
 
@@ -44,6 +43,10 @@ class Game
 
   ## Core Game Loop
   def game_loop
+    # select_active_player
+    active_piece = @board.find_cell('e2').piece
+    binding.pry
+    @board.generate_moves(active_piece)
 
   end
 end

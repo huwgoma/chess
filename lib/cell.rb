@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-class String 
-  def shift(increment = 1)
-    (self.ord + increment).chr
-  end
-end
-
 class Cell
   attr_reader :column, :row, :piece
 
