@@ -24,7 +24,6 @@ class Board
     initialize_cells
     @columns = sort_cells(:column)
     @rows = sort_cells(:row)
-    #set_columns_rows
     place_pieces(Piece::INITIAL_PIECES)
   end
 
@@ -48,13 +47,6 @@ class Board
       hash.has_key?(axis) ? hash[axis] << cell : hash[axis] = [cell]
       hash
     end
-  end
-  
-  
-  def set_columns_rows
-    
-    # @columns = Cell.sort_cells(:@column)
-    # @rows = Cell.sort_cells(:@row)
   end
 
   # Place the 32 Pieces on their initial positions
