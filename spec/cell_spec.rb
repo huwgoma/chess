@@ -11,20 +11,6 @@ describe Cell do
     @cell_b2 = described_class.new('b', 2)
   end
 
-  describe '::find' do
-    context "when given an alphanumeric coordinate (eg. 'a2')" do
-      it 'returns the corresponding Cell object' do
-        expect(described_class.find('a2')).to eq(@cell_a2)
-      end
-    end
-
-    context "when given an out-of-bounds alphanumeric coordinate (eg. 'h9')" do
-      it 'returns nil' do
-        expect(described_class.find('h9')).to be_nil
-      end
-    end
-  end
-
   describe '#update_piece' do
     subject(:cell_piece) { described_class.new('a', 1) }
 
