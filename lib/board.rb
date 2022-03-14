@@ -13,7 +13,11 @@ end
 class Board
   include Displayable
 
-  attr_reader :columns, :rows, :active_piece
+  attr_reader :columns, :rows, :active_piece, :cells
+
+  def initialize
+    @cells = []
+  end
 
   # Create Cells, set columns/rows for easier access, place Pieces on cells
   def prepare_board
@@ -28,7 +32,7 @@ class Board
       column = (x + 97).chr
       y.times do | y |
         row = (y + 1)
-        Cell.new(column, row)
+        @cells << Cell.new(column, row)
       end
     end
   end

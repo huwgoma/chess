@@ -7,6 +7,47 @@ require './lib/pieces/piece_factories'
 require 'pry'
 
 describe Board do
+  describe '#prepare_board' do
+    subject(:board_prepare) { described_class.new }
+
+    before do
+      @cell = class_double(Cell).as_stubbed_const
+      #allow(@cell).to_receive(:new).and_return(instance_double(Cell))
+      
+      
+    end  
+
+    describe '#initialize_cells' do
+      it 'sends ::new to Cell class 64 times' do
+        expect(@cell).to receive(:new).exactly(64).times
+        board_prepare.initialize_cells
+      end
+    end
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   before do
     @cell = class_double(Cell).as_stubbed_const
     @cell_a1 = instance_double(Cell, 'a1', column: 'a', row: 1)
@@ -22,21 +63,21 @@ describe Board do
     describe '#initialize_cells' do
       subject(:board_cells) { described_class.new }
 
-      it 'creates 64 #new Cell objects' do
+      xit 'creates 64 #new Cell objects' do
         expect(@cell).to receive(:new).exactly(64).times
         board_cells.initialize_cells
       end
 
       # It converts 0..7(x) => a..h(columns); 0..7(y) => 1..8(rows),
       # then passes those values to Cell.new to create different Cells
-      it 'creates Cells with alphanumeric coordinates(starting from A1)' do
+      xit 'creates Cells with alphanumeric coordinates(starting from A1)' do
         allow(@cell).to receive(:new)
 
         expect(@cell).to receive(:new).with('a', 1)
         board_cells.initialize_cells
       end
 
-      it 'creates Cells with alphanumeric coordinates(ending at H8)' do
+      xit 'creates Cells with alphanumeric coordinates(ending at H8)' do
         allow(@cell).to receive(:new)
 
         expect(@cell).to receive(:new).with('h', 8)
@@ -64,7 +105,7 @@ describe Board do
       end
       
       
-      it "calls ::select_factory on Piece using the current piece's type" do
+      xit "calls ::select_factory on Piece using the current piece's type" do
         allow(@piece).to receive(:select_factory).and_return(@rook_factory)
         a1_type = :Rook
 
@@ -72,7 +113,7 @@ describe Board do
         board_pieces.place_pieces(@pieces)
       end
 
-      it "sends #place_piece to the PieceFactory subclass object" do
+      xit "sends #place_piece to the PieceFactory subclass object" do
         allow(@piece).to receive(:select_factory).and_return(@rook_factory)
         
         expect(@rook_factory).to receive(:place_piece)
@@ -92,14 +133,14 @@ describe Board do
     end
 
     context 'when given a valid inbounds alphanumeric coordinate' do
-      it 'returns the corresponding Cell object' do
+      xit 'returns the corresponding Cell object' do
         coords = 'a1'
         expect(board_find.find_cell(coords)).to eq(@cell_a1)
       end
     end
 
     context 'when given an invalid out of bounds coordinate' do
-      it 'returns nil' do
+      xit 'returns nil' do
         coords = 'h9'
         expect(board_find.find_cell(coords)).to be nil
       end
@@ -135,7 +176,7 @@ describe Board do
 
         end
 
-        it "populates the empty cells array of Pawn@moves with its possible move cells" do
+        xit "populates the empty cells array of Pawn@moves with its possible move cells" do
           allow(board_valid_moves).to receive(:find_cell).and_return(@cell_e3, @cell_e4, @cell_d3, @cell_f3)
           @pawn_moves = {
             forward:[@cell_e3], initial:[@cell_e4], forward_left: [@cell_d3], forward_right: [@cell_f3]
