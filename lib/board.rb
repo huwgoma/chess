@@ -58,6 +58,16 @@ class Board
     end
   end
 
+  # Utility function for finding any cell on the board given a set of coordinates
+  def find_cell(coords)
+    column, row = coords.split('')
+    column_cells = @columns[column]
+    row_cells = @rows[row.to_i]
+    
+    # If both column and row cells exist 
+    [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
+  end
+
   def generate_moves(piece)
     movement = piece.class::MOVEMENT
     
@@ -77,13 +87,5 @@ class Board
     #binding.pry
   end
 
-  # Utility function for finding any cell on the board given a set of coordinates
-  def find_cell(coords)
-    column, row = coords.split('')
-    column_cells = @columns[column]
-    row_cells = @rows[row.to_i]
-    
-    # If both column and row cells exist 
-    [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
-  end
+  
 end

@@ -81,26 +81,24 @@ describe Board do
     end
   end
 
-  # Query Method
+  # Find and return the corresponding Cell given a coordinate input
   describe '#find_cell' do
     subject(:board_find) { described_class.new }
 
-
-
     before do
-      board_find.instance_variable_set(:@columns, @columns)
-      board_find.instance_variable_set(:@rows, @rows)
+      board_find.instance_variable_set(:@columns, @column_hash)
+      board_find.instance_variable_set(:@rows, @row_hash)
     end
 
-    context 'when given a valid inbounds alphanumeric coordinate' do
-      xit 'returns the corresponding Cell object' do
+    context 'when given a valid inbound alphanumeric coordinate' do
+      it 'returns the corresponding Cell object' do
         coords = 'a1'
         expect(board_find.find_cell(coords)).to eq(@cell_a1)
       end
     end
 
     context 'when given an invalid out of bounds coordinate' do
-      xit 'returns nil' do
+      it 'returns nil' do
         coords = 'h9'
         expect(board_find.find_cell(coords)).to be nil
       end
