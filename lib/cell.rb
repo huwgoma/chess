@@ -25,15 +25,6 @@ class Cell
     @@list.find { | cell | cell.column == column && cell.row == row.to_i }
   end
 
-  def self.sort_cells(cell_axis)
-    return unless [:@column, :@row].include?(cell_axis)
-    @@list.reduce(Hash.new) do | cell_hash, cell |
-      axis = cell.instance_variable_get(cell_axis)
-      cell_hash.has_key?(axis) ? cell_hash[axis] << cell : cell_hash[axis] = [cell]
-      cell_hash
-    end
-  end
-
   def update_piece(piece)
     @piece = piece
   end

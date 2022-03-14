@@ -42,35 +42,6 @@ describe Cell do
     end
   end
 
-
-  describe '::sort_cells' do
-    context "when given :@column as a parameter" do
-      it 'returns a Hash of the Cells in @@list, sorted by column' do
-        column_hash = {
-          'a' => [@cell_a1, @cell_a2],
-          'b' => [@cell_b1, @cell_b2]
-        } 
-        expect(described_class.sort_cells(:@column)).to eq(column_hash)
-      end
-    end
-
-    context "when given :@row as a parameter" do
-      it 'returns a Hash of the Cells in @@list sorted by row' do
-        row_hash = {
-            1 => [@cell_a1, @cell_b1],
-            2 => [@cell_a2, @cell_b2]
-        }
-        expect(described_class.sort_cells(:@row)).to eq(row_hash)
-      end
-    end
-    
-    context 'if given any other value as parameter' do
-      it 'returns nil' do
-        expect(described_class.sort_cells('value')).to be_nil
-      end
-    end
-  end
-
   describe '#update_piece' do
     subject(:cell_piece) { described_class.new('a', 1) }
 

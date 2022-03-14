@@ -12,17 +12,50 @@ describe Board do
 
     before do
       @cell = class_double(Cell).as_stubbed_const
-      #allow(@cell).to_receive(:new).and_return(instance_double(Cell))
-      
-      
+
+      @cell_a1 = instance_double(Cell, 'a1', column: 'a', row: 1)
+      @cell_a2 = instance_double(Cell, 'a2', column: 'a', row: 2)
+      @cell_b1 = instance_double(Cell, 'b1', column: 'b', row: 1)
+      @cell_b2 = instance_double(Cell, 'b2', column: 'b', row: 2)
+
+      @cell_list = [@cell_a1, @cell_a2, @cell_b1, @cell_b2]
+      board_prepare.instance_variable_set(:@cells, @cell_list)
     end  
 
+    # Initialize the 64 Cells
     describe '#initialize_cells' do
       it 'sends ::new to Cell class 64 times' do
         expect(@cell).to receive(:new).exactly(64).times
         board_prepare.initialize_cells
       end
     end
+
+    # Sort @cells into columns/rows
+    describe '#sort_cells' do
+      context "when given :column as the axis parameter" do
+        before do
+          @column_hash = {'a' => [@cell_a1, @cell_a2], 'b' => [@cell_b1, @cell_b2]}
+        end
+
+        it 'sorts @cells into a Hash of cells organized by columns' do
+          expect(board_prepare.sort_cells(:column)).to eq(@column_hash) 
+        end
+      end
+
+      context "when given :row as the axis parameter" do
+        before do
+          @row_hash = {1 => [@cell_a1, @cell_b1], 2 => [@cell_a2, @cell_b2]}
+        end
+        
+        it 'sorts @cells into a Hash of cells organized by rows' do
+          expect(board_prepare.sort_cells(:row)).to eq(@row_hash) 
+        end
+      end
+    end
+
+
+
+
   end
 
 

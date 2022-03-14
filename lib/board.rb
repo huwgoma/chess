@@ -22,7 +22,9 @@ class Board
   # Create Cells, set columns/rows for easier access, place Pieces on cells
   def prepare_board
     initialize_cells
-    set_columns_rows
+    @columns = sort_cells(:column)
+    @rows = sort_cells(:row)
+    #set_columns_rows
     place_pieces(Piece::INITIAL_PIECES)
   end
 
@@ -38,9 +40,21 @@ class Board
   end
 
   # Sort the Cells into their columns and rows
+  def sort_cells(axis_type)
+    @cells.reduce({}) do | hash, cell |
+      # eg. axis_type: column; axis: a
+      axis = cell.send(axis_type)
+#      binding.pry
+      hash.has_key?(axis) ? hash[axis] << cell : hash[axis] = [cell]
+      hash
+    end
+  end
+  
+  
   def set_columns_rows
-    @columns = Cell.sort_cells(:@column)
-    @rows = Cell.sort_cells(:@row)
+    
+    # @columns = Cell.sort_cells(:@column)
+    # @rows = Cell.sort_cells(:@row)
   end
 
   # Place the 32 Pieces on their initial positions
