@@ -26,13 +26,14 @@ describe Piece do
   describe '#update_position' do
     before do
       @color = :W
-      @cell = instance_double(Cell, column: 'a', row: 1)
+      @start_cell = instance_double(Cell, column: 'a', row: 1)
+      @end_cell = instance_double(Cell, column: 'a', row: 5)
     end
     
-    subject(:piece_position) { described_class.new(@color, @cell) }
+    subject(:piece_position) { described_class.new(@color, @start_cell) }
     
     it "changes the Piece's @position to the given Cell" do
-      expect { piece_position.update_position(@cell) }.to change { piece_position.position }.to(@cell)
+      expect { piece_position.update_position(@end_cell) }.to change { piece_position.position }.to(@end_cell)
     end
   end
 end
