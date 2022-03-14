@@ -70,7 +70,6 @@ module Displayable
   end
 
   def set_background(cell)
-
     # Default Backgrounds 
     # Even cells - Black (40); Odd cells - White (47)
     (cell.row + cell.column.ord).even? ? 40 : 47
