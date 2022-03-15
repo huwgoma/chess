@@ -67,24 +67,27 @@ class Board
     [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
   end
 
+  # Generate all possible cells that a given Piece can move to 
+  # Isolated; does not take other pieces into account
   def generate_moves(piece)
     movement = piece.class::MOVEMENT
     
     piece.moves.each do | dir, cells |
       cells.clear
-      
-      1.times do | i |
-        column = piece.position.column.shift(1 * movement[dir][:column])
-        row = piece.position.row + (1 * movement[dir][:row])
-        #binding.pry
+      # If piece is Pawn, forward = +/- 1 (W/B); otherwise, it's just 1
+      forward = piece.is_a?(Pawn) ? piece.forward : 1
+
+      1.upto(1) do |i|
+      # (1).upto(movement[:infinite] ? 7 : 1) do | i |
+        column = piece.position.column.shift(i * movement[dir][:column])
+        row = piece.position.row + (i * movement[dir][:row] * forward)
         cell = find_cell(column + row.to_s)
         
-
+        break if cell.nil?
         cells << cell
       end
-      
+      piece.moves.delete(dir) if cells.empty?
     end
-    
   end
 
   

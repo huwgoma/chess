@@ -2,7 +2,7 @@
 require './lib/pieces/piece'
 
 class Pawn < Piece
-  attr_reader :row_direction, :forward
+  attr_reader :forward
 
   MOVEMENT = {
     infinite: false,
