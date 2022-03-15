@@ -113,18 +113,39 @@ describe Board do
     # MOVEMENT directions and cells (array) - Fill Piece's @moves
     # cells (array) with Cells the Piece can move to
     describe '#generate_moves' do
+      
+      #######
+      before do
+        # Create a Board of Instance Doubles for Cells
+        @cell_doubles = []
+        8.times do | x |
+          column = (x + 97).chr
+          8.times do | y |
+            row = (y + 1)
+            @cell_doubles << instance_double(Cell, "#{column+row.to_s}", column: column, row: row)
+          end
+        end
+        board_valid_moves.instance_variable_set(:@cells, @cell_doubles)
 
+        # Sort Cell Instance Doubles and set them onto board_valid_moves'
+        # @columns/@rows instance variables 
+        @columns = board_valid_moves.sort_cells(:column)
+        @rows = board_valid_moves.sort_cells(:row)
+        board_valid_moves.instance_variable_set(:@columns, @columns)
+        board_valid_moves.instance_variable_set(:@rows, @rows)
+      end
+
+      #######
       context "for a Piece of the Pawn subclass" do
         before do
+          binding.pry
           @cell_e2 = instance_double(Cell, 'e2', column: 'e', row: 2)
           @cell_e3 = instance_double(Cell, 'e3', column: 'e', row: 3)
           @cell_e4 = instance_double(Cell, 'e4', column: 'e', row: 4)
           @cell_d3 = instance_double(Cell, 'd3', column: 'd', row: 3)
           @cell_f3 = instance_double(Cell, 'f3', column: 'f', row: 3) 
           
-          @empty_moves = { forward:[], initial:[], forward_left: [], forward_right: [] }
-
-          
+          @empty_moves = { forward:[], initial:[], forward_left: [], forward_right: [] }        
         end
 
         context "for a White Pawn at e2" do

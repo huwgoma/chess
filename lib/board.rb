@@ -43,7 +43,6 @@ class Board
     @cells.reduce({}) do | hash, cell |
       # eg. axis_type: column; axis: a
       axis = cell.send(axis_type)
-#      binding.pry
       hash.has_key?(axis) ? hash[axis] << cell : hash[axis] = [cell]
       hash
     end
