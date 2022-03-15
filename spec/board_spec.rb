@@ -138,32 +138,19 @@ describe Board do
       #######
       context "for a Piece of the Pawn subclass" do
         before do
-          binding.pry
-          @cell_e2 = instance_double(Cell, 'e2', column: 'e', row: 2)
-          @cell_e3 = instance_double(Cell, 'e3', column: 'e', row: 3)
-          @cell_e4 = instance_double(Cell, 'e4', column: 'e', row: 4)
-          @cell_d3 = instance_double(Cell, 'd3', column: 'd', row: 3)
-          @cell_f3 = instance_double(Cell, 'f3', column: 'f', row: 3) 
-          
           @empty_moves = { forward:[], initial:[], forward_left: [], forward_right: [] }        
         end
 
         context "for a White Pawn at e2" do
           before do
+            @cell_e2 = board_valid_moves.find_cell('e2')
             @pawn = instance_double(Pawn, 'Pawne2', position: @cell_e2, class: Pawn)
             allow(@pawn).to receive(:moves).and_return(@empty_moves)
 
-            # Manually set board's @columns and @rows to cover the Cells we need to test
-            # for find_cell to work properly.
-            @columns = {
-              'd' => [@cell_d3], 'e' => [@cell_e2, @cell_e3, @cell_e4], 'f' => [@cell_f3]
-            }
-            @rows = {
-              2 => [@cell_e2], 3 => [@cell_d3, @cell_e3, @cell_f3], 4 => [@cell_e4]
-            }
-
-            board_valid_moves.instance_variable_set(:@columns, @columns)
-            board_valid_moves.instance_variable_set(:@rows, @rows)
+            @cell_e3 = board_valid_moves.find_cell('e3')
+            @cell_e4 = board_valid_moves.find_cell('e4')
+            @cell_d3 = board_valid_moves.find_cell('d3')
+            @cell_f3 = board_valid_moves.find_cell('f3')
 
             @pawn_moves = {
               forward:[@cell_e3], initial:[@cell_e4], forward_left: [@cell_d3], forward_right: [@cell_f3]
