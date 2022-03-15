@@ -77,6 +77,7 @@ class Board
       1.times do | i |
         column = piece.position.column.shift(1 * movement[dir][:column])
         row = piece.position.row + (1 * movement[dir][:row])
+        #binding.pry
         cell = find_cell(column + row.to_s)
         
 
@@ -84,7 +85,7 @@ class Board
       end
       
     end
-    #binding.pry
+    
   end
 
   
