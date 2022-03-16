@@ -77,8 +77,7 @@ class Board
       # If piece is Pawn, forward = +/- 1 (W/B); otherwise, it's just 1
       forward = piece.is_a?(Pawn) ? piece.forward : 1
 
-      1.upto(1) do |i|
-      # (1).upto(movement[:infinite] ? 7 : 1) do | i |
+      (1).upto(movement[:infinite] ? 7 : 1) do | i |
         column = piece.position.column.shift(i * movement[dir][:column])
         row = piece.position.row + (i * movement[dir][:row] * forward)
         cell = find_cell(column + row.to_s)

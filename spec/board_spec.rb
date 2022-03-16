@@ -206,26 +206,26 @@ describe Board do
         end
       end
 
-      # context "for Pieces with infinite Movement (eg. Rook)" do
-      #   before do
-      #     @empty_moves = { top:[], right:[], bot: [], left: [] }
-      #     @cell_a5 = board_valid_moves.find_cell('a5')
-      #     @rook = instance_double(Rook, position: @cell_a5, class: Rook)
-      #     allow(@rook).to receive(:moves).and_return(@empty_moves)
+      context "for Pieces with infinite Movement (eg. Rook)" do
+        before do
+          @empty_moves = { top:[], right:[], bot: [], left: [] }
+          @cell_a5 = board_valid_moves.find_cell('a5')
+          @rook = instance_double(Rook, position: @cell_a5, class: Rook)
+          allow(@rook).to receive(:moves).and_return(@empty_moves)
 
-      #     @cell_a6 = board_valid_moves.find_cell('a6')
-      #     @cell_a7 = board_valid_moves.find_cell('a7')
-      #     @cell_a8 = board_valid_moves.find_cell('a8')
-      #     @rook_top_moves = [@cell_a6, @cell_a7, @cell_a8]    
-      #   end
+          @cell_a6 = board_valid_moves.find_cell('a6')
+          @cell_a7 = board_valid_moves.find_cell('a7')
+          @cell_a8 = board_valid_moves.find_cell('a8')
+          @rook_top_moves = [@cell_a6, @cell_a7, @cell_a8]    
+        end
 
-      #   it "iterates in each direction until it reaches the end of the board" do
-      #     rook_full_moves = board_valid_moves.generate_moves(@rook)
-      #     #binding.pry
-      #     # Expect rook_full_moves[:top] to equal @rook_top_moves
-      #     expect(rook_full_moves[:top]).to eq(@rook_top_moves)
-      #   end
-      # end
+        it "iterates in each direction until it reaches the end of the board" do
+          rook_full_moves = board_valid_moves.generate_moves(@rook)
+          #binding.pry
+          # Expect rook_full_moves[:top] to equal @rook_top_moves
+          expect(rook_full_moves[:top]).to eq(@rook_top_moves)
+        end
+      end
     end
   end
 end
