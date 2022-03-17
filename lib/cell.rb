@@ -12,4 +12,15 @@ class Cell
   def update_piece(piece)
     @piece = piece
   end
+
+  # Does this cell have an enemy piece?
+  def has_enemy?(foreign_color)
+    return false if @piece.nil?
+    @piece.color != foreign_color
+  end
+
+  def has_ally?(foreign_color)
+    return false if @piece.nil?
+    @piece.color == foreign_color
+  end
 end

@@ -100,7 +100,7 @@ class Board
         # whether to keep the current cell or not
         cells.pop(cells.length-1 - index)
         # Cell has enemy => Keep cell; Cell has ally => Discard cell
-        if cell.has_enemy?
+        #  if cell.has_enemy?
       end
     end
   end
