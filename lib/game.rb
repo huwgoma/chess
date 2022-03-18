@@ -46,7 +46,7 @@ class Game
     # select_active_player
     # pawn = @board.find_cell('e2').piece
     knight = @board.find_cell('b1').piece
-    moves = @board.prune_moves(@board.generate_moves(knight))
+    moves = @board.prune_moves(knight, @board.generate_moves(knight))
 
   end
 end

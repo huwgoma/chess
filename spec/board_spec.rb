@@ -248,12 +248,13 @@ describe Board do
         before do
           @empty_moves = { top:[], right:[], bot: [], left: [] }
           @cell_a4 = board_prune.find_cell('a4')
-          @rook = instance_double(Rook, position: @cell_a4, class: Rook)
+          @rook = instance_double(Rook, position: @cell_a4, class: Rook, color: :W)
           allow(@rook).to receive(:moves).and_return(@empty_moves)
           
           @moves = board_prune.generate_moves(@rook)
 
           @cell_a5 = board_prune.find_cell('a5')
+          
           @cell_a6 = board_prune.find_cell('a6')
           @cell_a7 = board_prune.find_cell('a7')
           @cell_a8 = board_prune.find_cell('a8')
@@ -261,14 +262,18 @@ describe Board do
 
         context "when it encounters a Cell with an enemy Piece" do
           before do
+            # Cell A6 has a Black Pawn on it 
             @b_pawn = instance_double(Pawn, color: :B) 
             allow(@cell_a6).to receive(:piece).and_return(@b_pawn)
-            @pruned_top_moves = [@cell_a5, @cell_a6]
+
+            @pruned_moves_top = [@cell_a5, @cell_a6]
+            allow(@cell_a6).to receive(:has_enemy?).and_return(true)
           end
-          xit "includes that Cell, but stops iterating any further in that direction" do
-            pruned_full_moves = board_prune.prune_moves(@moves)
+          
+          it "includes that Cell, but stops iterating any further in that direction" do
+            pruned_moves_full = board_prune.prune_moves(@rook, @moves)
             
-            expect(pruned_full_moves[:top]).to eq(@pruned_top_moves)
+            expect(pruned_moves_full[:top]).to eq(@pruned_moves_top)
           end
         end
       end

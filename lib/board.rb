@@ -91,7 +91,7 @@ class Board
 
   # Given a Hash of moves, prune the moves based on the position of other Pieces;
   # Remove moves if they are blocked by the presence of other Pieces
-  def prune_moves(moves)
+  def prune_moves(piece, moves)
     moves.each do | dir, cells |
       cells.keep_if.with_index do | cell, index |
         # If cell has no piece, keep the cell
@@ -99,8 +99,9 @@ class Board
         # Otherwise, remove all cells AFTER the current one, then decide 
         # whether to keep the current cell or not
         cells.pop(cells.length-1 - index)
-        # Cell has enemy => Keep cell; Cell has ally => Discard cell
-        #  if cell.has_enemy?
+        # Cell has enemy => Keep cell (true); Cell has ally => Discard cell(false)
+        
+        cell.has_enemy?(piece.color)
       end
     end
   end
