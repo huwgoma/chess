@@ -22,6 +22,20 @@ describe Cell do
     end
   end
 
+  describe '#empty?' do
+    subject(:cell_empty) { described_class.new('a', 1) }
+
+    it "returns true if the Cell's @piece is nil" do
+      expect(cell_empty.empty?).to be true
+    end
+
+    it "returns false if the Cell's @piece is not nil" do
+      piece = instance_double(Piece)
+      cell_empty.update_piece(piece)
+      expect(cell_empty.empty?).to be false
+    end
+  end
+
   describe '#has_enemy?' do
     subject(:cell_enemy) { described_class.new('a', 2) }
     it 'returns true if the cell piece has a DIFFERENT color as the given color' do
@@ -39,8 +53,7 @@ describe Cell do
     end
 
     it 'returns false if the cell has NO piece' do
-      cell_enemy.update_piece(nil)
-      
+      #cell_enemy.update_piece(nil)
       expect(cell_enemy.has_enemy?(:W)).to be false
     end
   end
@@ -62,7 +75,7 @@ describe Cell do
     end
 
     it 'returns false if the cell has NO piece' do
-      cell_ally.update_piece(nil)
+      #cell_ally.update_piece(nil)
       expect(cell_ally.has_ally?(:W)).to be false
     end
   end
