@@ -72,12 +72,15 @@ class Board
 
   end
 
-  # Given a Piece's possible end Cell, decide whether to keep it or not (valid?)
+  # Given a Piece's possible end Cell, decide whether to keep it or not
   def keep_piece_move?(cell, piece)
     cell.empty? || cell.has_enemy?(piece.color)
   end
 
-  
+  # Given a Pawn's possible end Cell, decide whether to keep it or not
+  def keep_pawn_move?(cell, direction, pawn)
+    
+  end
 
 
   # Generate all possible cells that a given Piece can move to 

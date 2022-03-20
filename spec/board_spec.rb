@@ -146,13 +146,18 @@ describe Board do
     end
     
     it 'returns true if the given cell is empty' do
-      empty_cell = instance_double(Cell, 'a3', empty?: true)
+      empty_cell = instance_double(Cell, empty?: true)
       expect(board_keep_move.keep_piece_move?(empty_cell, @piece)).to be true
     end
 
     it 'returns true if the given cell has an enemy piece on it' do
-      enemy_cell = instance_double(Cell, 'a3', empty?: false, has_enemy?: true)
+      enemy_cell = instance_double(Cell, empty?: false, has_enemy?: true)
       expect(board_keep_move.keep_piece_move?(enemy_cell, @piece)).to be true
+    end
+
+    it 'returns false if the given cell has an ally piece on it' do
+      ally_cell = instance_double(Cell, empty?: false, has_enemy?: false)
+      expect(board_keep_move.keep_piece_move?(ally_cell, @piece)).to be false
     end
   end
 
