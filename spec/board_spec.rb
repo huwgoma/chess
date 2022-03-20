@@ -106,6 +106,64 @@ describe Board do
     end
   end
 
+
+
+
+
+  # Merge Generate + Prune Moves
+  describe '#generate_moves' do
+    subject(:board_moves) { described_class.new }
+
+    before do
+      # Create a Board of Instance Doubles for Cells
+      @cell_doubles = []
+      8.times do | x |
+        column = (x + 97).chr
+        8.times do | y |
+          row = (y + 1)
+          @cell_doubles << instance_double(Cell, "#{column+row.to_s}", column: column, row: row, piece: nil)
+        end
+      end
+      # Set Board's @cells to @cell_doubles Array
+      board_moves.instance_variable_set(:@cells, @cell_doubles)
+
+      # Sort Cell Instance Doubles into Hashes sorted by Columns/Rows
+      @columns = board_moves.sort_cells(:column)
+      @rows = board_moves.sort_cells(:row)
+      board_moves.instance_variable_set(:@columns, @columns)
+      board_moves.instance_variable_set(:@rows, @rows)
+    end
+
+
+  end
+
+  # Given a Piece's possible end Cell, decide whether to keep it or not;
+  # Is the Cell a valid Cell for the Piece to move to? 
+  describe '#keep_piece_move?' do
+    subject(:board_keep_move) { described_class.new }
+    before do
+      @piece = instance_double(Rook, color: :W)
+    end
+    
+    it 'returns true if the given cell is empty' do
+      empty_cell = instance_double(Cell, 'a3', empty?: true)
+      expect(board_keep_move.keep_piece_move?(empty_cell, @piece)).to be true
+    end
+
+    it 'returns true if the given cell has an enemy piece on it' do
+      enemy_cell = instance_double(Cell, 'a3', empty?: false, has_enemy?: true)
+      expect(board_keep_move.keep_piece_move?(enemy_cell, @piece)).to be true
+    end
+  end
+
+
+
+
+
+
+
+
+
   # Generate Valid Moves - Generate and Prune
   # Valid Moves of a Piece - EXCLUDING King safety checks
   describe '#generate_valid_moves' do
@@ -161,7 +219,7 @@ describe Board do
             }
           end
 
-          it "populates the empty cells array of Pawn@moves with its possible move cells" do
+          xit "populates the empty cells array of Pawn@moves with its possible move cells" do
             expect(board_moves.generate_moves(@pawn)).to eq(@pawn_moves)
           end
         end
@@ -181,7 +239,7 @@ describe Board do
             }
           end
 
-          it 'properly constrains the possible cells (ie. no out-of-bounds moves)' do
+          xit 'properly constrains the possible cells (ie. no out-of-bounds moves)' do
             expect(board_moves.generate_moves(@pawn)).to eq(@pawn_moves)
           end
         end
@@ -205,7 +263,7 @@ describe Board do
             }
           end
           
-          it "takes the Pawn's direction (based on color) into account" do
+          xit "takes the Pawn's direction (based on color) into account" do
             expect(board_moves.generate_moves(@b_pawn)).to eq(@pawn_moves)
           end
         end
@@ -224,7 +282,7 @@ describe Board do
           @rook_top_moves = [@cell_a6, @cell_a7, @cell_a8]    
         end
 
-        it "iterates in each direction until it reaches the end of the board" do
+        xit "iterates in each direction until it reaches the end of the board" do
           rook_full_moves = board_moves.generate_moves(@rook)
           #binding.pry
           # Expect rook_full_moves[:top] to equal @rook_top_moves
@@ -270,7 +328,7 @@ describe Board do
             allow(@cell_a6).to receive(:has_enemy?).and_return(true)
           end
           
-          it "includes that Cell, but stops iterating any further in that direction" do
+          xit "includes that Cell, but stops iterating any further in that direction" do
             pruned_moves_full = board_prune.prune_moves(@rook, @moves)
             
             expect(pruned_moves_full[:top]).to eq(@pruned_moves_top)
