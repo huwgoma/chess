@@ -79,7 +79,10 @@ class Board
 
   # Given a Pawn's possible end Cell, decide whether to keep it or not
   def keep_pawn_move?(cell, direction, pawn)
-    
+    case direction
+    when :forward
+      cell.empty?
+    end
   end
 
 
