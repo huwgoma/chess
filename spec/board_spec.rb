@@ -24,9 +24,6 @@ describe Board do
 
   describe '#prepare_board' do
     subject(:board_prepare) { described_class.new }
-
-    
-
     # Initialize the 64 Cells
     describe '#initialize_cells' do
       it 'sends ::new to Cell class 64 times' do
@@ -134,77 +131,100 @@ describe Board do
       board_moves.instance_variable_set(:@rows, @rows)
     end
 
-
-  end
-
-  # Given a Piece's possible end Cell, decide whether to keep it or not;
-  # Is the Cell a valid Cell for the Piece to move to? 
-  describe '#keep_piece_move?' do
-    subject(:board_piece_move) { described_class.new }
-    before do
-      @piece = instance_double(Rook, color: :W)
-    end
-    
-    it 'returns true if the given cell is empty' do
-      empty_cell = instance_double(Cell, empty?: true)
-      expect(board_piece_move.keep_piece_move?(empty_cell, @piece)).to be true
-    end
-
-    it 'returns true if the given cell has an enemy piece on it' do
-      enemy_cell = instance_double(Cell, empty?: false, has_enemy?: true)
-      expect(board_piece_move.keep_piece_move?(enemy_cell, @piece)).to be true
-    end
-
-    it 'returns false if the given cell has an ally piece on it' do
-      ally_cell = instance_double(Cell, empty?: false, has_enemy?: false)
-      expect(board_piece_move.keep_piece_move?(ally_cell, @piece)).to be false
-    end
-  end
-
-  # Pawns follow a different ruleset from other Pieces - Decide whether to
-  # keep the given Cell for the given Pawn
-  describe '#keep_pawn_move?' do
-    subject (:board_pawn_move) { described_class.new }
-    before do
-      @pawn = instance_double(Pawn, color: :W)
-    end
-
-    context "when the given direction is :forward" do
+    # Given a Piece's possible end Cell, decide whether to keep it or not;
+    # Is the Cell a valid Cell for the Piece to move to? 
+    describe '#keep_piece_move?' do
+      subject(:board_piece_move) { described_class.new }
       before do
-        @direction = :forward
+        @piece = instance_double(Rook, color: :W)
       end
+      
       it 'returns true if the given cell is empty' do
-        cell = instance_double(Cell, empty?: true)
-        expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be true
+        empty_cell = instance_double(Cell, empty?: true)
+        expect(board_piece_move.keep_piece_move?(empty_cell, @piece)).to be true
       end
 
-      it 'returns false if the given cell is not empty' do
-        cell = instance_double(Cell, empty?: false)
-        expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be false
+      it 'returns true if the given cell has an enemy piece on it' do
+        enemy_cell = instance_double(Cell, empty?: false, has_enemy?: true)
+        expect(board_piece_move.keep_piece_move?(enemy_cell, @piece)).to be true
+      end
+
+      it 'returns false if the given cell has an ally piece on it' do
+        ally_cell = instance_double(Cell, empty?: false, has_enemy?: false)
+        expect(board_piece_move.keep_piece_move?(ally_cell, @piece)).to be false
       end
     end
 
-    # context "when the given direction is :initial" do
-    #   before do
-    #     @direction = :initial
-    #   end
-    #   # Initial only returns true under the following circumstances:
-    #   # The pawn has not moved (@initial = true)
-    #   # The initial cell (+2) and forward cell (+1) are both unoccupied
-    #   it 'returns true if the Pawn has not moved, the forward cell is empty, AND the given cell is empty' do
-    #     allow(@pawn).to receive(:initial).and_return(true)
-    #     cell = instance_double(Cell, empty?: true, column: 'a', row: 4)
-    #   end
-    # end
+    # Pawns follow a different ruleset from other Pieces - Decide whether to
+    # keep the given Cell for the given Pawn
+    describe '#keep_pawn_move?' do
+      subject (:board_pawn_move) { described_class.new }
+      before do
+        @pawn = instance_double(Pawn, color: :W, forward: 1)
+        board_pawn_move.instance_variable_set(:@cells, @cell_doubles)
+        board_pawn_move.instance_variable_set(:@columns, @columns)
+        board_pawn_move.instance_variable_set(:@rows, @rows)
+      end
+
+      context "when the given direction is :forward" do
+        before do
+          @direction = :forward
+        end
+        it 'returns true if the given cell is empty' do
+          cell = instance_double(Cell, empty?: true)
+          expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be true
+        end
+
+        it 'returns false if the given cell is not empty' do
+          cell = instance_double(Cell, empty?: false)
+          expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be false
+        end
+      end
+
+      context "when the given direction is :initial" do
+        before do
+          @direction = :initial
+          
+          @initial_cell = board_pawn_move.find_cell('a4')
+          allow(@initial_cell).to receive(:empty?).and_return(true)
+          
+          @forward_cell = board_pawn_move.find_cell('a3')
+          allow(@forward_cell).to receive(:empty?).and_return(true)
+        end
+        
+        # Initial only returns true under the following circumstances:
+        # The pawn has not moved (@initial = true)
+        # The initial cell (+2) and forward cell (+1) are both unoccupied
+        it 'returns true if the Pawn has not moved, the forward cell is empty, AND the given cell is empty' do
+          allow(@pawn).to receive(:initial).and_return(true)
+          expect(board_pawn_move.keep_pawn_move?(@initial_cell, @direction, @pawn)).to be true
+        end
+
+        it 'returns false otherwise' do
+          allow(@pawn).to receive(:initial).and_return(false)
+          expect(board_pawn_move.keep_pawn_move?(@initial_cell, @direction, @pawn)).to be false
+        end
+      end
+
+      context "when the given direction is :forward left/right" do
+        before do
+          @direction = :forward_left
+        end
+
+        it 'returns true if the Cell has an enemy on it' do
+          enemy_cell = instance_double(Cell, has_enemy?: true)
+          expect(board_pawn_move.keep_pawn_move?(enemy_cell, @direction, @pawn)).to be true
+        end
+
+        it 'returns false if the Cell is empty or has an ally on it' do
+          cell = instance_double(Cell, has_enemy?: false)
+          expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be false
+        end
+      end
+    end
   end
 
-
-
-
-
-
-
-
+  
   # Generate Valid Moves - Generate and Prune
   # Valid Moves of a Piece - EXCLUDING King safety checks
   describe '#generate_valid_moves' do

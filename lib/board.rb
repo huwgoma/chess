@@ -82,6 +82,11 @@ class Board
     case direction
     when :forward
       cell.empty?
+    when :initial
+      forward_cell = find_cell(cell.column + (cell.row - pawn.forward).to_s)
+      pawn.initial && forward_cell.empty? && cell.empty?
+    when :forward_left, :forward_right
+      cell.has_enemy?(pawn.color)
     end
   end
 
