@@ -139,26 +139,26 @@ describe Board do
     # Test Cases - Pawn
     context "when the given Piece is a Pawn" do
       before do
-        @pawn_moves = { forward:[], initial:[], forward_left:[], forward_right:[] }
+        pawn_moves = { forward:[], initial:[], forward_left:[], forward_right:[] }
         
         @cell_d2 = board_moves.find_cell('d2')
         # Piece is_a?(Pawn) #=> true
         @w_pawn_d2 = instance_double(Pawn, class: Pawn, is_a?: true,
-          moves: @pawn_moves, initial: true, 
+          moves: pawn_moves, initial: true, 
           position: @cell_d2, color: :W, forward: 1)
         
         @cell_d3 = board_moves.find_cell('d3')
 
         @cell_d4 = board_moves.find_cell('d4')
         @w_pawn_d4 = instance_double(Pawn, class: Pawn, is_a?: true,
-          moves: @pawn_moves, initial: false, 
+          moves: pawn_moves, initial: false, 
           position: @cell_d4, color: :W, forward: 1)
 
         @cell_d5 = board_moves.find_cell('d5')
 
         @cell_d7 = board_moves.find_cell('d7')
         @b_pawn_d7 = instance_double(Pawn, class: Pawn, is_a?: true,
-          moves: @pawn_moves, initial: true,
+          moves: pawn_moves, initial: true,
           position: @cell_d7, color: :B, forward: -1)
       end
       
@@ -223,7 +223,33 @@ describe Board do
       end
     end
 
+    # For all Pieces other than Pawns, we keep the Cell if it is empty 
+    # OR if it has an enemy Piece
+    # If the Cell has a Piece, exit the current direction's loop; otherwise, continue
+    
+    # Test Cases - Rook
+    context "when the given Piece is a Rook (Infinite Movement)" do
+      before do
+        @rook_moves = { top:[], right:[], bot:[], left:[] }
+        # Piece is_a?(Pawn) #=> false
+        @cell_b4 = board_moves.find_cell('b4')
+        @w_rook_b4 = instance_double(Rook, class: Rook, is_a?: false,
+          moves: @rook_moves, position: @cell_b4, color: :W)
 
+        @cell_b5 = board_moves.find_cell('b5')
+        @cell_b6 = board_moves.find_cell('b6')
+        @cell_b7 = board_moves.find_cell('b7')
+        @cell_b8 = board_moves.find_cell('b8')
+      end
+
+      context "when there are no other Pieces in its path" do
+        it 'iterates until the end of the Board is reached' do
+          top_moves = [@cell_b5, @cell_b6, @cell_b7, @cell_b8]
+          expect(board_moves.generate_moves(@w_rook_b4)[:top]).to eq(top_moves)
+        end
+      end
+      
+    end
 
     # Given a Piece's possible end Cell, decide whether to keep it or not;
     # Is the Cell a valid Cell for the Piece to move to? 
