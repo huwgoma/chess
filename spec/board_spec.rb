@@ -141,6 +141,15 @@ describe Board do
       before do
         @pawn_moves = { forward:[], initial:[], forward_left:[], forward_right:[] }
         
+        @cell_d2 = board_moves.find_cell('d2')
+        @w_pawn_d2 = instance_double(Pawn, class: Pawn,
+          moves: @pawn_moves, initial: true, 
+          position: @cell_d2, color: :W, forward: 1)
+        # Piece is_a?(Pawn) #=> true
+        allow(@w_pawn_d2).to receive(:is_a?).and_return(true)
+
+        @cell_d3 = board_moves.find_cell('d3')
+
         @cell_d4 = board_moves.find_cell('d4')
         @w_pawn_d4 = instance_double(Pawn, class: Pawn,
           moves: @pawn_moves, initial: false, 
@@ -148,15 +157,45 @@ describe Board do
         # Piece is_a?(Pawn) #=> true
         allow(@w_pawn_d4).to receive(:is_a?).and_return(true)
 
-        @pawn_d2 = instance_double(Pawn)
-      end
-      # Forward - Move 1 cell forward
-      it 'moves forward 1 cell' do
         @cell_d5 = board_moves.find_cell('d5')
+      end
+      
+      # Forward - Move 1 cell forward (D4->D5)
+      it 'moves forward 1 cell' do
         moves = { forward: [@cell_d5] }
         expect(board_moves.generate_moves(@w_pawn_d4)).to eq(moves)
       end
+
+      # Initial - Move 2 cells forward (D2->D4)
+      it 'moves forward 2 cells' do
+        moves = { forward: [@cell_d3], initial: [@cell_d4] }
+        expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+      end
+
+      # Forward - Cannot move if cell is occupied (D4->D5 blocked)
+      it 'cannot move forward if that cell is blocked' do
+        allow(@cell_d5).to receive(:empty?).and_return(false)
+        moves = {}
+        expect(board_moves.generate_moves(@w_pawn_d4)).to eq(moves)
+      end 
+
+      # Initial - Cannot move if the first Forward Cell is blocked 
+      # (even if Initial Cell is empty) (D2->D4 blocked by D3 block)
+      it 'cannot move forward 2 cells if the first forward cell is blocked' do
+        allow(@cell_d3).to receive(:empty?).and_return(false)
+        moves = {}
+        expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+      end
+      # Initial - Cannot move if the Initial Cell is blocked
+      # (but CAN move to the Forward Cell if that's empty) (D2->D3->D4 blocked)
+      it 'cannot move forward 2 cells if the second cell is blocked' do
+        allow(@cell_d4).to receive(:empty?).and_return(false)
+        moves = { forward: [@cell_d3] }
+        expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+      end
     end
+
+
 
     # Given a Piece's possible end Cell, decide whether to keep it or not;
     # Is the Cell a valid Cell for the Piece to move to? 
