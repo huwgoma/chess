@@ -67,9 +67,27 @@ class Board
     [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
   end
 
-  # Merge Generate + Prune Moves
+  # Generate Moves - Given a Piece, generate its possible moves
+  # - Does not account for the King's safety
   def generate_moves(piece)
+    movement = piece.class::MOVEMENT
+    piece.moves.each do | dir, cells |
+      cells.clear
+      forward = piece.is_a?(Pawn) ? piece.forward : 1
 
+      (1).upto(movement[:infinite] ? 7 : 1) do | i |
+        column = piece.position.column.shift(i * movement[dir][:column])
+        row = piece.position.row + (i * movement[dir][:row] * forward)
+        cell = find_cell(column + row.to_s)
+        break if cell.nil?
+        #binding.pry
+        keep_cell = piece.is_a?(Pawn) ? keep_pawn_move?(cell, dir, piece) : keep_piece_move?(cell, piece)
+        
+        cells << cell if keep_cell
+        break unless cell.empty?
+      end
+      piece.moves.delete(dir) if cells.empty?
+    end
   end
 
   # Given a Piece's possible end Cell, decide whether to keep it or not

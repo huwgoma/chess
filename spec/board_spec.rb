@@ -107,7 +107,8 @@ describe Board do
 
 
 
-  # Merge Generate + Prune Moves
+  # Generate Moves - Given a Piece, generate its possible moves
+  # - Does not account for the King's safety
   describe '#generate_moves' do
     subject(:board_moves) { described_class.new }
 
@@ -118,7 +119,9 @@ describe Board do
         column = (x + 97).chr
         8.times do | y |
           row = (y + 1)
-          @cell_doubles << instance_double(Cell, "#{column+row.to_s}", column: column, row: row, piece: nil)
+          @cell_doubles << instance_double(Cell, "#{column+row.to_s}", 
+            column: column, row: row, 
+            piece: nil, empty?: true, has_enemy?: false, has_ally?: false)
         end
       end
       # Set Board's @cells to @cell_doubles Array
@@ -129,6 +132,30 @@ describe Board do
       @rows = board_moves.sort_cells(:row)
       board_moves.instance_variable_set(:@columns, @columns)
       board_moves.instance_variable_set(:@rows, @rows)
+    end
+
+    # Generate Moves - Test Cases
+
+    # Test Cases - Pawn
+    context "when the given Piece is a Pawn" do
+      before do
+        @pawn_moves = { forward:[], initial:[], forward_left:[], forward_right:[] }
+        
+        @cell_d4 = board_moves.find_cell('d4')
+        @w_pawn_d4 = instance_double(Pawn, class: Pawn,
+          moves: @pawn_moves, initial: false, 
+          position: @cell_d4, color: :W, forward: 1)
+        # Piece is_a?(Pawn) #=> true
+        allow(@w_pawn_d4).to receive(:is_a?).and_return(true)
+
+        @pawn_d2 = instance_double(Pawn)
+      end
+      # Forward - Move 1 cell forward
+      it 'moves forward 1 cell' do
+        @cell_d5 = board_moves.find_cell('d5')
+        moves = { forward: [@cell_d5] }
+        expect(board_moves.generate_moves(@w_pawn_d4)).to eq(moves)
+      end
     end
 
     # Given a Piece's possible end Cell, decide whether to keep it or not;
@@ -184,12 +211,8 @@ describe Board do
       context "when the given direction is :initial" do
         before do
           @direction = :initial
-          
           @initial_cell = board_pawn_move.find_cell('a4')
-          allow(@initial_cell).to receive(:empty?).and_return(true)
-          
           @forward_cell = board_pawn_move.find_cell('a3')
-          allow(@forward_cell).to receive(:empty?).and_return(true)
         end
         
         # Initial only returns true under the following circumstances:
@@ -227,178 +250,178 @@ describe Board do
   
   # Generate Valid Moves - Generate and Prune
   # Valid Moves of a Piece - EXCLUDING King safety checks
-  describe '#generate_valid_moves' do
-    subject(:board_valid_moves) { described_class.new }
-    before do
-      # Create a Board of Instance Doubles for Cells
-      @cell_doubles = []
-      8.times do | x |
-        column = (x + 97).chr
-        8.times do | y |
-          row = (y + 1)
-          @cell_doubles << instance_double(Cell, "#{column+row.to_s}", column: column, row: row, piece: nil)
-        end
-      end
-      # Set Board's @cells to @cell_doubles Array
-      board_valid_moves.instance_variable_set(:@cells, @cell_doubles)
+  # describe '#generate_valid_moves' do
+  #   subject(:board_valid_moves) { described_class.new }
+  #   before do
+  #     # Create a Board of Instance Doubles for Cells
+  #     @cell_doubles = []
+  #     8.times do | x |
+  #       column = (x + 97).chr
+  #       8.times do | y |
+  #         row = (y + 1)
+  #         @cell_doubles << instance_double(Cell, "#{column+row.to_s}", column: column, row: row, piece: nil)
+  #       end
+  #     end
+  #     # Set Board's @cells to @cell_doubles Array
+  #     board_valid_moves.instance_variable_set(:@cells, @cell_doubles)
 
-      # Sort Cell Instance Doubles into Hashes sorted by Columns/Rows
-      @columns = board_valid_moves.sort_cells(:column)
-      @rows = board_valid_moves.sort_cells(:row)
-    end
+  #     # Sort Cell Instance Doubles into Hashes sorted by Columns/Rows
+  #     @columns = board_valid_moves.sort_cells(:column)
+  #     @rows = board_valid_moves.sort_cells(:row)
+  #   end
 
-    # given a Piece, it will return a Hash of that Piece's
-    # MOVEMENT directions and cells (array) - Fill Piece's @moves
-    # cells (array) with Cells the Piece can move to
-    describe '#generate_moves' do
-      subject(:board_moves) { described_class.new }
-      before do
-        board_moves.instance_variable_set(:@cells, @cell_doubles)
-        board_moves.instance_variable_set(:@columns, @columns)
-        board_moves.instance_variable_set(:@rows, @rows)
-      end
+  #   # given a Piece, it will return a Hash of that Piece's
+  #   # MOVEMENT directions and cells (array) - Fill Piece's @moves
+  #   # cells (array) with Cells the Piece can move to
+  #   describe '#generate_moves' do
+  #     subject(:board_moves) { described_class.new }
+  #     before do
+  #       board_moves.instance_variable_set(:@cells, @cell_doubles)
+  #       board_moves.instance_variable_set(:@columns, @columns)
+  #       board_moves.instance_variable_set(:@rows, @rows)
+  #     end
 
-      # Pawns
-      context "for a Piece of the Pawn subclass" do
-        before do
-          @empty_moves = { forward:[], initial:[], forward_left: [], forward_right: [] }        
-        end
+  #     # Pawns
+  #     context "for a Piece of the Pawn subclass" do
+  #       before do
+  #         @empty_moves = { forward:[], initial:[], forward_left: [], forward_right: [] }        
+  #       end
 
-        context "for a White Pawn at e2" do
-          before do
-            @cell_e2 = board_moves.find_cell('e2')
-            @pawn = instance_double(Pawn, 'Pawne2', position: @cell_e2, class: Pawn)
-            allow(@pawn).to receive(:moves).and_return(@empty_moves)
+  #       context "for a White Pawn at e2" do
+  #         before do
+  #           @cell_e2 = board_moves.find_cell('e2')
+  #           @pawn = instance_double(Pawn, 'Pawne2', position: @cell_e2, class: Pawn)
+  #           allow(@pawn).to receive(:moves).and_return(@empty_moves)
 
-            @cell_e3 = board_moves.find_cell('e3')
-            @cell_e4 = board_moves.find_cell('e4')
-            @cell_d3 = board_moves.find_cell('d3')
-            @cell_f3 = board_moves.find_cell('f3')
+  #           @cell_e3 = board_moves.find_cell('e3')
+  #           @cell_e4 = board_moves.find_cell('e4')
+  #           @cell_d3 = board_moves.find_cell('d3')
+  #           @cell_f3 = board_moves.find_cell('f3')
 
-            @pawn_moves = {
-              forward:[@cell_e3], initial:[@cell_e4], forward_left: [@cell_d3], forward_right: [@cell_f3]
-            }
-          end
+  #           @pawn_moves = {
+  #             forward:[@cell_e3], initial:[@cell_e4], forward_left: [@cell_d3], forward_right: [@cell_f3]
+  #           }
+  #         end
 
-          xit "populates the empty cells array of Pawn@moves with its possible move cells" do
-            expect(board_moves.generate_moves(@pawn)).to eq(@pawn_moves)
-          end
-        end
+  #         xit "populates the empty cells array of Pawn@moves with its possible move cells" do
+  #           expect(board_moves.generate_moves(@pawn)).to eq(@pawn_moves)
+  #         end
+  #       end
 
-        context "for a White Pawn at h2 (end of board)" do
-          before do
-            @cell_h2 = board_moves.find_cell('h2')
-            @pawn = instance_double(Pawn, 'Pawnh2', position: @cell_h2, class: Pawn)
-            allow(@pawn).to receive(:moves).and_return(@empty_moves)
+  #       context "for a White Pawn at h2 (end of board)" do
+  #         before do
+  #           @cell_h2 = board_moves.find_cell('h2')
+  #           @pawn = instance_double(Pawn, 'Pawnh2', position: @cell_h2, class: Pawn)
+  #           allow(@pawn).to receive(:moves).and_return(@empty_moves)
 
-            @cell_g3 = board_moves.find_cell('g3')
-            @cell_h3 = board_moves.find_cell('h3')
-            @cell_h4 = board_moves.find_cell('h4')
+  #           @cell_g3 = board_moves.find_cell('g3')
+  #           @cell_h3 = board_moves.find_cell('h3')
+  #           @cell_h4 = board_moves.find_cell('h4')
 
-            @pawn_moves = {
-              forward:[@cell_h3], initial:[@cell_h4], forward_left: [@cell_g3]
-            }
-          end
+  #           @pawn_moves = {
+  #             forward:[@cell_h3], initial:[@cell_h4], forward_left: [@cell_g3]
+  #           }
+  #         end
 
-          xit 'properly constrains the possible cells (ie. no out-of-bounds moves)' do
-            expect(board_moves.generate_moves(@pawn)).to eq(@pawn_moves)
-          end
-        end
+  #         xit 'properly constrains the possible cells (ie. no out-of-bounds moves)' do
+  #           expect(board_moves.generate_moves(@pawn)).to eq(@pawn_moves)
+  #         end
+  #       end
         
-        context "for a Black Pawn at e7" do
-          before do
-            @cell_e7 = board_moves.find_cell('e7')
-            @b_pawn = instance_double(Pawn, position: @cell_e7, forward: -1, class: Pawn)
-            allow(@b_pawn).to receive(:is_a?).with(Pawn).and_return(true)
-            allow(@b_pawn).to receive(:moves).and_return(@empty_moves)
+  #       context "for a Black Pawn at e7" do
+  #         before do
+  #           @cell_e7 = board_moves.find_cell('e7')
+  #           @b_pawn = instance_double(Pawn, position: @cell_e7, forward: -1, class: Pawn)
+  #           allow(@b_pawn).to receive(:is_a?).with(Pawn).and_return(true)
+  #           allow(@b_pawn).to receive(:moves).and_return(@empty_moves)
 
-            @cell_e6 = board_moves.find_cell('e6')
-            @cell_e5 = board_moves.find_cell('e5')
-            @cell_d6 = board_moves.find_cell('d6')
-            @cell_f6 = board_moves.find_cell('f6')
+  #           @cell_e6 = board_moves.find_cell('e6')
+  #           @cell_e5 = board_moves.find_cell('e5')
+  #           @cell_d6 = board_moves.find_cell('d6')
+  #           @cell_f6 = board_moves.find_cell('f6')
             
-            # Relevant subset of Black Pawn's moves - Check that direction 
-            # is being accounted for 
-            @pawn_moves = {
-              forward:[@cell_e6], initial:[@cell_e5], forward_left: [@cell_d6], forward_right: [@cell_f6]
-            }
-          end
+  #           # Relevant subset of Black Pawn's moves - Check that direction 
+  #           # is being accounted for 
+  #           @pawn_moves = {
+  #             forward:[@cell_e6], initial:[@cell_e5], forward_left: [@cell_d6], forward_right: [@cell_f6]
+  #           }
+  #         end
           
-          xit "takes the Pawn's direction (based on color) into account" do
-            expect(board_moves.generate_moves(@b_pawn)).to eq(@pawn_moves)
-          end
-        end
-      end
+  #         xit "takes the Pawn's direction (based on color) into account" do
+  #           expect(board_moves.generate_moves(@b_pawn)).to eq(@pawn_moves)
+  #         end
+  #       end
+  #     end
 
-      context "for Pieces with infinite Movement (eg. Rook)" do
-        before do
-          @empty_moves = { top:[], right:[], bot: [], left: [] }
-          @cell_a5 = board_moves.find_cell('a5')
-          @rook = instance_double(Rook, position: @cell_a5, class: Rook)
-          allow(@rook).to receive(:moves).and_return(@empty_moves)
+  #     context "for Pieces with infinite Movement (eg. Rook)" do
+  #       before do
+  #         @empty_moves = { top:[], right:[], bot: [], left: [] }
+  #         @cell_a5 = board_moves.find_cell('a5')
+  #         @rook = instance_double(Rook, position: @cell_a5, class: Rook)
+  #         allow(@rook).to receive(:moves).and_return(@empty_moves)
 
-          @cell_a6 = board_moves.find_cell('a6')
-          @cell_a7 = board_moves.find_cell('a7')
-          @cell_a8 = board_moves.find_cell('a8')
-          @rook_top_moves = [@cell_a6, @cell_a7, @cell_a8]    
-        end
+  #         @cell_a6 = board_moves.find_cell('a6')
+  #         @cell_a7 = board_moves.find_cell('a7')
+  #         @cell_a8 = board_moves.find_cell('a8')
+  #         @rook_top_moves = [@cell_a6, @cell_a7, @cell_a8]    
+  #       end
 
-        xit "iterates in each direction until it reaches the end of the board" do
-          rook_full_moves = board_moves.generate_moves(@rook)
-          #binding.pry
-          # Expect rook_full_moves[:top] to equal @rook_top_moves
-          expect(rook_full_moves[:top]).to eq(@rook_top_moves)
-        end
-      end
-    end
+  #       xit "iterates in each direction until it reaches the end of the board" do
+  #         rook_full_moves = board_moves.generate_moves(@rook)
+  #         #binding.pry
+  #         # Expect rook_full_moves[:top] to equal @rook_top_moves
+  #         expect(rook_full_moves[:top]).to eq(@rook_top_moves)
+  #       end
+  #     end
+  #   end
 
-    # Given a Hash of moves, prune the moves based on the position of other Pieces
-    # Modifies and returns the Hash of pruned moves
-    describe '#prune_moves' do
-      subject(:board_prune) { described_class.new }
-      before do
-        board_prune.instance_variable_set(:@cells, @cell_doubles)
-        board_prune.instance_variable_set(:@columns, @columns)
-        board_prune.instance_variable_set(:@rows, @rows)
-      end
+  #   # Given a Hash of moves, prune the moves based on the position of other Pieces
+  #   # Modifies and returns the Hash of pruned moves
+  #   describe '#prune_moves' do
+  #     subject(:board_prune) { described_class.new }
+  #     before do
+  #       board_prune.instance_variable_set(:@cells, @cell_doubles)
+  #       board_prune.instance_variable_set(:@columns, @columns)
+  #       board_prune.instance_variable_set(:@rows, @rows)
+  #     end
 
-      # Infinite Movement Classes - Rook, Bishop, Queen
-      context "for Pieces with infinite Movement (eg. Rook)" do
-        before do
-          @empty_moves = { top:[], right:[], bot: [], left: [] }
-          @cell_a4 = board_prune.find_cell('a4')
-          @rook = instance_double(Rook, position: @cell_a4, class: Rook, color: :W)
-          allow(@rook).to receive(:moves).and_return(@empty_moves)
+  #     # Infinite Movement Classes - Rook, Bishop, Queen
+  #     context "for Pieces with infinite Movement (eg. Rook)" do
+  #       before do
+  #         @empty_moves = { top:[], right:[], bot: [], left: [] }
+  #         @cell_a4 = board_prune.find_cell('a4')
+  #         @rook = instance_double(Rook, position: @cell_a4, class: Rook, color: :W)
+  #         allow(@rook).to receive(:moves).and_return(@empty_moves)
           
-          @moves = board_prune.generate_moves(@rook)
+  #         @moves = board_prune.generate_moves(@rook)
 
-          @cell_a5 = board_prune.find_cell('a5')
+  #         @cell_a5 = board_prune.find_cell('a5')
           
-          @cell_a6 = board_prune.find_cell('a6')
-          @cell_a7 = board_prune.find_cell('a7')
-          @cell_a8 = board_prune.find_cell('a8')
-        end
+  #         @cell_a6 = board_prune.find_cell('a6')
+  #         @cell_a7 = board_prune.find_cell('a7')
+  #         @cell_a8 = board_prune.find_cell('a8')
+  #       end
 
-        context "when it encounters a Cell with an enemy Piece" do
-          before do
-            # Cell A6 has a Black Pawn on it 
-            @b_pawn = instance_double(Pawn, color: :B) 
-            allow(@cell_a6).to receive(:piece).and_return(@b_pawn)
+  #       context "when it encounters a Cell with an enemy Piece" do
+  #         before do
+  #           # Cell A6 has a Black Pawn on it 
+  #           @b_pawn = instance_double(Pawn, color: :B) 
+  #           allow(@cell_a6).to receive(:piece).and_return(@b_pawn)
 
-            @pruned_moves_top = [@cell_a5, @cell_a6]
-            allow(@cell_a6).to receive(:has_enemy?).and_return(true)
-          end
+  #           @pruned_moves_top = [@cell_a5, @cell_a6]
+  #           allow(@cell_a6).to receive(:has_enemy?).and_return(true)
+  #         end
           
-          xit "includes that Cell, but stops iterating any further in that direction" do
-            pruned_moves_full = board_prune.prune_moves(@rook, @moves)
+  #         xit "includes that Cell, but stops iterating any further in that direction" do
+  #           pruned_moves_full = board_prune.prune_moves(@rook, @moves)
             
-            expect(pruned_moves_full[:top]).to eq(@pruned_moves_top)
-          end
-        end
-      end
-    end
+  #           expect(pruned_moves_full[:top]).to eq(@pruned_moves_top)
+  #         end
+  #       end
+  #     end
+  #   end
 
-  end
+  # end
 
   
 end
