@@ -107,44 +107,4 @@ class Board
       cell.has_enemy?(pawn.color)
     end
   end
-
-
-  # Generate all possible cells that a given Piece can move to 
-  # Isolated; does not take other pieces into account
-  # def generate_moves(piece)
-  #   movement = piece.class::MOVEMENT
-    
-  #   piece.moves.each do | dir, cells |
-  #     cells.clear
-  #     # If piece is Pawn, forward = +/- 1 (W/B); otherwise, it's just 1
-  #     forward = piece.is_a?(Pawn) ? piece.forward : 1
-
-  #     (1).upto(movement[:infinite] ? 7 : 1) do | i |
-  #       column = piece.position.column.shift(i * movement[dir][:column])
-  #       row = piece.position.row + (i * movement[dir][:row] * forward)
-  #       cell = find_cell(column + row.to_s)
-        
-  #       break if cell.nil?
-  #       cells << cell
-  #     end
-  #     piece.moves.delete(dir) if cells.empty?
-  #   end
-  # end
-
-  # # Given a Hash of moves, prune the moves based on the position of other Pieces;
-  # # Remove moves if they are blocked by the presence of other Pieces
-  # def prune_moves(piece, moves)
-  #   moves.each do | dir, cells |
-  #     cells.keep_if.with_index do | cell, index |
-  #       # If cell has no piece, keep the cell
-  #       next true if cell.piece.nil?
-  #       # Otherwise, remove all cells AFTER the current one, then decide 
-  #       # whether to keep the current cell or not
-  #       cells.pop(cells.length-1 - index)
-  #       # Cell has enemy => Keep cell (true); Cell has ally => Discard cell(false)
-        
-  #       cell.has_enemy?(piece.color)
-  #     end
-  #   end
-  # end
 end
