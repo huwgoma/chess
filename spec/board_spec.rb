@@ -142,22 +142,24 @@ describe Board do
         @pawn_moves = { forward:[], initial:[], forward_left:[], forward_right:[] }
         
         @cell_d2 = board_moves.find_cell('d2')
-        @w_pawn_d2 = instance_double(Pawn, class: Pawn,
+        # Piece is_a?(Pawn) #=> true
+        @w_pawn_d2 = instance_double(Pawn, class: Pawn, is_a?: true,
           moves: @pawn_moves, initial: true, 
           position: @cell_d2, color: :W, forward: 1)
-        # Piece is_a?(Pawn) #=> true
-        allow(@w_pawn_d2).to receive(:is_a?).and_return(true)
-
+        
         @cell_d3 = board_moves.find_cell('d3')
 
         @cell_d4 = board_moves.find_cell('d4')
-        @w_pawn_d4 = instance_double(Pawn, class: Pawn,
+        @w_pawn_d4 = instance_double(Pawn, class: Pawn, is_a?: true,
           moves: @pawn_moves, initial: false, 
           position: @cell_d4, color: :W, forward: 1)
-        # Piece is_a?(Pawn) #=> true
-        allow(@w_pawn_d4).to receive(:is_a?).and_return(true)
 
         @cell_d5 = board_moves.find_cell('d5')
+
+        @cell_d7 = board_moves.find_cell('d7')
+        @b_pawn_d7 = instance_double(Pawn, class: Pawn, is_a?: true,
+          moves: @pawn_moves, initial: true,
+          position: @cell_d7, color: :B, forward: -1)
       end
       
       # Forward - Move 1 cell forward (D4->D5)
@@ -192,6 +194,32 @@ describe Board do
         allow(@cell_d4).to receive(:empty?).and_return(false)
         moves = { forward: [@cell_d3] }
         expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+      end
+
+      # Diagonal - Can only move if Diagonal Cell has an enemy Piece on it
+      it 'can only move diagonally if that cell has an enemy' do
+        # Block Cell D3
+        allow(@cell_d3).to receive(:empty?).and_return(false)
+        # Place a juicy enemy Piece on Cell C3 (Diagonal Left)
+        cell_c3 = board_moves.find_cell('c3')
+        allow(cell_c3).to receive(:has_enemy?).and_return(true)
+
+        moves = { forward_left: [cell_c3] }
+        expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+      end
+
+      # Direction - Black Pawns move in reverse (Forward = -1)
+      it 'moves DOWN the board instead of up if it is Black' do
+        # Place enemy Piece on C6 to test Diagonal Cell
+        cell_c6 = board_moves.find_cell('c6')
+        allow(cell_c6).to receive(:has_enemy?).and_return(true)
+        # Forward
+        cell_d6 = board_moves.find_cell('d6')
+        # Initial
+        cell_d5 = board_moves.find_cell('d5')
+
+        moves = { forward: [cell_d6], initial: [cell_d5], forward_left: [cell_c6] }
+        expect(board_moves.generate_moves(@b_pawn_d7)).to eq(moves)
       end
     end
 
