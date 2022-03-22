@@ -163,63 +163,76 @@ describe Board do
       end
       
       # Forward - Move 1 cell forward (D4->D5)
-      it 'moves forward 1 cell' do
-        moves = { forward: [@cell_d5] }
-        expect(board_moves.generate_moves(@w_pawn_d4)).to eq(moves)
+      context "when the Cell in front of the Pawn is empty" do
+        it 'moves forward 1 cell' do
+          moves = { forward: [@cell_d5] }
+          expect(board_moves.generate_moves(@w_pawn_d4)).to eq(moves)
+        end
       end
-
+    
       # Initial - Move 2 cells forward (D2->D4)
-      it 'moves forward 2 cells' do
-        moves = { forward: [@cell_d3], initial: [@cell_d4] }
-        expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+      context "when the 2 Cells in front of the Pawn are empty, and the Pawn has not moved yet" do
+        it 'moves forward 2 cells' do
+          moves = { forward: [@cell_d3], initial: [@cell_d4] }
+          expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+        end
       end
+      
+      # Forward - Cannot move if the Cell is occupied (D4->D5 blocked)
+      # Initial - Cannot move if forward Cell is occupied (D2->D4 blocked by D3)
+      context "when the first Cell in front of the Pawn is occupied" do
+        it 'cannot move forward' do
+          allow(@cell_d5).to receive(:empty?).and_return(false)
+          moves = {}
+          expect(board_moves.generate_moves(@w_pawn_d4)).to eq(moves)
+        end
 
-      # Forward - Cannot move if cell is occupied (D4->D5 blocked)
-      it 'cannot move forward if that cell is blocked' do
-        allow(@cell_d5).to receive(:empty?).and_return(false)
-        moves = {}
-        expect(board_moves.generate_moves(@w_pawn_d4)).to eq(moves)
-      end 
-
-      # Initial - Cannot move if the first Forward Cell is blocked 
-      # (even if Initial Cell is empty) (D2->D4 blocked by D3 block)
-      it 'cannot move forward 2 cells if the first forward cell is blocked' do
-        allow(@cell_d3).to receive(:empty?).and_return(false)
-        moves = {}
-        expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+        it 'cannot move forward 2 cells, even if initial move is allowed and empty' do
+          allow(@cell_d3).to receive(:empty?).and_return(false)
+          moves = {}
+          expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+        end
       end
+      
       # Initial - Cannot move if the Initial Cell is blocked
       # (but CAN move to the Forward Cell if that's empty) (D2->D3->D4 blocked)
-      it 'cannot move forward 2 cells if the second cell is blocked' do
-        allow(@cell_d4).to receive(:empty?).and_return(false)
-        moves = { forward: [@cell_d3] }
-        expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+      context "when the initial Cell is occupied" do
+        it 'cannot move forward 2 cells, but CAN move to the first Cell if empty' do
+          allow(@cell_d4).to receive(:empty?).and_return(false)
+          moves = { forward: [@cell_d3] }
+          expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+        end
       end
-
+      
       # Diagonal - Can only move if Diagonal Cell has an enemy Piece on it
-      it 'can only move diagonally if that cell has an enemy' do
-        # Block Cell D3
-        allow(@cell_d3).to receive(:empty?).and_return(false)
-        # Place a juicy enemy Piece on Cell C3 (Diagonal Left)
-        cell_c3 = board_moves.find_cell('c3')
-        allow(cell_c3).to receive(:has_enemy?).and_return(true)
-
-        moves = { forward_left: [cell_c3] }
-        expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+      # Forward Left - Occupied; Forward Right - Not Occupied
+      context "when one of the Diagonal Cells are occupied by an enemy" do
+        it 'can only move diagonally if that cell has an enemy' do
+          # Block Cell D3
+          allow(@cell_d3).to receive(:empty?).and_return(false)
+          # Place a juicy enemy Piece on Cell C3 (Diagonal Left)
+          cell_c3 = board_moves.find_cell('c3')
+          allow(cell_c3).to receive(:has_enemy?).and_return(true)
+  
+          moves = { forward_left: [cell_c3] }
+          expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
+        end
       end
-
+      
       # Direction - Black Pawns move in reverse (Forward = -1)
-      it 'moves DOWN the board instead of up if it is Black' do
-        # Place enemy Piece on C6 to test Diagonal Cell
-        cell_c6 = board_moves.find_cell('c6')
-        allow(cell_c6).to receive(:has_enemy?).and_return(true)
-        # Forward
-        cell_d6 = board_moves.find_cell('d6')
-        # Initial
-        cell_d5 = board_moves.find_cell('d5')
-
-        moves = { forward: [cell_d6], initial: [cell_d5], forward_left: [cell_c6] }
-        expect(board_moves.generate_moves(@b_pawn_d7)).to eq(moves)
+      context "when the Pawn is black" do
+        it 'moves DOWN the board instead of up' do
+          # Place enemy Piece on C6 to test Diagonal Cell
+          cell_c6 = board_moves.find_cell('c6')
+          allow(cell_c6).to receive(:has_enemy?).and_return(true)
+          # Forward
+          cell_d6 = board_moves.find_cell('d6')
+          # Initial
+          cell_d5 = board_moves.find_cell('d5')
+  
+          moves = { forward: [cell_d6], initial: [cell_d5], forward_left: [cell_c6] }
+          expect(board_moves.generate_moves(@b_pawn_d7)).to eq(moves)
+        end
       end
     end
 
@@ -247,6 +260,10 @@ describe Board do
           top_moves = [@cell_b5, @cell_b6, @cell_b7, @cell_b8]
           expect(board_moves.generate_moves(@w_rook_b4)[:top]).to eq(top_moves)
         end
+      end
+
+      context "when there is an enemy Piece in its path" do
+        it ""
       end
       
     end
