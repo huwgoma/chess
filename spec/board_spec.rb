@@ -263,7 +263,24 @@ describe Board do
       end
 
       context "when there is an enemy Piece in its path" do
-        it ""
+        it "iterates until that Cell is reached, then stops - Inclusive" do
+          # Enemy Piece at B7
+          allow(@cell_b7).to receive(:empty?).and_return(false)
+          allow(@cell_b7).to receive(:has_enemy?).and_return(true)
+
+          top_moves = [@cell_b5, @cell_b6, @cell_b7]
+          expect(board_moves.generate_moves(@w_rook_b4)[:top]).to eq(top_moves)
+        end
+      end
+
+      context "when there is an ally Piece in its path" do
+        it "iterates until that Cell is reached, then stops - Exclusive" do
+          # Ally Piece at B7 ; has_enemy? #=> false
+          allow(@cell_b7).to receive(:empty?).and_return(false)
+
+          top_moves = [@cell_b5, @cell_b6]
+          expect(board_moves.generate_moves(@w_rook_b4)[:top]).to eq(top_moves)
+        end
       end
       
     end
