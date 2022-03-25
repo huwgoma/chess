@@ -86,16 +86,14 @@ describe Board do
       subject(:board_find) { described_class.new }
   
       before do
-        
         board_find.instance_variable_set(:@columns, @column_hash)
         board_find.instance_variable_set(:@rows, @row_hash)
       end
   
-      context 'when given a valid inbound alphanumeric coordinate' do
+      context 'when given a valid alphanumeric coordinate' do
         it 'returns the corresponding Cell object' do
           #cell_a1 = instance_double(Cell, 'a1', column: 'a', row: 1)
           coords = 'a1'
-          #binding.pry
           expect(board_find.find_cell(coords)).to eq(@cell_a1)
         end
       end
@@ -106,6 +104,29 @@ describe Board do
           expect(board_find.find_cell(coords)).to be nil
         end
       end
+    end
+
+    # Set Living Pieces - Iterate through @rows and create a Hash of Pieces
+    # that are alive, sorted by their color
+    describe '#set_living_pieces' do
+      subject(:board_living_pieces) { described_class.new }
+      before do
+        # Place Pieces on custom 2x2 Board - White on A1/B1, Black on A2/B2 
+        @w_pawn_a1 = instance_double(Pawn, 'a1', killed: false, color: :W)
+        @w_pawn_b1 = instance_double(Pawn, 'b1', killed: false, color: :W)
+        @b_pawn_a2 = instance_double(Pawn, 'a2', killed: false, color: :B)
+        @b_pawn_b2 = instance_double(Pawn, 'b2', killed: false, color: :B)
+        
+        board_living_pieces.instance_variable_set(:@rows, @row_hash)
+        @living_pieces = {
+          W: [@w_pawn_a1, @w_pawn_b1], B: [@b_pawn_a2, @b_pawn_b2]
+        }
+      end
+
+      it 'returns a hash of living pieces, sorted by color' do
+        expect(board_living_pieces.set_living_pieces).to eq(@living_pieces)
+      end
+      
     end
   end
 

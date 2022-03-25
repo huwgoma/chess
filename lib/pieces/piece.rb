@@ -6,7 +6,7 @@ class Piece
 
   MOVEMENT = { }
 
-  attr_reader :color, :position, :moves
+  attr_reader :color, :position, :moves, :killed
 
   def initialize(color, cell)
     @color = color

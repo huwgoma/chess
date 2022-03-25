@@ -26,6 +26,9 @@ class Board
     @columns = sort_cells(:column)
     @rows = sort_cells(:row)
     place_pieces(Piece::INITIAL_PIECES)
+
+    # ? 
+    @living_pieces = set_living_pieces
   end
 
   # Create the 64 Cells of the Board
@@ -67,6 +70,14 @@ class Board
     # If both column and row cells exist 
     [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
   end
+
+  # Iterate through @rows and create a Hash of Pieces that are alive (sorted by color)
+  def set_living_pieces
+    @rows.reduce({}) do | hash, (color, pieces) |
+      
+    end
+  end
+
 
   # Generate Moves - Given a Piece, generate its possible moves
   # - Does not account for the King's safety
