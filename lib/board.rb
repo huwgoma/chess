@@ -17,6 +17,7 @@ class Board
 
   def initialize
     @cells = []
+    @active_piece = nil
   end
 
   # Create Cells, set columns/rows for easier access, place Pieces on cells
@@ -114,5 +115,8 @@ class Board
     binding.pry
   end
 
-  
+  # Given a Piece, a Start Cell, and an End Cell, move the Piece from Start to End
+  def move_piece(piece = @active_piece, start, end_cell)
+    
+  end
 end
