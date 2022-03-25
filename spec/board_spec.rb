@@ -389,4 +389,12 @@ describe Board do
       @end = instance_double(Cell, 'end')
     end
   end
+
+  # Kill Piece - Kill the given Piece and remove it from Board@living_pieces
+  describe '#kill_piece' do
+    subject(:board_kill) { described_class.new }
+    before do
+      @piece = instance_double(Piece, 'killed')
+    end
+  end
 end
