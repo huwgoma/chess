@@ -121,23 +121,21 @@ describe Board do
           piece: nil, empty?: true, has_enemy?: false, has_ally?: false)
       end
     end
+
+    # Set each Board (subject)'s @cells to @cell_doubles
+    subject.instance_variable_set(:@cells, @cell_doubles)
+    # Sort @cell_doubles for each Board into column/row Hashes
+    @columns = subject.sort_cells(:column)
+    @rows = subject.sort_cells(:row)
+    # Then set each Board's @columns/@rows to the sorted @cell_double Hashes
+    subject.instance_variable_set(:@columns, @columns)
+    subject.instance_variable_set(:@rows, @rows)
   end
 
   # Generate Moves - Given a Piece, generate its possible moves
   # - Does not account for the King's safety
   describe '#generate_moves' do
     subject(:board_moves) { described_class.new }
-
-    before do
-      # Set Board's @cells to @cell_doubles Array
-      board_moves.instance_variable_set(:@cells, @cell_doubles)
-
-      # Sort Cell Instance Doubles into Hashes sorted by Columns/Rows
-      @columns = board_moves.sort_cells(:column)
-      @rows = board_moves.sort_cells(:row)
-      board_moves.instance_variable_set(:@columns, @columns)
-      board_moves.instance_variable_set(:@rows, @rows)
-    end
 
     # Generate Moves - Test Cases
     # Test Cases - Pawn
@@ -320,12 +318,6 @@ describe Board do
     subject (:board_pawn_move) { described_class.new }
     before do
       @pawn = instance_double(Pawn, color: :W, forward: 1)
-      board_pawn_move.instance_variable_set(:@cells, @cell_doubles)
-      @columns = board_pawn_move.sort_cells(:column)
-      @rows = board_pawn_move.sort_cells(:row)
-      
-      board_pawn_move.instance_variable_set(:@columns, @columns)
-      board_pawn_move.instance_variable_set(:@rows, @rows)
     end
 
     context "when the given direction is :forward" do
@@ -384,19 +376,8 @@ describe Board do
   # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
   # each move can be made without putting the allied King into check
   describe '#verify_moves' do
-    subject(:board_verify) { described_class.new }
-
-    before do
-      # Set Board's @cells to @cell_doubles Array
-      board_verify.instance_variable_set(:@cells, @cell_doubles)
-
-      # Sort Cell Instance Doubles into Hashes sorted by Columns/Rows
-      @columns = board_verify.sort_cells(:column)
-      @rows = board_verify.sort_cells(:row)
-      board_verify.instance_variable_set(:@columns, @columns)
-      board_verify.instance_variable_set(:@rows, @rows)
-    end
-
-    
+    subject(:board_verify) { described_class.new }    
   end
+
+
 end

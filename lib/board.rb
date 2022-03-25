@@ -113,4 +113,6 @@ class Board
   def verify_moves(piece)
     binding.pry
   end
+
+  
 end
