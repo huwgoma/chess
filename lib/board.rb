@@ -80,7 +80,7 @@ class Board
         row = piece.position.row + (i * movement[dir][:row] * forward)
         cell = find_cell(column + row.to_s)
         break if cell.nil?
-        #binding.pry
+
         keep_cell = piece.is_a?(Pawn) ? keep_pawn_move?(cell, dir, piece) : keep_piece_move?(cell, piece)
         
         cells << cell if keep_cell
@@ -106,5 +106,11 @@ class Board
     when :forward_left, :forward_right
       cell.has_enemy?(pawn.color)
     end
+  end
+
+  # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
+  # each move can be made without putting the allied King into check
+  def verify_moves(piece)
+    binding.pry
   end
 end

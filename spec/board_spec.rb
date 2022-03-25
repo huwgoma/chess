@@ -26,9 +26,6 @@ describe Board do
     
     describe '#prepare_board' do
       subject(:board_prepare) { described_class.new }
-      
-      
-  
       # Initialize the 64 Cells
       describe '#initialize_cells' do
         it 'sends ::new to Cell class 64 times' do
@@ -379,5 +376,24 @@ describe Board do
         end
       end
     end
+  end
+
+  # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
+  # each move can be made without putting the allied King into check
+  describe '#verify_moves' do
+    subject(:board_verify) { described_class.new }
+
+    before do
+      # Set Board's @cells to @cell_doubles Array
+      board_verify.instance_variable_set(:@cells, @cell_doubles)
+
+      # Sort Cell Instance Doubles into Hashes sorted by Columns/Rows
+      @columns = board_verify.sort_cells(:column)
+      @rows = board_verify.sort_cells(:row)
+      board_verify.instance_variable_set(:@columns, @columns)
+      board_verify.instance_variable_set(:@rows, @rows)
+    end
+
+    
   end
 end
