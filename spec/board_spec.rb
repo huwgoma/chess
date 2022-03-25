@@ -379,5 +379,14 @@ describe Board do
     subject(:board_verify) { described_class.new }    
   end
 
-
+  # Move Piece - Given a Piece, Start, and End, move the Piece from Start to End Cell
+  describe '#move_piece' do
+    subject(:board_move) { described_class.new }
+    before do
+      @start = instance_double(Cell, 'start')
+      @piece = instance_double(Piece, 'moved')
+      @kill = instance_double(Piece, 'killed')
+      @end = instance_double(Cell, 'end')
+    end
+  end
 end
