@@ -427,5 +427,14 @@ describe Board do
     before do
       @piece = instance_double(Piece, 'killed')
     end
+
+    it 'sends #is_killed to the given piece' do
+      expect(@piece).to receive(:is_killed)
+      board_kill.kill_piece(@piece)
+    end
+    
+    it 'deletes the killed piece from @living_pieces' do
+      
+    end
   end
 end

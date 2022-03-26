@@ -8,7 +8,7 @@ class Piece
 
   attr_reader :color, :position, :moves, :killed
 
-  def initialize(color, cell)
+  def initialize(color = :W, cell = nil)
     @color = color
     @killed = false
     @position = cell
@@ -44,5 +44,9 @@ class Piece
       hash[direction] = Array.new
       hash
     end
+  end
+
+  def is_killed
+    @killed = true
   end
 end
