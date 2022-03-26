@@ -26,8 +26,6 @@ class Board
     @columns = sort_cells(:column)
     @rows = sort_cells(:row)
     place_pieces(Piece::INITIAL_PIECES)
-
-    # ? 
     @living_pieces = set_living_pieces
   end
 
@@ -73,8 +71,11 @@ class Board
 
   # Iterate through @rows and create a Hash of Pieces that are alive (sorted by color)
   def set_living_pieces
-    @rows.reduce({}) do | hash, (color, pieces) |
-      
+    @rows.values.flatten.reduce({}) do | hash, cell |
+      next hash if cell.empty?
+      color = cell.piece.color
+      hash.has_key?(color) ? hash[color] << cell.piece : hash[color] = [cell.piece]
+      hash
     end
   end
 
