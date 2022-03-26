@@ -13,7 +13,7 @@ end
 class Board
   include Displayable
 
-  attr_reader :columns, :rows, :active_piece, :cells
+  attr_reader :columns, :rows, :active_piece, :cells, :living_pieces
 
   def initialize
     @cells = []
@@ -134,6 +134,7 @@ class Board
 
   # Kill the given Piece and remove it from @living_pieces
   def kill_piece(piece)
-
+    piece.is_killed
+    @living_pieces[piece.color].delete(piece)
   end
 end

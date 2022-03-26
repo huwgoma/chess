@@ -125,12 +125,12 @@ describe Board do
         board_living_pieces.instance_variable_set(:@rows, @row_hash)
       end
 
-      it 'returns a hash of living pieces, sorted by color' do
+      xit 'returns a hash of living pieces, sorted by color' do
         living_pieces = { W: [@w_pawn_a1, @w_pawn_b1], B: [@b_pawn_a2, @b_pawn_b2] }
         expect(board_living_pieces.set_living_pieces).to eq(living_pieces)
       end
       
-      it 'skips empty cells' do
+      xit 'skips empty cells' do
         # Remove Black Pawn from Cell B2
         allow(@cell_b2).to receive_messages(empty?: true)
 
@@ -425,16 +425,31 @@ describe Board do
   describe '#kill_piece' do
     subject(:board_kill) { described_class.new }
     before do
-      @piece = instance_double(Piece, 'killed')
+      # Place a White Piece on A1 and a Black Piece on A2 
+      @w_a1_piece = instance_double(Piece, 'w_a1', color: :W, killed: false)
+      allow(@w_a1_piece).to receive(:is_killed)
+      #@cell_a1 = board_kill.find_cell('a1')
+      #allow(@cell_a1).to receive_messages(empty?: false, piece: @w_a1_piece)
+
+      @b_a2_piece = instance_double(Piece, 'b_a2', color: :B, killed: false)
+      allow(@b_a2_piece).to receive(:is_killed)
+      # Create the Living Pieces Hash (with just 2 pieces on the board)
+      @living_pieces = { W: [@w_a1_piece], B: [@b_a2_piece] }
+      board_kill.instance_variable_set(:@living_pieces, @living_pieces)
     end
 
     it 'sends #is_killed to the given piece' do
-      expect(@piece).to receive(:is_killed)
-      board_kill.kill_piece(@piece)
+      expect(@w_a1_piece).to receive(:is_killed)
+      board_kill.kill_piece(@w_a1_piece)
     end
     
     it 'deletes the killed piece from @living_pieces' do
-      
+      after_kill = { W: [], B: [@b_a2_piece] }
+      expect { board_kill.kill_piece(@w_a1_piece) }.to change { board_kill.living_pieces }.to(after_kill) 
+    end
+
+    it 'returns the killed piece after deletion' do
+      expect(board_kill.kill_piece(@b_a2_piece)).to eq(@b_a2_piece)
     end
   end
 end
