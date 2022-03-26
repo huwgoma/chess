@@ -129,7 +129,7 @@ class Board
 
   # Given a Piece, a Start Cell, and an End Cell, move the Piece from Start to End
   def move_piece(piece = @active_piece, start, end_cell)
-
+    
   end
 
   # Kill the given Piece and remove it from @living_pieces

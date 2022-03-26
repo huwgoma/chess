@@ -125,12 +125,12 @@ describe Board do
         board_living_pieces.instance_variable_set(:@rows, @row_hash)
       end
 
-      xit 'returns a hash of living pieces, sorted by color' do
+      it 'returns a hash of living pieces, sorted by color' do
         living_pieces = { W: [@w_pawn_a1, @w_pawn_b1], B: [@b_pawn_a2, @b_pawn_b2] }
         expect(board_living_pieces.set_living_pieces).to eq(living_pieces)
       end
       
-      xit 'skips empty cells' do
+      it 'skips empty cells' do
         # Remove Black Pawn from Cell B2
         allow(@cell_b2).to receive_messages(empty?: true)
 
@@ -414,10 +414,38 @@ describe Board do
   describe '#move_piece' do
     subject(:board_move) { described_class.new }
     before do
+      # Start Cell
       @start = instance_double(Cell, 'start')
+      allow(@start).to receive(:update_piece)
+      # Moving Piece
       @piece = instance_double(Piece, 'moved')
+      allow(@piece).to receive(:update_position)
+
       @kill = instance_double(Piece, 'killed')
       @end = instance_double(Cell, 'end')
+    end
+
+    it 'sends #update_piece with nil to the start cell' do
+      expect(@start).to receive(:update_piece).with(nil)
+      board_move.move_piece(@piece, @start, @end)
+    end
+
+    it 'sends #update_position with the end cell to the moving piece' do
+      
+    end
+
+    context "if the end cell already has an enemy piece occupying it" do
+      it 'kills the enemy piece' do
+        
+      end
+    end
+
+    it 'sends #update_piece with the moving piece to the end cell' do
+      
+    end
+
+    it 'creates a new Move object' do
+      
     end
   end
 
