@@ -128,8 +128,11 @@ class Board
   end
 
   # Given a Piece, a Start Cell, and an End Cell, move the Piece from Start to End
-  def move_piece(piece = @active_piece, start, end_cell)
-    
+  def move_piece(piece = @active_piece, start_cell, end_cell)
+    start_cell.update_piece(nil)
+    piece.update_position(end_cell)
+    kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
+    end_cell.update_piece(piece)
   end
 
   # Kill the given Piece and remove it from @living_pieces

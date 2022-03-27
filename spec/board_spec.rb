@@ -418,11 +418,14 @@ describe Board do
       @start = instance_double(Cell, 'start')
       allow(@start).to receive(:update_piece)
       # Moving Piece
-      @piece = instance_double(Piece, 'moved')
+      @piece = instance_double(Piece, 'moved', color: :W)
       allow(@piece).to receive(:update_position)
+      # Killed Piece
+      @killed = instance_double(Piece, 'killed', color: :B)
+      allow(@killed).to receive(:is_killed)
 
-      @kill = instance_double(Piece, 'killed')
-      @end = instance_double(Cell, 'end')
+      @end = instance_double(Cell, 'end', piece: @killed, has_enemy?: false)
+      allow(@end).to receive(:update_piece)
     end
 
     it 'sends #update_piece with nil to the start cell' do
@@ -431,21 +434,26 @@ describe Board do
     end
 
     it 'sends #update_position with the end cell to the moving piece' do
-      
+      expect(@piece).to receive(:update_position).with(@end)
+      board_move.move_piece(@piece, @start, @end)
     end
 
     context "if the end cell already has an enemy piece occupying it" do
       it 'kills the enemy piece' do
-        
+        allow(@end).to receive(:has_enemy?).and_return(true)
+        expect(board_move).to receive(:kill_piece).with(@killed)
+        board_move.move_piece(@piece, @start, @end)
       end
     end
 
     it 'sends #update_piece with the moving piece to the end cell' do
-      
+      expect(@end).to receive(:update_piece).with(@piece)
+      board_move.move_piece(@piece, @start, @end)
     end
 
     it 'creates a new Move object' do
-      
+      move = class_double(Move).as_stubbed_const
+      expect(move).to receive(:new).with(@start, @end, @piece, @killed)
     end
   end
 
