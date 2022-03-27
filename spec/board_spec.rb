@@ -5,6 +5,7 @@ require './lib/pieces/piece'
 require './lib/pieces/pawn'
 require './lib/pieces/rook'
 require './lib/pieces/piece_factories'
+require './lib/move'
 require 'pry'
 
 describe Board do
@@ -426,6 +427,10 @@ describe Board do
 
       @end = instance_double(Cell, 'end', piece: @killed, has_enemy?: false)
       allow(@end).to receive(:update_piece)
+
+      # Set Living Pieces
+      @living_pieces = { W: [@piece], B: [@killed] }
+      board_move.instance_variable_set(:@living_pieces, @living_pieces)
     end
 
     it 'sends #update_piece with nil to the start cell' do
@@ -439,9 +444,19 @@ describe Board do
     end
 
     context "if the end cell already has an enemy piece occupying it" do
-      it 'kills the enemy piece' do
+      before do
         allow(@end).to receive(:has_enemy?).and_return(true)
+      end
+
+      it 'kills the enemy piece' do
         expect(board_move).to receive(:kill_piece).with(@killed)
+        board_move.move_piece(@piece, @start, @end)
+      end
+
+      # If a Killed Piece exists, send that Piece to Move#new
+      it 'creates a new Move object with the Killed Piece' do
+        move = class_double(Move).as_stubbed_const
+        expect(move).to receive(:new).with(@start, @end, @piece, @killed)
         board_move.move_piece(@piece, @start, @end)
       end
     end
@@ -451,9 +466,11 @@ describe Board do
       board_move.move_piece(@piece, @start, @end)
     end
 
+    # If no Piece was killed, killed = nil is passed to Move#new
     it 'creates a new Move object' do
       move = class_double(Move).as_stubbed_const
-      expect(move).to receive(:new).with(@start, @end, @piece, @killed)
+      expect(move).to receive(:new).with(@start, @end, @piece, nil)
+      board_move.move_piece(@piece, @start, @end)
     end
   end
 
