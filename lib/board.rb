@@ -141,4 +141,10 @@ class Board
     piece.is_killed
     @living_pieces[piece.color].delete(piece)
   end
+
+  # Undo the last Move - Revert Cell/Piece @piece/@position changes
+  # Also revive the killed Piece if any and re-add it to @living_pieces
+  def undo_last_move
+
+  end
 end

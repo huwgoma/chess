@@ -505,4 +505,13 @@ describe Board do
       expect(board_kill.kill_piece(@b_a2_piece)).to eq(@b_a2_piece)
     end
   end
+
+  # Undo Last Move - Remove the last Move from Move@@stack, then call 
+  # #undo on that Move object - Will revert the changes made by that Move
+  # Revive the killed Piece (if any) and add it back to @living_pieces
+  describe '#undo_last_move' do
+    it "#pops the last Move object from Move class' @@stack" do
+      
+    end
+  end
 end
