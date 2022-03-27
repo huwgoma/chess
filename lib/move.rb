@@ -14,4 +14,8 @@ class Move
   def self.stack
     @@stack
   end
+
+  def self.pop
+    @@stack.pop
+  end
 end
