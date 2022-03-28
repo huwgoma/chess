@@ -38,9 +38,13 @@ describe Piece do
   end
 
   describe '#is_killed' do
-    subject(:piece_killed) { described_class.new }
+    subject(:piece_killed) { described_class.new(:W, 'CellA1') }
     it "changes piece's @killed to true" do
       expect { piece_killed.is_killed }.to change { piece_killed.killed }.to true
+    end
+
+    it "changes piece's @position to nil" do
+      expect { piece_killed.is_killed }.to change { piece_killed.position }.to nil
     end
   end
 end
