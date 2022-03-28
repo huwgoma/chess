@@ -5,6 +5,7 @@ require './lib/pieces/piece'
 require './lib/pieces/pawn'
 require './lib/pieces/rook'
 require './lib/pieces/piece_factories'
+require './lib/move'
 require 'pry'
 
 describe Board do
@@ -125,12 +126,12 @@ describe Board do
         board_living_pieces.instance_variable_set(:@rows, @row_hash)
       end
 
-      xit 'returns a hash of living pieces, sorted by color' do
+      it 'returns a hash of living pieces, sorted by color' do
         living_pieces = { W: [@w_pawn_a1, @w_pawn_b1], B: [@b_pawn_a2, @b_pawn_b2] }
         expect(board_living_pieces.set_living_pieces).to eq(living_pieces)
       end
       
-      xit 'skips empty cells' do
+      it 'skips empty cells' do
         # Remove Black Pawn from Cell B2
         allow(@cell_b2).to receive_messages(empty?: true)
 
@@ -414,10 +415,62 @@ describe Board do
   describe '#move_piece' do
     subject(:board_move) { described_class.new }
     before do
+      # Start Cell
       @start = instance_double(Cell, 'start')
-      @piece = instance_double(Piece, 'moved')
-      @kill = instance_double(Piece, 'killed')
-      @end = instance_double(Cell, 'end')
+      allow(@start).to receive(:update_piece)
+      # Moving Piece
+      @piece = instance_double(Piece, 'moved', color: :W)
+      allow(@piece).to receive(:update_position)
+      # Killed Piece
+      @killed = instance_double(Piece, 'killed', color: :B)
+      allow(@killed).to receive(:is_killed)
+
+      @end = instance_double(Cell, 'end', piece: @killed, has_enemy?: false)
+      allow(@end).to receive(:update_piece)
+
+      # Set Living Pieces
+      @living_pieces = { W: [@piece], B: [@killed] }
+      board_move.instance_variable_set(:@living_pieces, @living_pieces)
+    end
+
+    it 'sends #update_piece with nil to the start cell' do
+      expect(@start).to receive(:update_piece).with(nil)
+      board_move.move_piece(@piece, @start, @end)
+    end
+
+    it 'sends #update_position with the end cell to the moving piece' do
+      expect(@piece).to receive(:update_position).with(@end)
+      board_move.move_piece(@piece, @start, @end)
+    end
+
+    context "if the end cell already has an enemy piece occupying it" do
+      before do
+        allow(@end).to receive(:has_enemy?).and_return(true)
+      end
+
+      it 'kills the enemy piece' do
+        expect(board_move).to receive(:kill_piece).with(@killed)
+        board_move.move_piece(@piece, @start, @end)
+      end
+
+      # If a Killed Piece exists, send that Piece to Move#new
+      it 'creates a new Move object with the Killed Piece' do
+        move = class_double(Move).as_stubbed_const
+        expect(move).to receive(:new).with(@start, @end, @piece, @killed)
+        board_move.move_piece(@piece, @start, @end)
+      end
+    end
+
+    it 'sends #update_piece with the moving piece to the end cell' do
+      expect(@end).to receive(:update_piece).with(@piece)
+      board_move.move_piece(@piece, @start, @end)
+    end
+
+    # If no Piece was killed, killed = nil is passed to Move#new
+    it 'creates a new Move object' do
+      move = class_double(Move).as_stubbed_const
+      expect(move).to receive(:new).with(@start, @end, @piece, nil)
+      board_move.move_piece(@piece, @start, @end)
     end
   end
 
@@ -450,6 +503,15 @@ describe Board do
 
     it 'returns the killed piece after deletion' do
       expect(board_kill.kill_piece(@b_a2_piece)).to eq(@b_a2_piece)
+    end
+  end
+
+  # Undo Last Move - Remove the last Move from Move@@stack, then call 
+  # #undo on that Move object - Will revert the changes made by that Move
+  # Revive the killed Piece (if any) and add it back to @living_pieces
+  describe '#undo_last_move' do
+    it "#pops the last Move object from Move class' @@stack" do
+      
     end
   end
 end
