@@ -18,4 +18,9 @@ class Move
   def self.pop
     @@stack.pop
   end
+
+  # Revert the changes made to Cell/Piece states by the move
+  def undo
+
+  end
 end

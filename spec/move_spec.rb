@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 require './lib/move'
+require './lib/cell'
+require './lib/pieces/piece'
 require 'pry'
 
 describe Move do
@@ -28,6 +30,41 @@ describe Move do
 
     it 'returns the popped move' do
       expect(Move.pop).to eq(@move_2)
+    end
+  end
+
+  # Undo - Revert the changes made to Cell@piece and Piece@position
+  describe '#undo' do
+    before do
+      @start = instance_double(Cell, 'start', piece: nil)
+      @piece = instance_double(Piece, 'piece')
+      @end = instance_double(Cell, 'end', piece: @piece)
+      allow(@piece).to receive(:position).and_return(@end)
+      @killed = instance_double(Piece, 'killed', position: nil)
+    end
+
+    subject(:move_undo) { described_class.new }
+    
+    it 'sends #update_position with @start Cell to the moving @piece' do
+      
+    end
+
+    it 'sends #update_piece with moving @piece to the @start cell' do
+      
+    end
+
+    it 'sends #update_piece with nil to @end cell' do
+      
+    end
+
+    context 'if there is a killed piece in this Move' do
+      it 'sends #update_position with @end to @killed piece' do
+        
+      end
+
+      it 'sends #update_piece with @killed to @end cell' do
+        
+      end
     end
   end
 end
