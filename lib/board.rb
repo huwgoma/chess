@@ -150,6 +150,7 @@ class Board
   
   # Revive the given Piece and add it back to @living_pieces
   def revive_piece(piece)
-
+    piece.is_revived
+    @living_pieces[piece.color] << piece
   end
 end

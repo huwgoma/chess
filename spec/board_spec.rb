@@ -531,14 +531,20 @@ describe Board do
     subject(:board_revive) { described_class.new }
     before do
       @w_piece = instance_double(Piece, color: :W)
+      allow(@w_piece).to receive(:is_revived)
+
+      @living_pieces = { W:[], B:[] }
+      board_revive.instance_variable_set(:@living_pieces, @living_pieces)
     end
 
     it 'sends #is_revived to the Piece' do
-      
+      expect(@w_piece).to receive(:is_revived)
+      board_revive.revive_piece(@w_piece)
     end
 
     it 'adds the Piece to @living_pieces' do
-      
+      updated_living_pieces = { W:[@w_piece], B:[] }
+      expect { board_revive.revive_piece(@w_piece) }.to change { board_revive.living_pieces }.to(updated_living_pieces)
     end
   end
 end
