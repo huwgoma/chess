@@ -145,7 +145,9 @@ class Board
   # Undo the last Move - Revert Cell/Piece @piece/@position changes
   # Also revive the killed Piece if any and re-add it to @living_pieces
   def undo_last_move
-    
+    last_move = Move.pop
+    last_move.undo
+    revive_piece(last_move.killed) if last_move.killed
   end
   
   # Revive the given Piece and add it back to @living_pieces

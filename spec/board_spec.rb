@@ -511,17 +511,38 @@ describe Board do
   # Also #revive the killed Piece (if any) and add it back to @living_pieces
   describe '#undo_last_move' do
     subject(:board_undo) { described_class.new }
+    before do
+      # Mock the killed Piece
+      @killed_piece = instance_double(Piece, killed: true, color: :W)
+      allow(@killed_piece).to receive(:is_revived)
+      # Set Board's Living Pieces
+      @living_pieces = { W:[], B:[] }
+      board_undo.instance_variable_set(:@living_pieces, @living_pieces)
+      # Mock the last Move Object
+      @last_move = instance_double(Move, killed: nil)
+      allow(@last_move).to receive(:undo)
+      # Mock the Move Class
+      @move = class_double(Move).as_stubbed_const
+      allow(@move).to receive(:pop).and_return(@last_move)
+    end
+    
     it "asks the Move class to ::pop the last move from its @@stack" do
-      
+      expect(@move).to receive(:pop)
+      board_undo.undo_last_move
     end
 
     it "asks the popped Move object to #undo the effects of its move" do
-      
+      expect(@last_move).to receive(:undo)
+      board_undo.undo_last_move
     end
 
     context "if there was a Killed Piece" do
+      before do
+        allow(@last_move).to receive(:killed).and_return(@killed_piece)
+      end
       it 'calls Board#revive_piece to revive the Piece' do
-        
+        expect(board_undo).to receive(:revive_piece).with(@killed_piece)
+        board_undo.undo_last_move
       end
     end
   end
