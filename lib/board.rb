@@ -94,7 +94,6 @@ class Board
         break if cell.nil?
 
         keep_cell = piece.is_a?(Pawn) ? keep_pawn_move?(cell, dir, piece) : keep_piece_move?(cell, piece)
-        
         cells << cell if keep_cell
         break unless cell.empty?
       end
@@ -128,10 +127,8 @@ class Board
 
   # King in Check? - Given a Color, check if that Color's King is in danger (Check)
   def king_in_check?(king_color)
-    #binding.pry
     king_cell = find_king_cell(king_color)
     enemy_color = king_color == :W ? :B : :W
-    
     # Does ANY living enemy Piece...
     @living_pieces[enemy_color].any? do | enemy_piece |
       # Have ANY move...

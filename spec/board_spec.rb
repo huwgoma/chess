@@ -480,36 +480,51 @@ describe Board do
   # King in Check? - Given a Color, check if that Color's King is in danger
   describe '#king_in_check?' do
     subject(:board_check) { described_class.new }
-    before do
-      # Mock Black Rook at E7
-      rook_moves = { top:[], right:[], bot:[], left:[] }
-      cell_e7 = board_check.find_cell('e7')
-      @b_rook_e7 = instance_double(Rook, class: Rook,
-        moves: rook_moves, color: :B, position: cell_e7)
-      # is_a?(Pawn) -> False (during generate_moves)
-      allow(@b_rook_e7).to receive(:is_a?)
-      allow(@b_rook_e7).to receive(:is_a?).with(Pawn).and_return(false)
-      
+    before do      
       # Mock White King at E2
       cell_e2 = board_check.find_cell('e2')
       @w_king_e2 = instance_double(King, color: :W, position: cell_e2)
-      # is_a?(King) -> True (during find_king_cell)
       allow(@w_king_e2).to receive(:is_a?)
       allow(@w_king_e2).to receive(:is_a?).with(King).and_return(true)
         
+      # Mock Black King at E8 
+      cell_e8 = board_check.find_cell('e8')
+      @b_king_e8 = instance_double(King, color: :B, position: cell_e8)
+      allow(@b_king_e8).to receive(:is_a?)
+      allow(@b_king_e8).to receive(:is_a?).with(King).and_return(true)
+
+
+      # Mock a Black Rook 
+      @rook_moves = { top:[], right:[], bot:[], left:[] }
+      @b_rook = instance_double(Rook, class: Rook,
+        moves: @rook_moves, color: :B)
+      allow(@b_rook).to receive(:is_a?)
+      allow(@b_rook).to receive(:is_a?).with(Pawn).and_return(false)
+
       # Living Pieces - Black Rook E7
-      @living_pieces = { W:[@w_king_e2], B:[@b_rook_e7] }
-      board_check.instance_variable_set(:@living_pieces, @living_pieces)
+      living_pieces = { W:[@w_king_e2], B:[@b_rook] }
+      board_check.instance_variable_set(:@living_pieces, living_pieces)
     end
 
-    # True - ANY of the living enemy Pieces have ANY move that == King's cell
-    it 'returns true if the King is in check' do
-      expect(board_check.king_in_check?(:W)).to be true
+    context "if the King is in check" do
+      before do
+        # Move the Black Rook to E7 ====> White King at E2
+        cell_e7 = board_check.find_cell('e7')
+        allow(@b_rook).to receive(:position).and_return(cell_e7)
+      end
+      it 'returns true' do
+        expect(board_check.king_in_check?(:W)).to be true
+      end
     end
 
-    # False - None of the living enemy Pieces have a move that == King's cell
-    it 'returns false if the King is not in check' do
-      
+    context "if the King is not in check" do
+      before do 
+        # Mock a Black Rook at 
+      end
+
+      it 'returns false if the King is not in check' do
+        
+      end
     end
   end
 
