@@ -507,16 +507,17 @@ describe Board do
   describe '#find_king_cell' do
     subject(:board_find_king) { described_class.new }
     before do
-      # White King at E2
+      # White King at E2 - #is_a?(King)
       @cell_e2 = board_find_king.find_cell('e2')
-      @w_king = instance_double(King, position: @cell_e2, color: :W)
-
+      @w_king = instance_double(King, is_a?: true, position: @cell_e2, color: :W)
+      # White Rook - Verify it only finds the King Piece
+      @w_rook = instance_double(Rook, is_a?: false)
       # Black King at E8
       @cell_e8 = board_find_king.find_cell('e8')
-      @b_king = instance_double(King, position: @cell_e8, color: :B)
+      @b_king = instance_double(King, is_a?: true, position: @cell_e8, color: :B)
 
       # Set Living Pieces
-      @living_pieces = { W: [@w_king], B: [@b_king] }
+      @living_pieces = { W: [@w_rook, @w_king], B: [@b_king] }
       board_find_king.instance_variable_set(:@living_pieces, @living_pieces)
     end
 
@@ -528,7 +529,7 @@ describe Board do
 
     context 'when :B (Black) is the given color' do
       it "returns the Black King's cell" do
-        
+        expect(board_find_king.find_king_cell(:B)).to eq(@cell_e8)
       end
     end
 
