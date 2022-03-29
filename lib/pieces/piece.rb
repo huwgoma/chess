@@ -50,4 +50,8 @@ class Piece
     @killed = true
     @position = nil
   end
+
+  def is_revived
+    @killed = false
+  end
 end

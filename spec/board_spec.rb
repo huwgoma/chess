@@ -508,7 +508,7 @@ describe Board do
 
   # Undo Last Move - Remove the last Move from Move@@stack, then call 
   # #undo on that Move object - Will revert the changes made by that Move
-  # Revive the killed Piece (if any) and add it back to @living_pieces
+  # Also #revive the killed Piece (if any) and add it back to @living_pieces
   describe '#undo_last_move' do
     subject(:board_undo) { described_class.new }
     it "asks the Move class to ::pop the last move from its @@stack" do
@@ -523,6 +523,14 @@ describe Board do
       it 'calls Board#revive_piece to revive the Piece' do
         
       end
+    end
+  end
+
+  # Revive Piece - Revive the given Piece and add it back to @living_pieces
+  describe '#revive_piece' do
+    subject(:board_revive) { described_class.new }
+    before do
+      @w_piece = instance_double(Piece, color: :W)
     end
   end
 end

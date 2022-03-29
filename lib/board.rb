@@ -147,4 +147,9 @@ class Board
   def undo_last_move
     
   end
+  
+  # Revive the given Piece and add it back to @living_pieces
+  def revive_piece(piece)
+
+  end
 end

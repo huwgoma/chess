@@ -47,4 +47,12 @@ describe Piece do
       expect { piece_killed.is_killed }.to change { piece_killed.position }.to nil
     end
   end
+
+  describe '#is_revived' do
+    subject(:piece_revive) { described_class.new(:W, 'CellA1') }
+    it "sets piece's @killed to false" do
+      piece_revive.instance_variable_set(:@killed, true)
+      expect { piece_revive.is_revived }.to change { piece_revive.killed }.to false
+    end
+  end
 end
