@@ -131,6 +131,11 @@ class Board
 
   end
 
+  # Given a Color, find and return that color's King's cell
+  def find_king_cell(king_color)
+
+  end
+  
   # Given a Piece, a Start Cell, and an End Cell, move the Piece from Start to End
   def move_piece(piece = @active_piece, start_cell, end_cell)
     start_cell.update_piece(nil)

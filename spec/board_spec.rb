@@ -503,7 +503,36 @@ describe Board do
     end
   end
 
+  # Find King Cell - Given a Color, find+return that Color's King's Cell
+  describe '#find_king_cell' do
+    subject(:board_find_king) { described_class.new }
+    before do
+      # White King at E2
+      @cell_e2 = board_find_king.find_cell('e2')
+      @w_king = instance_double(King, position: @cell_e2, color: :W)
 
+      # Black King at E8
+      @cell_e8 = board_find_king.find_cell('e8')
+      @b_king = instance_double(King, position: @cell_e8, color: :B)
+
+      # Set Living Pieces
+      @living_pieces = { W: [@w_king], B: [@b_king] }
+      board_find_king.instance_variable_set(:@living_pieces, @living_pieces)
+    end
+
+    context 'when :W (White) is the given color' do
+      it "returns the White King's cell" do
+        expect(board_find_king.find_king_cell(:W)).to eq(@cell_e2)
+      end
+    end
+
+    context 'when :B (Black) is the given color' do
+      it "returns the Black King's cell" do
+        
+      end
+    end
+
+  end
 
   # Kill Piece - Kill the given Piece and remove it from Board@living_pieces
   describe '#kill_piece' do
