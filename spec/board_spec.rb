@@ -163,6 +163,8 @@ describe Board do
     # Then set each Board's @columns/@rows to the sorted @cell_double Hashes
     subject.instance_variable_set(:@columns, @columns)
     subject.instance_variable_set(:@rows, @rows)
+
+    
   end
 
   # Generate Moves - Given a Piece, generate its possible moves
@@ -482,19 +484,27 @@ describe Board do
       # Mock Black Rook at E7
       rook_moves = { top:[], right:[], bot:[], left:[] }
       cell_e7 = board_check.find_cell('e7')
-      @b_rook_e7 = instance_double(Rook, class: Rook, is_a?: false,
+      @b_rook_e7 = instance_double(Rook, class: Rook,
         moves: rook_moves, color: :B, position: cell_e7)
+      # is_a?(Pawn) -> False (during generate_moves)
+      allow(@b_rook_e7).to receive(:is_a?)
+      allow(@b_rook_e7).to receive(:is_a?).with(Pawn).and_return(false)
       
       # Mock White King at E2
       cell_e2 = board_check.find_cell('e2')
       @w_king_e2 = instance_double(King, color: :W, position: cell_e2)
-        # Living Pieces - Black Rook E7
+      # is_a?(King) -> True (during find_king_cell)
+      allow(@w_king_e2).to receive(:is_a?)
+      allow(@w_king_e2).to receive(:is_a?).with(King).and_return(true)
+        
+      # Living Pieces - Black Rook E7
       @living_pieces = { W:[@w_king_e2], B:[@b_rook_e7] }
+      board_check.instance_variable_set(:@living_pieces, @living_pieces)
     end
 
     # True - ANY of the living enemy Pieces have ANY move that == King's cell
     it 'returns true if the King is in check' do
-      expect(board_check.king_in_check?(:W))
+      expect(board_check.king_in_check?(:W)).to be true
     end
 
     # False - None of the living enemy Pieces have a move that == King's cell
@@ -509,12 +519,14 @@ describe Board do
     before do
       # White King at E2 - #is_a?(King)
       @cell_e2 = board_find_king.find_cell('e2')
-      @w_king = instance_double(King, is_a?: true, position: @cell_e2, color: :W)
+      @w_king = instance_double(King, position: @cell_e2, color: :W)
+      allow(@w_king).to receive(:is_a?).with(King).and_return(true)
       # White Rook - Verify it only finds the King Piece
       @w_rook = instance_double(Rook, is_a?: false)
       # Black King at E8
       @cell_e8 = board_find_king.find_cell('e8')
-      @b_king = instance_double(King, is_a?: true, position: @cell_e8, color: :B)
+      @b_king = instance_double(King, position: @cell_e8, color: :B)
+      allow(@b_king).to receive(:is_a?).with(King).and_return(true)
 
       # Set Living Pieces
       @living_pieces = { W: [@w_rook, @w_king], B: [@b_king] }
