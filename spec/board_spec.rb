@@ -493,7 +493,6 @@ describe Board do
       allow(@b_king_e8).to receive(:is_a?)
       allow(@b_king_e8).to receive(:is_a?).with(King).and_return(true)
 
-
       # Mock a Black Rook 
       @rook_moves = { top:[], right:[], bot:[], left:[] }
       @b_rook = instance_double(Rook, class: Rook,
@@ -512,6 +511,7 @@ describe Board do
         cell_e7 = board_check.find_cell('e7')
         allow(@b_rook).to receive(:position).and_return(cell_e7)
       end
+
       it 'returns true' do
         expect(board_check.king_in_check?(:W)).to be true
       end
@@ -519,11 +519,13 @@ describe Board do
 
     context "if the King is not in check" do
       before do 
-        # Mock a Black Rook at 
+        # Move the Black Rook to D7 =========> (no King)
+        cell_d7 = board_check.find_cell('d7')
+        allow(@b_rook).to receive(:position).and_return(cell_d7)
       end
 
       it 'returns false if the King is not in check' do
-        
+        expect(board_check.king_in_check?(:W)).to be false
       end
     end
   end
