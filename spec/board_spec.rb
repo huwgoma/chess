@@ -4,6 +4,7 @@ require './lib/cell'
 require './lib/pieces/piece'
 require './lib/pieces/pawn'
 require './lib/pieces/rook'
+require './lib/pieces/king'
 require './lib/pieces/piece_factories'
 require './lib/move'
 require 'pry'
@@ -473,6 +474,36 @@ describe Board do
       board_move.move_piece(@piece, @start, @end)
     end
   end
+
+  # King in Check? - Given a Color, check if that Color's King is in danger
+  describe '#king_in_check?' do
+    subject(:board_check) { described_class.new }
+    before do
+      # Mock Black Rook at E7
+      rook_moves = { top:[], right:[], bot:[], left:[] }
+      cell_e7 = board_check.find_cell('e7')
+      @b_rook_e7 = instance_double(Rook, class: Rook, is_a?: false,
+        moves: rook_moves, color: :B, position: cell_e7)
+      
+      # Mock White King at E2
+      cell_e2 = board_check.find_cell('e2')
+      @w_king_e2 = instance_double(King, color: :W, position: cell_e2)
+        # Living Pieces - Black Rook E7
+      @living_pieces = { W:[@w_king_e2], B:[@b_rook_e7] }
+    end
+
+    # True - ANY of the living enemy Pieces have ANY move that == King's cell
+    it 'returns true if the King is in check' do
+      expect(board_check.king_in_check?(:W))
+    end
+
+    # False - None of the living enemy Pieces have a move that == King's cell
+    it 'returns false if the King is not in check' do
+      
+    end
+  end
+
+
 
   # Kill Piece - Kill the given Piece and remove it from Board@living_pieces
   describe '#kill_piece' do

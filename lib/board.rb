@@ -79,7 +79,6 @@ class Board
     end
   end
 
-
   # Generate Moves - Given a Piece, generate its possible moves
   # - Does not account for the King's safety
   def generate_moves(piece)
@@ -125,6 +124,11 @@ class Board
   # each move can be made without putting the allied King into check
   def verify_moves(piece)
     binding.pry
+  end
+
+  # King in Check? - Given a Color, check if that Color's King is in danger (Check)
+  def king_in_check?(king_color)
+
   end
 
   # Given a Piece, a Start Cell, and an End Cell, move the Piece from Start to End
