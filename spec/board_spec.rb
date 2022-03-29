@@ -532,5 +532,13 @@ describe Board do
     before do
       @w_piece = instance_double(Piece, color: :W)
     end
+
+    it 'sends #is_revived to the Piece' do
+      
+    end
+
+    it 'adds the Piece to @living_pieces' do
+      
+    end
   end
 end
