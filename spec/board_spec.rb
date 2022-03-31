@@ -162,9 +162,7 @@ describe Board do
     @rows = subject.sort_cells(:row)
     # Then set each Board's @columns/@rows to the sorted @cell_double Hashes
     subject.instance_variable_set(:@columns, @columns)
-    subject.instance_variable_set(:@rows, @rows)
-
-    
+    subject.instance_variable_set(:@rows, @rows)    
   end
 
   # Generate Moves - Given a Piece, generate its possible moves
@@ -411,7 +409,91 @@ describe Board do
   # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
   # each move can be made without putting the allied King into check
   describe '#verify_moves' do
-    subject(:board_verify) { described_class.new }    
+    subject(:board_verify) { described_class.new }
+    before do
+      # Mock a White Pawn at E2
+      cell_e2 = board_verify.find_cell('e2')
+      pawn_moves = { forward: [], initial: [], forward_left: [], forward_right: [] }
+      @w_pawn = instance_double(Pawn, class:Pawn, 
+        moves: pawn_moves, initial: true,
+        position: cell_e2, color: :W, forward: 1)
+      allow(@w_pawn).to receive(:is_a?)
+      allow(@w_pawn).to receive(:is_a?).with(Pawn).and_return(true)
+
+      # Mock a White King
+      @w_king = instance_double(King)
+      allow(@w_king).to receive(:is_a?)
+      allow(@w_king).to receive(:is_a?).with(King).and_return(true)
+
+      # Mock two Black Rooks (default at A8 and B8)
+      rook_moves = { top: [], right: [], bot: [], left: [] }
+
+      cell_a8 = board_verify.find_cell('a8')
+      @b_rook_1 = instance_double(Rook, is_a?: true,
+        moves: rook_moves, position: cell_a8, color: :B)
+      allow(@b_rook_1).to receive(:is_a?).with(Pawn).and_return(false)
+      allow(@b_rook_1).to receive(:is_a?).with(King).and_return(false)
+      
+      cell_b8 = board_verify.find_cell('a9')
+      @b_rook_2 = instance_double(Rook, is_a?: true,
+        moves: rook_moves, position: cell_b8, color: :B)
+      allow(@b_rook_2).to receive(:is_a?).with(Pawn).and_return(false)
+      allow(@b_rook_2).to receive(:is_a?).with(King).and_return(false)
+      # Mock Living Pieces
+      living_pieces = { W: [@w_pawn, @w_king], B: [@b_rook_1, @b_rook_2] }
+      board_verify.instance_variable_set(:@living_pieces, living_pieces)
+    end
+
+    # Verify Moves - Test Cases
+    # Imminent threat - When the King is 1 move away from being in Check;
+    # only being protected by the moving Piece
+    context "when the King is under no imminent threat" do
+      # ie. All generated moves are legal 
+      it "does not modify the Piece's @moves Hash" do
+        pawn_moves = board_verify.generate_moves(@w_pawn)
+        expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
+      end
+    end
+
+    context "when the King is under imminent threat" do
+      it 'does not allow the Piece to make a move that would put the King into check' do
+        
+      end
+    end
+
+    context "when the King is in Check" do
+      context "when the King is not also under imminent threat" do
+        it 'allows the Piece to capture the Checking enemy piece' do
+          
+        end
+
+        it 'allows the Piece to block the Checking enemy piece' do
+          
+        end
+      end
+
+      context "when the King is also under imminent threat (from another enemy piece)" do
+        # If moving the piece would expose the King to Check from another piece
+        it 'does not allow the Piece to move' do
+          
+        end
+      end
+    end
+
+
+
+    context "when the Piece's move places the King into check" do
+      it "removes that move from @moves" do
+        
+      end
+    end
+
+    context "when the King is in check" do
+      context "" do
+        
+      end
+    end
+    
   end
 
   # Move Piece - Given a Piece, Start, and End, move the Piece from Start to End Cell

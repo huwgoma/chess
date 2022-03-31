@@ -122,7 +122,7 @@ class Board
   # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
   # each move can be made without putting the allied King into check
   def verify_moves(piece)
-    binding.pry
+    
   end
 
   # King in Check? - Given a Color, check if that Color's King is in danger (Check)
