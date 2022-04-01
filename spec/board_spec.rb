@@ -414,16 +414,22 @@ describe Board do
     subject(:board_verify) { described_class.new }
     before do
       # Mock a White Pawn at E2
-      cell_e2 = board_verify.find_cell('e2')
+      @cell_e2 = board_verify.find_cell('e2')
       pawn_moves = { forward: [], initial: [], forward_left: [], forward_right: [] }
       @w_pawn = instance_double(Pawn, class:Pawn, 
         moves: pawn_moves, initial: true,
-        position: cell_e2, color: :W, forward: 1)
+        position: @cell_e2, color: :W, forward: 1)
       allow(@w_pawn).to receive(:is_a?)
       allow(@w_pawn).to receive(:is_a?).with(Pawn).and_return(true)
 
-      # Mock a White King
-      @w_king = instance_double(King)
+      # Mock Pawn Cells
+      @cell_e3 = board_verify.find_cell('e3')
+      @cell_e4 = board_verify.find_cell('e4')
+      @cell_f3 = board_verify.find_cell('f3')
+
+      # Mock a White King at E1
+      @cell_e1 = board_verify.find_cell('e1')
+      @w_king = instance_double(King, class:King, position: @cell_e1)
       allow(@w_king).to receive(:is_a?)
       allow(@w_king).to receive(:is_a?).with(King).and_return(true)
 
@@ -436,7 +442,7 @@ describe Board do
       allow(@b_rook_1).to receive(:is_a?).with(Pawn).and_return(false)
       allow(@b_rook_1).to receive(:is_a?).with(King).and_return(false)
       
-      cell_b8 = board_verify.find_cell('a9')
+      cell_b8 = board_verify.find_cell('b8')
       @b_rook_2 = instance_double(Rook, is_a?: true,
         moves: rook_moves, position: cell_b8, color: :B)
       allow(@b_rook_2).to receive(:is_a?).with(Pawn).and_return(false)
@@ -458,8 +464,35 @@ describe Board do
     end
 
     context "when the King is under imminent threat" do
-      xit 'does not allow the Piece to make a move that would put the King into check' do
+      before do
+        # Move Rook 1 to E5
+        cell_e5 = board_verify.find_cell('e5')
+        allow(@b_rook_1).to receive(:position).and_return(cell_e5)
+
+        # Place Enemy Piece on F3
+        allow(@cell_f3).to receive(:has_enemy?).and_return(true)
+
+        # Pawn Moves to each Cell of @moves
+        @pawn_moves = board_verify.generate_moves(@w_pawn)
         
+        allow(@cell_e3).to receive(:has_enemy?).with(:W).and_return(false)
+        allow(@cell_e4).to receive(:has_enemy?).with(:W).and_return(false)
+        allow(@cell_f3).to receive(:has_enemy?).with(:W).and_return(true)
+        
+        # Rook Moves to each Cell; empty? -> enemy? -> piece?
+        allow(@cell_e4).to receive(:empty?).and_return(true, false, true)
+        allow(@cell_e4).to receive(:has_enemy?).with(:B).and_return(true)
+        allow(@cell_e4).to receive(:piece).and_return(nil, @w_pawn, nil)
+
+        allow(@cell_e3).to receive(:empty?).and_return(false, true)
+        allow(@cell_e3).to receive(:has_enemy?).with(:B).and_return(true)
+        allow(@cell_e3).to receive(:piece).and_return(@w_pawn, nil)
+
+        allow(@cell_e2).to receive_messages(empty?: true, piece: nil)
+        allow(@cell_e1).to receive_messages(empty?: false, has_enemy?: true, piece: @w_king)
+      end
+      it 'does not allow the Piece to make a move that would put the King into check' do
+        pawn_moves = { forward: [@cell_e3], initial: [@cell_e4] }
       end
     end
 
