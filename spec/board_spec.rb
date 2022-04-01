@@ -475,8 +475,9 @@ describe Board do
         enemy_pawn = instance_double(Pawn, color: :B)
         allow(enemy_pawn).to receive(:is_killed)
         allow(@cell_f3).to receive(:piece).and_return(enemy_pawn)
+        
         # Pawn Moves to each Cell of @moves
-        @pawn_moves = board_verify.generate_moves(@w_pawn)
+        board_verify.generate_moves(@w_pawn)
         
         allow(@cell_e3).to receive(:has_enemy?).with(:W).and_return(false)
         allow(@cell_e4).to receive(:has_enemy?).with(:W).and_return(false)
@@ -494,7 +495,7 @@ describe Board do
         allow(@cell_e2).to receive_messages(empty?: true, piece: nil)
         allow(@cell_e1).to receive_messages(empty?: false, has_enemy?: true, piece: @w_king)
       end
-      it 'does not allow the Piece to make a move that would put the King into check' do
+      xit 'does not allow the Piece to make a move that would put the King into check' do
         pawn_moves = { forward: [@cell_e3], initial: [@cell_e4] }
         expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
       end
@@ -502,8 +503,25 @@ describe Board do
 
     context "when the King is in Check" do
       context "when the King is not also under imminent threat" do
-        xit 'allows the Piece to capture the Checking enemy piece' do
-          
+        before do
+          # Move Rook 1 to Cell F3
+          allow(@b_rook_1).to receive(:position).and_return(@cell_f3)
+          allow(@cell_f3).to receive_messages(piece: @b_rook_1, has_enemy?: true)
+
+          # Move W King to Cell F2
+          cell_f2 = board_verify.find_cell('f2')
+          allow(@w_king).to receive(:position).and_return(cell_f2)
+
+          # Pawn Moves to each @moves Cell
+          board_verify.generate_moves(@w_pawn)
+
+
+          # Rook Moves to each possible Cell
+          allow(@b_rook_1).to receive_messages(is_killed: nil, update_position: nil, is_revived: nil)
+        end
+        it 'allows the Piece to capture the Checking enemy piece' do
+          pawn_moves = { forward_right: [@cell_f3] }
+          expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
         end
 
         xit 'allows the Piece to block the Checking enemy piece' do
