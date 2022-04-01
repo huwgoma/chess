@@ -122,7 +122,15 @@ class Board
   # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
   # each move can be made without putting the allied King into check
   def verify_moves(piece)
-    
+    piece.moves.each do | dir, cells |
+      cells.reject! do | cell |
+        move_piece(piece, piece.position, cell)
+        reject_cell = king_in_check?(piece.color)
+        undo_last_move
+        reject_cell
+      end
+      piece.moves.delete(dir) if cells.empty?
+    end
   end
 
   # King in Check? - Given a Color, check if that Color's King is in danger (Check)
@@ -149,6 +157,7 @@ class Board
   def move_piece(piece = @active_piece, start_cell, end_cell)
     start_cell.update_piece(nil)
     piece.update_position(end_cell)
+    #binding.pry
     kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
     end_cell.update_piece(piece)
     Move.new(start_cell, end_cell, piece, kill)

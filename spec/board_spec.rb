@@ -151,7 +151,8 @@ describe Board do
         row = (y + 1)
         @cell_doubles << instance_double(Cell, "#{column+row.to_s}", 
           column: column, row: row, 
-          piece: nil, empty?: true, has_enemy?: false, has_ally?: false)
+          piece: nil, empty?: true, has_enemy?: false, has_ally?: false,
+          update_piece: nil)
       end
     end
 
@@ -417,7 +418,7 @@ describe Board do
       @cell_e2 = board_verify.find_cell('e2')
       pawn_moves = { forward: [], initial: [], forward_left: [], forward_right: [] }
       @w_pawn = instance_double(Pawn, class:Pawn, 
-        moves: pawn_moves, initial: true,
+        moves: pawn_moves, initial: true, update_position: nil,
         position: @cell_e2, color: :W, forward: 1)
       allow(@w_pawn).to receive(:is_a?)
       allow(@w_pawn).to receive(:is_a?).with(Pawn).and_return(true)
@@ -437,13 +438,13 @@ describe Board do
       rook_moves = { top: [], right: [], bot: [], left: [] }
 
       cell_a8 = board_verify.find_cell('a8')
-      @b_rook_1 = instance_double(Rook, is_a?: true,
+      @b_rook_1 = instance_double(Rook, class: Rook, is_a?: true,
         moves: rook_moves, position: cell_a8, color: :B)
       allow(@b_rook_1).to receive(:is_a?).with(Pawn).and_return(false)
       allow(@b_rook_1).to receive(:is_a?).with(King).and_return(false)
       
       cell_b8 = board_verify.find_cell('b8')
-      @b_rook_2 = instance_double(Rook, is_a?: true,
+      @b_rook_2 = instance_double(Rook, class: Rook, is_a?: true,
         moves: rook_moves, position: cell_b8, color: :B)
       allow(@b_rook_2).to receive(:is_a?).with(Pawn).and_return(false)
       allow(@b_rook_2).to receive(:is_a?).with(King).and_return(false)
@@ -469,9 +470,11 @@ describe Board do
         cell_e5 = board_verify.find_cell('e5')
         allow(@b_rook_1).to receive(:position).and_return(cell_e5)
 
-        # Place Enemy Piece on F3
+        # Place Enemy Pawn on F3
         allow(@cell_f3).to receive(:has_enemy?).and_return(true)
-
+        enemy_pawn = instance_double(Pawn, color: :B)
+        allow(enemy_pawn).to receive(:is_killed)
+        allow(@cell_f3).to receive(:piece).and_return(enemy_pawn)
         # Pawn Moves to each Cell of @moves
         @pawn_moves = board_verify.generate_moves(@w_pawn)
         
@@ -493,6 +496,7 @@ describe Board do
       end
       it 'does not allow the Piece to make a move that would put the King into check' do
         pawn_moves = { forward: [@cell_e3], initial: [@cell_e4] }
+        expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
       end
     end
 
