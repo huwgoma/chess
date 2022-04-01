@@ -95,7 +95,7 @@ class Board
 
         keep_cell = piece.is_a?(Pawn) ? keep_pawn_move?(cell, dir, piece) : keep_piece_move?(cell, piece)
         cells << cell if keep_cell
-        break unless cell.empty?
+        break if cell.piece
       end
       piece.moves.delete(dir) if cells.empty?
     end

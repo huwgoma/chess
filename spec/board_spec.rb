@@ -302,6 +302,7 @@ describe Board do
           # Enemy Piece at B7
           allow(@cell_b7).to receive(:empty?).and_return(false)
           allow(@cell_b7).to receive(:has_enemy?).and_return(true)
+          allow(@cell_b7).to receive(:piece).and_return(instance_double(Piece))
 
           top_moves = [@cell_b5, @cell_b6, @cell_b7]
           expect(board_moves.generate_moves(@w_rook_b4)[:top]).to eq(top_moves)
@@ -312,6 +313,7 @@ describe Board do
         it "iterates until that Cell is reached, then stops - Exclusive" do
           # Ally Piece at B7 ; has_enemy? #=> false
           allow(@cell_b7).to receive(:empty?).and_return(false)
+          allow(@cell_b7).to receive(:piece).and_return(instance_double(Piece))
 
           top_moves = [@cell_b5, @cell_b6]
           expect(board_moves.generate_moves(@w_rook_b4)[:top]).to eq(top_moves)
@@ -449,32 +451,32 @@ describe Board do
     # only being protected by the moving Piece
     context "when the King is under no imminent threat" do
       # ie. All generated moves are legal 
-      it "does not modify the Piece's @moves Hash" do
+      xit "does not modify the Piece's @moves Hash" do
         pawn_moves = board_verify.generate_moves(@w_pawn)
         expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
       end
     end
 
     context "when the King is under imminent threat" do
-      it 'does not allow the Piece to make a move that would put the King into check' do
+      xit 'does not allow the Piece to make a move that would put the King into check' do
         
       end
     end
 
     context "when the King is in Check" do
       context "when the King is not also under imminent threat" do
-        it 'allows the Piece to capture the Checking enemy piece' do
+        xit 'allows the Piece to capture the Checking enemy piece' do
           
         end
 
-        it 'allows the Piece to block the Checking enemy piece' do
+        xit 'allows the Piece to block the Checking enemy piece' do
           
         end
       end
 
       context "when the King is also under imminent threat (from another enemy piece)" do
         # If moving the piece would expose the King to Check from another piece
-        it 'does not allow the Piece to move' do
+        xit 'does not allow the Piece to move' do
           
         end
       end
