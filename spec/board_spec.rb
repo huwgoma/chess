@@ -459,7 +459,7 @@ describe Board do
     # only being protected by the moving Piece
     context "when the King is under no imminent threat" do
       # ie. All generated moves are legal 
-      xit "does not modify the Piece's @moves Hash" do
+      it "does not modify the Piece's @moves Hash" do
         pawn_moves = board_verify.generate_moves(@w_pawn)
         expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
       end
@@ -496,7 +496,7 @@ describe Board do
         allow(@cell_e2).to receive_messages(empty?: true, piece: nil)
         allow(@cell_e1).to receive_messages(empty?: false, has_enemy?: true, piece: @w_king)
       end
-      xit 'does not allow the Piece to make a move that would put the King into check' do
+      it 'does not allow the Piece to make a move that would put the King into check' do
         pawn_moves = { forward: [@cell_e3], initial: [@cell_e4] }
         expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
       end
@@ -530,26 +530,35 @@ describe Board do
 
       context "when the King is also under imminent threat (from another enemy piece)" do
         # If moving the piece would expose the King to Check from another piece
-        xit 'does not allow the Piece to move' do
-          
+        before do
+          # Move Rook 1 to Cell A2; Rook 2 to Cell F3
+          cell_a2 = board_verify.find_cell('a2')
+          allow(@b_rook_1).to receive(:position).and_return(cell_a2)
+          allow(cell_a2).to receive(:piece).and_return(@b_rook_1)
+
+          allow(@b_rook_2).to receive(:position).and_return(@cell_f3)
+          allow(@cell_f3).to receive_messages(piece: @b_rook_2, has_enemy?: true)
+
+          # Move the King to Cell F2
+          cell_f2 = board_verify.find_cell('f2')
+          allow(@w_king).to receive(:position).and_return(cell_f2)
+
+          # Pawn Moves
+          board_verify.generate_moves(@w_pawn)
+          allow(@cell_f3).to receive(:has_enemy?).with(:W).and_return(true)
+
+          # Rook Moves 
+          allow(@b_rook_2).to receive_messages(is_killed: nil, update_position: nil, is_revived: nil)
+
+          allow(@cell_e2).to receive(:empty?).and_return(true)
+          allow(cell_f2).to receive_messages(empty?: false, has_enemy?: true)      
+        end
+        it 'does not allow the Piece to move' do
+          pawn_moves = { }
+          expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
         end
       end
     end
-
-
-
-    context "when the Piece's move places the King into check" do
-      it "removes that move from @moves" do
-        
-      end
-    end
-
-    context "when the King is in check" do
-      context "" do
-        
-      end
-    end
-    
   end
 
   # Move Piece - Given a Piece, Start, and End, move the Piece from Start to End Cell
