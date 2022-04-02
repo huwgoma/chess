@@ -97,7 +97,6 @@ class Board
         cells << cell if keep_cell
         break if cell.piece
       end
-      piece.moves.delete(dir) if cells.empty?
     end
   end
 
@@ -129,7 +128,6 @@ class Board
         undo_last_move
         reject_cell
       end
-      piece.moves.delete(dir) if cells.empty?
     end
   end
 

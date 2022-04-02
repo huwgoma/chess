@@ -201,7 +201,7 @@ describe Board do
       # Forward - Move 1 cell forward (D4->D5)
       context "when the Cell in front of the Pawn is empty" do
         it 'moves forward 1 cell' do
-          moves = { forward: [@cell_d5] }
+          moves = { forward: [@cell_d5], initial: [], forward_left: [], forward_right: [] }
           expect(board_moves.generate_moves(@w_pawn_d4)).to eq(moves)
         end
       end
@@ -209,7 +209,7 @@ describe Board do
       # Initial - Move 2 cells forward (D2->D4)
       context "when the 2 Cells in front of the Pawn are empty, and the Pawn has not moved yet" do
         it 'moves forward 2 cells' do
-          moves = { forward: [@cell_d3], initial: [@cell_d4] }
+          moves = { forward: [@cell_d3], initial: [@cell_d4], forward_left:[], forward_right:[] }
           expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
         end
       end
@@ -219,13 +219,13 @@ describe Board do
       context "when the first Cell in front of the Pawn is occupied" do
         it 'cannot move forward' do
           allow(@cell_d5).to receive(:empty?).and_return(false)
-          moves = {}
+          moves = { forward:[], initial:[], forward_left:[], forward_right:[] }
           expect(board_moves.generate_moves(@w_pawn_d4)).to eq(moves)
         end
 
         it 'cannot move forward 2 cells, even if initial move is allowed and empty' do
           allow(@cell_d3).to receive(:empty?).and_return(false)
-          moves = {}
+          moves = { forward:[], initial:[], forward_left:[], forward_right:[] }
           expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
         end
       end
@@ -235,7 +235,7 @@ describe Board do
       context "when the initial Cell is occupied" do
         it 'cannot move forward 2 cells, but CAN move to the first Cell if empty' do
           allow(@cell_d4).to receive(:empty?).and_return(false)
-          moves = { forward: [@cell_d3] }
+          moves = { forward: [@cell_d3], initial:[], forward_left:[], forward_right:[] }
           expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
         end
       end
@@ -250,7 +250,7 @@ describe Board do
           cell_c3 = board_moves.find_cell('c3')
           allow(cell_c3).to receive(:has_enemy?).and_return(true)
   
-          moves = { forward_left: [cell_c3] }
+          moves = { forward: [], initial: [], forward_left: [cell_c3], forward_right:[] }
           expect(board_moves.generate_moves(@w_pawn_d2)).to eq(moves)
         end
       end
@@ -266,7 +266,7 @@ describe Board do
           # Initial
           cell_d5 = board_moves.find_cell('d5')
   
-          moves = { forward: [cell_d6], initial: [cell_d5], forward_left: [cell_c6] }
+          moves = { forward: [cell_d6], initial: [cell_d5], forward_left: [cell_c6], forward_right: [] }
           expect(board_moves.generate_moves(@b_pawn_d7)).to eq(moves)
         end
       end
@@ -459,8 +459,11 @@ describe Board do
     # only being protected by the moving Piece
     context "when the King is under no imminent threat" do
       # ie. All generated moves are legal 
+      before do
+        board_verify.generate_moves(@w_pawn)
+      end
       it "does not modify the Piece's @moves Hash" do
-        pawn_moves = board_verify.generate_moves(@w_pawn)
+        pawn_moves = { forward: [@cell_e3], initial: [@cell_e4], forward_left: [], forward_right: [] }
         expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
       end
     end
@@ -497,7 +500,7 @@ describe Board do
         allow(@cell_e1).to receive_messages(empty?: false, has_enemy?: true, piece: @w_king)
       end
       it 'does not allow the Piece to make a move that would put the King into check' do
-        pawn_moves = { forward: [@cell_e3], initial: [@cell_e4] }
+        pawn_moves = { forward: [@cell_e3], initial: [@cell_e4], forward_left: [], forward_right: [] }
         expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
       end
     end
@@ -523,7 +526,7 @@ describe Board do
           allow(@cell_e3).to receive(:piece).and_return(@w_pawn, nil)
         end
         it 'allows the Piece to capture OR block the Checking enemy piece' do
-          pawn_moves = { forward: [@cell_e3], forward_left: [@cell_d3] }
+          pawn_moves = { forward: [@cell_e3], initial: [], forward_left: [@cell_d3], forward_right: [] }
           expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
         end
       end
@@ -554,7 +557,7 @@ describe Board do
           allow(cell_f2).to receive_messages(empty?: false, has_enemy?: true)      
         end
         it 'does not allow the Piece to move' do
-          pawn_moves = { }
+          pawn_moves = { forward: [], initial: [], forward_left: [], forward_right: [] }
           expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
         end
       end
