@@ -28,7 +28,7 @@ class Game
   end
 
   def set_current_player(color)
-    @current_player = Player.list.find { | player | player.color == color }
+    @current_player = Player.find(color)
   end
 
   def select_color(player)
@@ -43,7 +43,7 @@ class Game
 
   ## Core Game Loop
   def game_loop
-    # select_active_player
+    # select_active_piece
     # pawn = @board.find_cell('e2').piece
     knight = @board.find_cell('b1').piece
     moves = @board.generate_moves(knight)
