@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Game
-  
   def initialize(board = Board.new, current_color = :W)
     @board = board
     @current_color = current_color
@@ -58,5 +57,6 @@ class Game
   def verify_piece_input(input)
 
   end
+  
 end
 
