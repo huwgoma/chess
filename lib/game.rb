@@ -50,5 +50,9 @@ class Game
     binding.pry
     @board.verify_moves(knight)
   end
+
+  def select_active_piece
+
+  end
 end
 

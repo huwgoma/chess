@@ -71,7 +71,6 @@ describe Game do
     context "when given a valid input (either 'B' or 'W')" do
       it 'returns the given input' do
         allow(game_color).to receive(:gets).and_return('W')
-        
         expect(game_color.select_color(name)).to eq(:W)
       end
     end
@@ -79,7 +78,6 @@ describe Game do
     context "when given a lowercase of a valid input" do
       it 'returns the input capitalized' do
         allow(game_color).to receive(:gets).and_return('b')
-
         expect(game_color.select_color(name)).to eq(:B)
       end
     end
@@ -102,8 +100,36 @@ describe Game do
     end
   end
 
-  
   describe '#game_loop' do
     
+  end
+
+  # Collect the current player's input and verify it
+  # If input is valid, set @board's @active_piece to the Piece on the cell
+  # Otherwise, print a warning and recurse
+  describe '#select_active_piece' do
+    before do
+      
+    end
+
+    context "when the current player enters a valid set of coordinates" do
+      it 'asks @board to find the cell corresponding to the input' do
+        
+      end
+
+      it "sets @board's @active_piece to the Piece on that cell" do
+        
+      end
+    end
+
+    context "when the current player enters an invalid input" do
+      it 'calls #to_s on the returned Warning object' do
+        
+      end
+
+      it "#puts the returned string from Warning object's #to_s method" do
+        
+      end
+    end
   end
 end
