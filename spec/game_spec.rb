@@ -132,4 +132,40 @@ describe Game do
       end
     end
   end
+
+  # Verify Input - If the input is not valid (see below), return a Warning object
+  # If the input is valid, return the input
+  describe '#verify_piece_input' do
+    before do
+      
+    end
+
+    context "when the input is valid" do
+      it "returns the input (string)" do
+        
+      end
+    end
+
+    context "when the input is invalid" do
+      context "when the input format is not valid" do
+        it 'returns an InvalidInputFormat object' do
+          
+        end
+      end
+
+      context "when the input coordinates correspond to an invalid cell" do
+        # Cell does not exist, Cell has no Piece, or Cell has an Enemy Piece on it
+        it 'returns an InvalidInputCell object' do
+          
+        end
+      end
+
+      context "when the input coordinates correspond to an invalid piece" do
+        # Piece has no legal moves
+        it 'returns an InvalidInputPiece object' do
+          
+        end 
+      end
+    end
+  end
 end

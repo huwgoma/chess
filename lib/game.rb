@@ -54,5 +54,9 @@ class Game
   def select_active_piece
 
   end
+
+  def verify_piece_input(input)
+
+  end
 end
 
