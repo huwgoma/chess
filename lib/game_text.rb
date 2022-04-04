@@ -22,3 +22,11 @@ To begin, please select one of the following game options:
     HEREDOC
   end
 end
+
+# Utility String Functions
+class String 
+  # Utility Function for shifting a Cell's column string up or down (eg. b->a)
+  def shift(increment = 1)
+    (self.ord + increment).chr
+  end
+end
