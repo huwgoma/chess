@@ -27,7 +27,7 @@ class Game
     end
   end
 
-  def set_current_player(color)
+  def set_current_player(color = @current_color)
     @current_player = Player.find(color)
   end
 
@@ -47,7 +47,7 @@ class Game
     # pawn = @board.find_cell('e2').piece
     knight = @board.find_cell('b1').piece
     moves = @board.generate_moves(knight)
-
+    #binding.pry
     @board.verify_moves(knight)
   end
 
@@ -64,7 +64,8 @@ class Game
   end
 
   def input_cell_valid?(input)
-
+    input_cell = @board.find_cell(input)
+    input_cell&.has_ally?(@current_color) == true
   end
 end
 

@@ -194,7 +194,8 @@ describe Game do
 
   # Valid: Cell exists and has one of the current player's Pieces on it
   describe '#input_cell_valid?' do
-    subject(:game_input_cell) { described_class.new }
+    subject(:game_input_cell) { described_class.new(@board, :W) }
+
     before do
       @board = instance_double(Board)
       @cell = instance_double(Cell)
@@ -203,17 +204,34 @@ describe Game do
     context "when the input is valid" do
       before do
         allow(@board).to receive(:find_cell).and_return(@cell)
-        allow(@cell).to receive(:has_ally?).and_return(true)
+        allow(@cell).to receive(:has_ally?).with(:W).and_return(true)
       end
       it 'returns true' do
-        input = 'a5'
+        input = 'd2'
         expect(game_input_cell.input_cell_valid?(input)).to be true
       end
     end
 
     context "when the input is invalid" do
-      it 'returns false' do
-        
+      context "when the input does not corresponding to an existing cell" do
+        before do
+          allow(@board).to receive(:find_cell).and_return(nil)
+        end
+        it 'returns false' do
+          input = 'a9'
+          expect(game_input_cell.input_cell_valid?(input)).to be false
+        end
+      end
+      
+      context "when the input corresponds to a Cell that does not have an ally piece on it" do
+        before do
+          allow(@board).to receive(:find_cell).and_return(@cell)
+          allow(@cell).to receive(:has_ally?).with(:W).and_return(false)
+        end
+        it 'returns false' do
+          input = 'd7'
+          expect(game_input_cell.input_cell_valid?(input)).to be false
+        end
       end
     end
   end
