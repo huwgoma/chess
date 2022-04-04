@@ -166,4 +166,20 @@ describe Game do
       end
     end
   end
+
+  # Valid: 2 Characters, Alpha-Numeric
+  describe '#input_format_valid?' do
+    subject(:game_input_format) { described_class.new }
+    context "when the input format is a valid 2 digit coordinate" do
+      it 'returns true' do
+        
+      end
+    end
+
+    context "when the input format is invalid" do
+      it 'returns false' do
+        
+      end
+    end
+  end
 end

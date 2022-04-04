@@ -58,5 +58,8 @@ class Game
 
   end
   
+  def input_format_valid?(input)
+
+  end
 end
 
