@@ -2,8 +2,6 @@
 require './lib/game_text.rb'
 
 class Game
-  include GameTextable
-
   def initialize(board = Board.new, current_color = :W)
     @board = board
     @current_color = current_color

@@ -21,6 +21,10 @@ To begin, please select one of the following game options:
   [2]: Continue playing a saved game.
     HEREDOC
   end
+
+  def invalid_input_format_message
+    "Invalid input! Please enter a valid set of alphanumeric coordinates (eg. d2)"
+  end
 end
 
 # Utility String Functions
