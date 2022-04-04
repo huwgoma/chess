@@ -62,5 +62,9 @@ class Game
   def input_format_valid?(input)
     input.length == 2 && input.chars[1].numeric?
   end
+
+  def input_cell_valid?(input)
+
+  end
 end
 

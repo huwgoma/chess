@@ -3,6 +3,7 @@
 require './lib/game'
 require './lib/game_text'
 require './lib/board'
+require './lib/cell'
 require './lib/player'
 
 require 'pry'
@@ -187,6 +188,32 @@ describe Game do
       it 'returns false' do
         input = '5qq'
         expect(game_input_format.input_format_valid?(input)).to be false
+      end
+    end
+  end
+
+  # Valid: Cell exists and has one of the current player's Pieces on it
+  describe '#input_cell_valid?' do
+    subject(:game_input_cell) { described_class.new }
+    before do
+      @board = instance_double(Board)
+      @cell = instance_double(Cell)
+    end
+
+    context "when the input is valid" do
+      before do
+        allow(@board).to receive(:find_cell).and_return(@cell)
+        allow(@cell).to receive(:has_ally?).and_return(true)
+      end
+      it 'returns true' do
+        input = 'a5'
+        expect(game_input_cell.input_cell_valid?(input)).to be true
+      end
+    end
+
+    context "when the input is invalid" do
+      it 'returns false' do
+        
       end
     end
   end
