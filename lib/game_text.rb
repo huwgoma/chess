@@ -25,6 +25,10 @@ To begin, please select one of the following game options:
   def invalid_input_format_message
     "Invalid input! Please enter a valid set of alphanumeric coordinates (eg. d2)"
   end
+
+  def invalid_input_cell_message(current_color)
+    "Invalid input! Please enter a pair of coordinates corresponding to a cell that is currently occupied by a #{current_color} Piece"
+  end
 end
 
 # Utility String Functions
