@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GameTextable
   def tutorial_message
     <<-HEREDOC
