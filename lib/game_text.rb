@@ -29,4 +29,9 @@ class String
   def shift(increment = 1)
     (self.ord + increment).chr
   end
+
+  def numeric?
+    # '0'.ord => 48; '9'.ord => 57
+    self.ord.between?(48, 57)
+  end
 end

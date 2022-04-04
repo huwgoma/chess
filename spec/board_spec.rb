@@ -4,8 +4,6 @@ Dir.glob(('./lib/pieces/*.rb'), &method(:require))
 
 require 'pry'
 
-
-
 describe Board do
   # Test the Board Preparation/Utility Methods first
   context "Board Preparation/Utility Methods" do

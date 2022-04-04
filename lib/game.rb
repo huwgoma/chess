@@ -42,11 +42,13 @@ class Game
 
   ## Core Game Loop
   def game_loop
+    'a'.numeric?
+    '0'.numeric?
     # select_active_piece
     # pawn = @board.find_cell('e2').piece
     knight = @board.find_cell('b1').piece
     moves = @board.generate_moves(knight)
-    binding.pry
+    
     @board.verify_moves(knight)
   end
 
