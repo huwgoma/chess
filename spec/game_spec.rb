@@ -1,8 +1,6 @@
 # frozen_string_literal: true
-require './lib/game'
-require './lib/player'
-require './lib/board'
-require './lib/cell'
+Dir.glob('./lib/*.rb').each { |file| require file unless file.include?('main') }
+Dir.glob(('./lib/pieces/*.rb'), &method(:require))
 
 describe Game do
   before do

@@ -1,13 +1,10 @@
 # frozen_string_literal: true
-require './lib/board'
-require './lib/cell'
-require './lib/pieces/piece'
-require './lib/pieces/pawn'
-require './lib/pieces/rook'
-require './lib/pieces/king'
-require './lib/pieces/piece_factories'
-require './lib/move'
+Dir.glob('./lib/*.rb').each { |file| require file unless file.include?('main') }
+Dir.glob(('./lib/pieces/*.rb'), &method(:require))
+
 require 'pry'
+
+
 
 describe Board do
   # Test the Board Preparation/Utility Methods first

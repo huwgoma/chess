@@ -2,14 +2,6 @@
 require './lib/pieces/piece'
 require './lib/display'
 
-
-class String 
-  # Utility Function for shifting a Cell's column string up or down (eg. b->a)
-  def shift(increment = 1)
-    (self.ord + increment).chr
-  end
-end
-
 class Board
   include Displayable
 
