@@ -1,10 +1,15 @@
 # frozen_string_literal: true
-Dir.glob('./lib/*.rb').each { |file| require file unless file.include?('main') }
-Dir.glob(('./lib/pieces/*.rb'), &method(:require))
+
+require './lib/game'
+require './lib/game_text'
+require './lib/board'
+require './lib/player'
+
+require 'pry'
 
 describe Game do
   before do
-    allow(STDOUT).to receive(:write)
+    #allow(STDOUT).to receive(:write)
   end
 
   describe '#initialize' do
@@ -170,15 +175,18 @@ describe Game do
   # Valid: 2 Characters, Alpha-Numeric
   describe '#input_format_valid?' do
     subject(:game_input_format) { described_class.new }
+
     context "when the input format is a valid 2 digit coordinate" do
       it 'returns true' do
-        
+        input = 'a5'
+        expect(game_input_format.input_format_valid?(input)).to be true
       end
     end
 
     context "when the input format is invalid" do
       it 'returns false' do
-        
+        input = '5qq'
+        expect(game_input_format.input_format_valid?(input)).to be false
       end
     end
   end

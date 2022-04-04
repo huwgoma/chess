@@ -1,6 +1,9 @@
 # frozen_string_literal: true
+require './lib/game_text.rb'
 
 class Game
+  include GameTextable
+
   def initialize(board = Board.new, current_color = :W)
     @board = board
     @current_color = current_color
@@ -42,13 +45,11 @@ class Game
 
   ## Core Game Loop
   def game_loop
-    'a'.numeric?
-    '0'.numeric?
     # select_active_piece
     # pawn = @board.find_cell('e2').piece
     knight = @board.find_cell('b1').piece
     moves = @board.generate_moves(knight)
-    
+
     @board.verify_moves(knight)
   end
 
@@ -61,7 +62,7 @@ class Game
   end
   
   def input_format_valid?(input)
-
+    input.length == 2 && input.chars[1].numeric?
   end
 end
 
