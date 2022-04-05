@@ -55,4 +55,20 @@ describe Piece do
       expect { piece_revive.is_revived }.to change { piece_revive.killed }.to false
     end
   end
+
+  describe '#has_moves?' do
+    subject(:piece_moves) { described_class.new(:W, 'CellA1') }
+    
+    context 'when the Piece has at least one move' do
+      it 'returns true' do
+        binding.pry
+      end  
+    end
+    
+    context "when the Piece has no moves" do
+      it 'returns false' do
+        
+      end
+    end
+  end
 end
