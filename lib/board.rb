@@ -53,7 +53,7 @@ class Board
 
   # Utility function for finding any cell on the board given a set of coordinates
   def find_cell(coords)
-    column, row = coords.split('')
+    column, row = coords.downcase.split('')
     column_cells = @columns[column]
     row_cells = @rows[row.to_i]
     
@@ -69,6 +69,11 @@ class Board
       hash.has_key?(color) ? hash[color] << cell.piece : hash[color] = [cell.piece]
       hash
     end
+  end
+
+  # Update @active_piece to the given Piece
+  def set_active_piece(piece)
+    @active_piece = piece
   end
 
   # Generate Legal Moves - Generate the given Piece's legal moves

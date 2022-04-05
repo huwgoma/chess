@@ -135,6 +135,15 @@ describe Board do
         expect(board_living_pieces.set_living_pieces).to eq(living_pieces)
       end
     end
+
+    # Set @active_piece - Given a Piece, set the board's @active piece to that Piece
+    describe '#set_active_piece' do
+      subject(:board_active) { described_class.new }
+      it "updates @active_piece to the given piece" do
+        piece = instance_double(Piece)
+        expect { board_active.set_active_piece(piece) }.to change { board_active.active_piece }.to(piece)
+      end
+    end
   end
 
   before do
