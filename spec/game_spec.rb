@@ -113,17 +113,34 @@ describe Game do
   # If input is valid, set @board's @active_piece to the Piece on the cell
   # Otherwise, print a warning and recurse
   describe '#select_active_piece' do
+    subject(:game_select_piece) { described_class.new(@board) }
     before do
+      @board = instance_double(Board)
+      @cell = instance_double(Cell)
+      @piece = instance_double(Piece)
       
+      @player_1 = instance_double(Player, name: 'Lei', color: :W)
+      game_select_piece.instance_variable_set(:@current_player, @player_1)
     end
 
     context "when the current player enters a valid set of coordinates" do
+      before do
+        allow(@board).to receive_messages(find_cell: @cell, generate_legal_moves: nil, set_active_piece: nil)
+        allow(@cell).to receive_messages(has_ally?: true, piece: @piece)
+        allow(@piece).to receive_messages(has_moves?: true)
+
+        allow(game_select_piece).to receive(:gets).and_return('d2')
+      end
+
       it 'asks @board to find the cell corresponding to the input' do
-        
+        # find_cell called twice in verify_piece_input
+        expect(@board).to receive(:find_cell).exactly(3).times
+        game_select_piece.select_active_piece
       end
 
       it "sets @board's @active_piece to the Piece on that cell" do
-        
+        expect(@board).to receive(:set_active_piece).with(@piece)
+        game_select_piece.select_active_piece
       end
     end
 

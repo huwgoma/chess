@@ -43,16 +43,19 @@ class Game
 
   ## Core Game Loop
   def game_loop
-    # select_active_piece
+    select_active_piece
     # pawn = @board.find_cell('e2').piece
-    knight = @board.find_cell('b1').piece
-    moves = @board.generate_moves(knight)
-    binding.pry
-    @board.verify_moves(knight)
+    #knight = @board.find_cell('b1').piece
+    #moves = @board.generate_moves(knight)
+    #binding.pry
+    #@board.verify_moves(knight)
   end
 
   def select_active_piece
-
+    puts "#{@current_player.name}, please enter the coordinates of the piece you want to move:"
+    input = verify_piece_input(gets.chomp)
+    piece = @board.find_cell(input).piece
+    @board.set_active_piece(piece)
   end
 
   def verify_piece_input(input)
