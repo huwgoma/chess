@@ -56,7 +56,10 @@ class Game
   end
 
   def verify_piece_input(input)
-
+    return InvalidInputFormat.new unless input_format_valid?(input)
+    return InvalidInputCell.new(@current_color) unless input_cell_valid?(input)
+    return InvalidInputPiece.new unless input_piece_valid?(input)
+    input
   end
   
   def input_format_valid?(input)

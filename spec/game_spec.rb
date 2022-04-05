@@ -5,6 +5,7 @@ require './lib/game_text'
 require './lib/board'
 require './lib/cell'
 require './lib/player'
+require './lib/warnings'
 
 require 'pry'
 
@@ -140,35 +141,90 @@ describe Game do
   # Verify Input - If the input is not valid (see below), return a Warning object
   # If the input is valid, return the input
   describe '#verify_piece_input' do
+    subject(:game_verify_piece) { described_class.new(@board) }
     before do
-      
+      @board = instance_double(Board)
+      allow(@board).to receive(:generate_legal_moves)
+      @cell = instance_double(Cell)
+      @piece = instance_double(Piece)
     end
 
     context "when the input is valid" do
+      before do
+        allow(@board).to receive(:find_cell).and_return(@cell)
+        allow(@cell).to receive(:has_ally?).and_return(true)
+        allow(@cell).to receive(:piece).and_return(@piece)
+        allow(@piece).to receive(:has_moves?).and_return(true)
+      end
+
       it "returns the input (string)" do
-        
+        input = 'd2'
+        expect(game_verify_piece.verify_piece_input(input)).to eq(input)
       end
     end
 
     context "when the input is invalid" do
+      # Invalid = Not a 2-digit alphanumeric coordinate
       context "when the input format is not valid" do
-        it 'returns an InvalidInputFormat object' do
-          
+        before do
+          @warning = instance_double(InvalidInputFormat)
+          @invalid_input_format = class_double(InvalidInputFormat, new: @warning).as_stubbed_const
+        end
+
+        it 'sends #new to InvalidInputFormat' do
+          input = 'd22'
+          expect(@invalid_input_format).to receive(:new)
+          game_verify_piece.verify_piece_input(input)
+        end
+
+        it 'returns the InvalidInputFormat object' do
+          input = 'd22'
+          expect(game_verify_piece.verify_piece_input(input)).to eq(@warning)
         end
       end
 
+      # Invalid = Cell does not exist, Cell has no Piece, or Cell has an Enemy Piece on it
       context "when the input coordinates correspond to an invalid cell" do
-        # Cell does not exist, Cell has no Piece, or Cell has an Enemy Piece on it
-        it 'returns an InvalidInputCell object' do
-          
+        before do
+          @warning = instance_double(InvalidInputCell)
+          @invalid_input_cell = class_double(InvalidInputCell, new: @warning).as_stubbed_const
+          # Cell is nil
+          allow(@board).to receive(:find_cell).and_return(nil)
+        end
+        
+        it 'sends #new to InvalidInputCell' do
+          input = 'a9'
+          expect(@invalid_input_cell).to receive(:new)
+          game_verify_piece.verify_piece_input(input)
+        end
+
+        it 'returns the InvalidInputCell object' do
+          input = 'a9'
+          expect(game_verify_piece.verify_piece_input(input)).to eq(@warning)
         end
       end
 
+      # Invalid = Piece has no legal moves
       context "when the input coordinates correspond to an invalid piece" do
-        # Piece has no legal moves
-        it 'returns an InvalidInputPiece object' do
+        before do
+          allow(@board).to receive(:find_cell).and_return(@cell)
+          allow(@cell).to receive_messages(has_ally?: true, piece: @piece)
           
+          allow(@piece).to receive(:has_moves?).and_return(false)
+          @warning = instance_double(InvalidInputPiece)
+          @invalid_input_piece = class_double(InvalidInputPiece, new: @warning).as_stubbed_const
+        end
+
+        it 'sends #new to InvalidInputPiece' do
+          input = 'd1'
+          expect(@invalid_input_piece).to receive(:new)
+          game_verify_piece.verify_piece_input(input)
         end 
+
+        it 'returns the InvalidInputPiece object' do
+          input = 'd1'
+          expect(game_verify_piece.verify_piece_input(input)).to eq(@warning)
+        end
       end
     end
   end
