@@ -235,4 +235,26 @@ describe Game do
       end
     end
   end
+
+  # Valid: Input Piece has at least one legal move
+  describe '#input_piece_valid?' do
+    subject(:game_input_piece) { described_class.new(@board) }
+
+    context "when the input Piece has at least one legal move" do
+      before do
+        @piece = instance_double(Piece, has_moves?: true)
+        @cell = instance_double(Cell, piece: @piece)
+        @board = instance_double(Board, find_cell: @cell)
+      end
+      it 'returns true' do
+        
+      end
+    end
+
+    context "when the input Piece has no legal moves" do
+      it 'returns false' do
+        
+      end
+    end
+  end
 end

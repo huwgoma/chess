@@ -67,5 +67,9 @@ class Game
     input_cell = @board.find_cell(input)
     input_cell&.has_ally?(@current_color) == true
   end
+
+  def input_piece_valid?(input)
+
+  end
 end
 
