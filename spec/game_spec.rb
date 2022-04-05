@@ -118,6 +118,8 @@ describe Game do
       @board = instance_double(Board)
       @cell = instance_double(Cell)
       @piece = instance_double(Piece)
+
+      allow(game_select_piece).to receive(:puts)
       
       @player_1 = instance_double(Player, name: 'Lei', color: :W)
       game_select_piece.instance_variable_set(:@current_player, @player_1)
@@ -144,13 +146,30 @@ describe Game do
       end
     end
 
-    context "when the current player enters an invalid input" do
+    context "when an invalid input is given once, followed by a valid input" do
+      before do
+        @warning = instance_double(InvalidInputFormat, is_a?: true)
+        allow(@warning).to receive(:is_a?).with(InputWarning).and_return(true)
+        @string = "Invalid input! Please enter a valid set of alphanumeric coordinates (eg. d2)"
+        allow(@warning).to receive(:to_s).and_return(@string)
+
+        @invalid_input_format = class_double(InvalidInputFormat, new: @warning).as_stubbed_const
+      
+        allow(game_select_piece).to receive(:gets).and_return('d22', 'd2')
+        # Second, valid loop
+        allow(@board).to receive_messages(find_cell: @cell, generate_legal_moves: nil, set_active_piece: nil)
+        allow(@cell).to receive_messages(has_ally?: true, piece: @piece)
+        allow(@piece).to receive_messages(has_moves?: true)
+      end
+
       it 'calls #to_s on the returned Warning object' do
-        
+        expect(@warning).to receive(:to_s).once
+        game_select_piece.select_active_piece
       end
 
       it "#puts the returned string from Warning object's #to_s method" do
-        
+        expect(game_select_piece).to receive(:puts).with(@string)
+        game_select_piece.select_active_piece
       end
     end
   end
