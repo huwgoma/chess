@@ -71,6 +71,12 @@ class Board
     end
   end
 
+  # Generate Legal Moves - Generate the given Piece's legal moves
+  def generate_legal_moves(piece)
+    generate_moves(piece)
+    verify_moves(piece)
+  end
+
   # Generate Moves - Given a Piece, generate its possible moves
   # - Does not account for the King's safety
   def generate_moves(piece)

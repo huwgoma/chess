@@ -69,7 +69,9 @@ class Game
   end
 
   def input_piece_valid?(input)
-
+    input_piece = @board.find_cell(input).piece
+    @board.generate_legal_moves(input_piece)
+    input_piece.has_moves?
   end
 end
 
