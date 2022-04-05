@@ -29,6 +29,10 @@ To begin, please select one of the following game options:
   def invalid_input_cell_message(current_color)
     "Invalid input! Please enter a pair of coordinates corresponding to a cell that is currently occupied by a #{current_color} Piece"
   end
+
+  def invalid_input_piece_message
+    "Invalid input! That piece does not have any legal moves it can make."
+  end
 end
 
 # Utility String Functions

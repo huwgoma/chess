@@ -20,3 +20,9 @@ class InvalidInputCell < InputWarning
     invalid_input_cell_message(@current_color)
   end
 end
+
+class InvalidInputPiece < InputWarning
+  def to_s
+    invalid_input_piece_message
+  end
+end
