@@ -44,6 +44,7 @@ class Game
   ## Core Game Loop
   def game_loop
     select_active_piece
+    # @board.display_active_moves
     # pawn = @board.find_cell('e2').piece
     #knight = @board.find_cell('b1').piece
     #moves = @board.generate_moves(knight)

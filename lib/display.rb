@@ -35,7 +35,7 @@ module Displayable
 
     print_order.each_with_index do | cell, index |
       print "\n\t #{cell.row} " if (index % 8).zero?
-      string = set_string(cell.piece)
+      string = set_string(cell)
       background = set_background(cell)
       print "\u001b[#{background};1m #{string} \u001b[0m"
     end
@@ -49,7 +49,9 @@ module Displayable
     Hash[@rows.to_a.reverse].values.flatten
   end
 
-  def set_string(piece)
+  def set_string(cell)
+    piece = cell.piece
+    
     case piece.class.to_s
     when 'Pawn'
       piece.color == :W ? '♟': '♙'
@@ -73,5 +75,9 @@ module Displayable
     # Default Backgrounds 
     # Even cells - Black (40); Odd cells - White (47)
     (cell.row + cell.column.ord).even? ? 40 : 47
+  end
+
+  def display_active_moves
+
   end
 end
