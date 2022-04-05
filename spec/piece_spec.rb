@@ -57,17 +57,26 @@ describe Piece do
   end
 
   describe '#has_moves?' do
-    subject(:piece_moves) { described_class.new(:W, 'CellA1') }
+    subject(:piece_moves) { described_class.new(:W, 'CellA2') }
     
     context 'when the Piece has at least one move' do
+      before do
+        @moves = { forward: ['CellA3'], initial: ['CellA4'], forward_left: [], forward_right: [] }
+        piece_moves.instance_variable_set(:@moves, @moves)
+      end
       it 'returns true' do
-        binding.pry
+        expect(piece_moves.has_moves?).to be true
       end  
     end
     
     context "when the Piece has no moves" do
+      before do
+        @moves = { forward: [], initial: [], forward_left: [], forward_right: [] }
+        piece_moves.instance_variable_set(:@moves, @moves)
+      end
+
       it 'returns false' do
-        
+        expect(piece_moves.has_moves?).to be false
       end
     end
   end

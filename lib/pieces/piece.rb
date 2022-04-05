@@ -54,4 +54,8 @@ class Piece
   def is_revived
     @killed = false
   end
+
+  def has_moves?
+    @moves.values.flatten.any?
+  end
 end
