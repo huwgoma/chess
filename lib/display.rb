@@ -65,8 +65,9 @@ module Displayable
       piece.color == :W ? '♛': '♕'
     when 'King'
       piece.color == :W ? '♚': '♔'
-    else
+    else # Piece is nil
       # piece.cell is in @active_piece's legal moves AND piece is nil? #=> ●
+      binding.pry
       ' '
     end
   end
@@ -75,9 +76,5 @@ module Displayable
     # Default Backgrounds 
     # Even cells - Black (40); Odd cells - White (47)
     (cell.row + cell.column.ord).even? ? 40 : 47
-  end
-
-  def display_active_moves
-
   end
 end

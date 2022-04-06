@@ -46,12 +46,27 @@ describe '#print_board' do
       end
     end
   
-    context "when the cell's @piece is nil (no piece)" do
-      it "returns an empty string ('')" do
-        allow(@cell_a2).to receive(:piece).and_return(nil)
-        expect(set_string(@cell_a2)).to eq(' ')
+    # If Piece is nil (Cell empty)
+    context "when the Piece is nil" do
+      context "when piece_selected is set to true AND the Cell is in @active_piece's @moves" do
+        it 'returns ● to symbolize a potential move' do
+          
+        end
+      end
+
+      context "when piece_selected is set to false" do
+        it "returns an empty string('')" do
+          
+        end
       end
     end
+
+    # context "when the cell's @piece is nil (no piece)" do
+    #   it "returns an empty string ('')" do
+    #     allow(@cell_a2).to receive(:piece).and_return(nil)
+    #     expect(set_string(@cell_a2)).to eq(' ')
+    #   end
+    # end
   end
   
   # Calculate and return the BG Color for the current Cell
