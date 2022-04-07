@@ -3,7 +3,7 @@
 class Move
   @@stack = []
 
-  attr_reader :killed
+  attr_reader :killed, :start, :end
 
   def initialize(start_cell, end_cell, piece, killed_piece)
     @start = start_cell
@@ -19,6 +19,10 @@ class Move
 
   def self.pop
     @@stack.pop
+  end
+
+  def self.last
+    @@stack[@@stack.length - 1]
   end
 
   # Revert the changes made to Cell/Piece states by the move
