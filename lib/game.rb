@@ -104,5 +104,9 @@ class Game
     # If input is not a valid format, return invalidinputformat
     # If input is not included in the active piece's moves, return invalidinputmove
   end
+
+  def input_move_valid?(input)
+
+  end
 end
 

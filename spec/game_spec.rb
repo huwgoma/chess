@@ -401,4 +401,19 @@ describe Game do
       end
     end
   end
+
+  # Valid: Input Cell is included within @active_piece's @moves
+  describe '#input_move_valid?' do
+    context "when the input Cell is included in the @active_piece's @moves" do
+      it 'returns true' do
+        
+      end
+    end
+
+    context "when the input Cell is not included in @active_piece's @moves" do
+      it 'returns false' do
+        
+      end
+    end
+  end
 end
