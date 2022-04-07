@@ -49,7 +49,7 @@ module Displayable
     Hash[@rows.to_a.reverse].values.flatten
   end
 
-  def set_string(cell)
+  def set_string(cell, piece_selected = false)
     piece = cell.piece
     
     case piece.class.to_s
@@ -66,9 +66,11 @@ module Displayable
     when 'King'
       piece.color == :W ? '♚': '♔'
     else # Piece is nil
-      # piece.cell is in @active_piece's legal moves AND piece is nil? #=> ●
-      binding.pry
-      ' '
+      if piece_selected && @active_piece.moves.values.flatten.include?(cell)
+        '●'
+      else
+        ' '
+      end
     end
   end
 

@@ -48,15 +48,26 @@ describe '#print_board' do
   
     # If Piece is nil (Cell empty)
     context "when the Piece is nil" do
+      subject(:board_set_string) { Board.new }
+
       context "when piece_selected is set to true AND the Cell is in @active_piece's @moves" do
+        before do
+          allow(@cell_a2).to receive(:piece).and_return(nil)
+          active_moves = { forward: [@cell_a2], initial: [], forward_left: [], forward_right: [@cell_b2] }
+          active_piece = instance_double(Pawn, position: @cell_a1, moves: active_moves)
+          board_set_string.instance_variable_set(:@active_piece, active_piece)
+        end
+
         it 'returns ● to symbolize a potential move' do
-          
+          piece_selected = true
+          expect(board_set_string.set_string(@cell_a2, piece_selected)).to eq('●')
         end
       end
 
       context "when piece_selected is set to false" do
-        it "returns an empty string('')" do
-          
+        it "returns an empty string(' ')" do
+          allow(@cell_b2).to receive(:piece).and_return(nil)
+          expect(set_string(@cell_b2)).to eq(' ')
         end
       end
     end
