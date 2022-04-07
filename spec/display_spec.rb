@@ -82,6 +82,48 @@ describe '#print_board' do
   
   # Calculate and return the BG Color for the current Cell
   describe '#set_background' do
+    subject(:board_set_bg) { Board.new }
+
+    # Highlight the Active Piece
+    context "when piece_selected is true and the cell is the @active_piece's cell" do
+      it 'returns 46 (Cyan)' do
+        
+      end
+    end
+
+    # Highlight Potential Captures
+    context "when piece_selected is true, the cell is included in @active_piece's @moves, and the cell has a piece" do
+      it 'returns 41 (Red)' do
+        
+      end
+    end
+
+    # Highlight the Last Move
+    context "when the cell is equal to the previous move's @end_cell" do
+      it 'returns 44 (Blue)' do
+        
+      end
+
+      # If the last cell is also a potential capture of the current turn's 
+      # @active_piece, prioritize highlighting Red over highlighting Blue
+      context "if the last move is a potential capture of the current @active_piece" do
+        it 'returns 41 (Red)' do
+          
+        end
+      end
+    end
+
+    # Default Black/White Backgrounds
+    context "if none of the above are true" do
+      it 'returns 40(Black) for even cells' do
+        
+      end
+
+      it 'returns 47(White) for odd cells' do
+        
+      end
+    end
+
     context 'for the default Black or White backgrounds' do
       it "returns 40 (Black) when the cell's @row + @column = EVEN" do
         expect(set_background(@cell_a1)).to eq(40)

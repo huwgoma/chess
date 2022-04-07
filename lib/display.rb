@@ -27,7 +27,8 @@ class String
 end
 
 module Displayable
-  def print_board
+  def print_board(piece_selected = false, last_cell = nil)
+    binding.pry
     # Clear the terminal every time the board is printed
     system 'clear'
 
@@ -35,7 +36,7 @@ module Displayable
 
     print_order.each_with_index do | cell, index |
       print "\n\t #{cell.row} " if (index % 8).zero?
-      string = set_string(cell)
+      string = set_string(cell, piece_selected)
       background = set_background(cell)
       print "\u001b[#{background};1m #{string} \u001b[0m"
     end
@@ -49,7 +50,7 @@ module Displayable
     Hash[@rows.to_a.reverse].values.flatten
   end
 
-  def set_string(cell, piece_selected = false)
+  def set_string(cell, piece_selected)
     piece = cell.piece
     
     case piece.class.to_s
