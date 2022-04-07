@@ -84,12 +84,14 @@ describe '#print_board' do
   describe '#set_bg' do
     subject(:board_set_bg) { Board.new }
 
+    before do
+      active_moves = { forward: [@cell_a2], initial: [], forward_left: [], forward_right: [@cell_b2] }
+      @active_piece = instance_double(Piece, position: @cell_a1, moves: active_moves)  
+      board_set_bg.instance_variable_set(:@active_piece, @active_piece)
+    end
+
     # Highlight the Active Piece
     context "when piece_selected is true and the cell is the @active_piece's cell" do
-      before do
-        active_piece = instance_double(Piece, position: @cell_a1)
-        board_set_bg.instance_variable_set(:@active_piece, active_piece)
-      end
       it 'returns 46 (Cyan)' do
         piece_selected = true
         expect(board_set_bg.set_bg(@cell_a1, piece_selected)).to eq(46)
@@ -99,10 +101,6 @@ describe '#print_board' do
     # Highlight Potential Captures
     context "when piece_selected is true, the cell is included in @active_piece's @moves, and the cell has a piece" do
       before do
-        active_moves = { forward: [@cell_a2], initial: [], forward_left: [], forward_right: [@cell_b2] }
-        active_piece = instance_double(Piece, position: @cell_a1, moves: active_moves)
-        board_set_bg.instance_variable_set(:@active_piece, active_piece)
-
         allow(@cell_b2).to receive(:piece).and_return(instance_double(Piece))
       end
       it 'returns 41 (Red)' do
