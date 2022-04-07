@@ -32,14 +32,14 @@ describe '#print_board' do
   # Calculate and return the string for the current cell (Piece or Blank)
   describe '#set_string' do
     context 'for the default Piece icons' do
-      it "returns ♟ (Black Pawn) when the cell's @piece is a Black Pawn" do
+      xit "returns ♟ (Black Pawn) when the cell's @piece is a Black Pawn" do
         pawn_a2 = instance_double(Pawn, class: Pawn, position: @cell_a2, color: :B)
         allow(@cell_a2).to receive(:piece).and_return(pawn_a2)
   
         expect(set_string(@cell_a2)).to eq('♙')
       end
   
-      it "returns ♙.white (White Pawn) when the @piece is a White Pawn" do
+      xit "returns ♙.white (White Pawn) when the @piece is a White Pawn" do
         pawn_b2 = instance_double(Pawn, class: Pawn, position: @cell_b2, color: :W)
         allow(@cell_b2).to receive(:piece).and_return(pawn_b2)
         expect(set_string(@cell_b2)).to eq('♟')
@@ -58,14 +58,14 @@ describe '#print_board' do
           board_set_string.instance_variable_set(:@active_piece, active_piece)
         end
 
-        it 'returns ● to symbolize a potential move' do
+        xit 'returns ● to symbolize a potential move' do
           piece_selected = true
           expect(board_set_string.set_string(@cell_a2, piece_selected)).to eq('●')
         end
       end
 
       context "when piece_selected is set to false" do
-        it "returns an empty string(' ')" do
+        xit "returns an empty string(' ')" do
           allow(@cell_b2).to receive(:piece).and_return(nil)
           expect(set_string(@cell_b2)).to eq(' ')
         end
@@ -81,20 +81,33 @@ describe '#print_board' do
   end
   
   # Calculate and return the BG Color for the current Cell
-  describe '#set_background' do
+  describe '#set_bg' do
     subject(:board_set_bg) { Board.new }
 
     # Highlight the Active Piece
     context "when piece_selected is true and the cell is the @active_piece's cell" do
+      before do
+        active_piece = instance_double(Piece, position: @cell_a1)
+        board_set_bg.instance_variable_set(:@active_piece, active_piece)
+      end
       it 'returns 46 (Cyan)' do
-        
+        piece_selected = true
+        expect(board_set_bg.set_bg(@cell_a1, piece_selected)).to eq(46)
       end
     end
 
     # Highlight Potential Captures
     context "when piece_selected is true, the cell is included in @active_piece's @moves, and the cell has a piece" do
+      before do
+        active_moves = { forward: [@cell_a2], initial: [], forward_left: [], forward_right: [@cell_b2] }
+        active_piece = instance_double(Piece, position: @cell_a1, moves: active_moves)
+        board_set_bg.instance_variable_set(:@active_piece, active_piece)
+
+        allow(@cell_b2).to receive(:piece).and_return(instance_double(Piece))
+      end
       it 'returns 41 (Red)' do
-        
+        piece_selected = true
+        expect(board_set_bg.set_bg(@cell_b2, piece_selected)).to eq(41)
       end
     end
 
@@ -125,11 +138,11 @@ describe '#print_board' do
     end
 
     context 'for the default Black or White backgrounds' do
-      it "returns 40 (Black) when the cell's @row + @column = EVEN" do
+      xit "returns 40 (Black) when the cell's @row + @column = EVEN" do
         expect(set_background(@cell_a1)).to eq(40)
       end
 
-      it "returns 47(White) when the cell @row+@column is ODD" do
+      xit "returns 47(White) when the cell @row+@column is ODD" do
         expect(set_background(@cell_a2)).to eq(47)
       end
     end
