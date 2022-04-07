@@ -358,4 +358,21 @@ describe Game do
       end
     end
   end
+
+  # Collect the current player's input and verify it
+  # If input is valid, carry out the Move
+  # Otherwise, print a warning and recurse
+  describe '#select_active_move' do
+    context "when the input cell is valid" do
+      it 'returns the destination cell' do
+        
+      end
+    end
+
+    context "when the input cell is invalid once, then valid" do
+      it 'puts out the warning message' do
+        
+      end
+    end
+  end
 end

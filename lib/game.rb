@@ -48,6 +48,7 @@ class Game
     # piece_selected? => true || active_piece => @board.active_piece
     @board.print_board(true)
     
+    # select_active_move
     # pawn = @board.find_cell('e2').piece
     #knight = @board.find_cell('b1').piece
     #moves = @board.generate_moves(knight)
@@ -55,6 +56,7 @@ class Game
     #@board.verify_moves(knight)
   end
 
+  # Select the Active Piece (Piece to be Moved)
   def select_active_piece
     puts "#{@current_player.name}, please enter the coordinates of the piece you want to move:"
     input = verify_piece_input(gets.chomp)
@@ -87,6 +89,15 @@ class Game
     input_piece = @board.find_cell(input).piece
     @board.generate_legal_moves(input_piece)
     input_piece.has_moves?
+  end
+
+  # Select the Active Move (Cell to be moved to (by the Active Piece))
+  def select_active_move
+    puts "#{@current_player.name}, please enter the coordinates of the cell you want to move to:"
+    input = #verify_move_input(gets.chomp)
+    # If Input is invalid (warning), #to_s, then recurse
+    # else:
+    # 
   end
 end
 
