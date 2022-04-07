@@ -174,7 +174,7 @@ describe Game do
     end
   end
 
-  # Verify Input - If the input is not valid (see below), return a Warning object
+  # If the input is not valid (see below), return a Warning object
   # If the input is valid, return the input
   describe '#verify_piece_input' do
     subject(:game_verify_piece) { described_class.new(@board) }
@@ -372,6 +372,32 @@ describe Game do
     context "when the input cell is invalid once, then valid" do
       it 'puts out the warning message' do
         
+      end
+    end
+  end
+
+  # If the input is not valid (see below), return a Warning object
+  # If the input is valid, return the inputted CELL
+  describe '#verify_move_input' do
+    context "when the input cell is valid" do
+      it 'returns the Cell corresponding to the input' do
+        
+      end
+    end
+
+    context "when the input is invalid" do
+      # Invalid: Not a 2 digit alphanumeric coordinate
+      context "when the input format is invalid" do
+        it 'returns an InvalidInputFormat object' do
+          
+        end
+      end
+
+      # Invalid: Not a Cell that the @active_piece can move to
+      context "when the input corresponds to a Cell that is not in the @active_piece's @moves" do
+        it 'returns an InvalidInputMove object' do
+          
+        end
       end
     end
   end
