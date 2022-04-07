@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'pry'
+require './lib/move'
 
 class String
 
@@ -27,8 +28,7 @@ class String
 end
 
 module Displayable
-  def print_board(piece_selected = false, last_cell = nil)
-    binding.pry
+  def print_board(piece_selected = false)
     # Clear the terminal every time the board is printed
     system 'clear'
 
@@ -37,8 +37,8 @@ module Displayable
     print_order.each_with_index do | cell, index |
       print "\n\t #{cell.row} " if (index % 8).zero?
       string = set_string(cell, piece_selected)
-      background = set_background(cell)
-      print "\u001b[#{background};1m #{string} \u001b[0m"
+      bg = set_bg(cell, piece_selected)
+      print "\u001b[#{bg};1m #{string} \u001b[0m"
     end
     
     print "\n\t   "
@@ -75,9 +75,17 @@ module Displayable
     end
   end
 
-  def set_background(cell)
-    # Default Backgrounds 
-    # Even cells - Black (40); Odd cells - White (47)
-    (cell.row + cell.column.ord).even? ? 40 : 47
+  def set_bg(cell, piece_selected, last_cell = Move.last&.end)
+    case 
+    when piece_selected && cell == @active_piece.position
+      46 # Cyan
+    when piece_selected && @active_piece.moves.values.flatten.include?(cell) && cell.piece
+      41 # Red
+    when cell == last_cell
+      44 # Blue
+    else
+      # Black or White
+      (cell.row + cell.column.ord).even? ? 40 : 47
+    end
   end
 end

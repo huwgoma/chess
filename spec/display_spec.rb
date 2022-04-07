@@ -76,56 +76,77 @@ describe '#print_board' do
   end
   
   # Calculate and return the BG Color for the current Cell
-  describe '#set_background' do
+  describe '#set_bg' do
     subject(:board_set_bg) { Board.new }
+
+    before do
+      # Active Piece
+      active_moves = { forward: [@cell_a2], initial: [], forward_left: [], forward_right: [@cell_b2] }
+      @active_piece = instance_double(Piece, position: @cell_a1, moves: active_moves)  
+      board_set_bg.instance_variable_set(:@active_piece, @active_piece)
+      # Last Move
+      @move = class_double(Move, last: nil).as_stubbed_const
+    end
 
     # Highlight the Active Piece
     context "when piece_selected is true and the cell is the @active_piece's cell" do
       it 'returns 46 (Cyan)' do
-        
+        piece_selected = true
+        expect(board_set_bg.set_bg(@cell_a1, piece_selected)).to eq(46)
       end
     end
 
     # Highlight Potential Captures
     context "when piece_selected is true, the cell is included in @active_piece's @moves, and the cell has a piece" do
+      before do
+        allow(@cell_b2).to receive(:piece).and_return(instance_double(Piece))
+      end
       it 'returns 41 (Red)' do
-        
+        piece_selected = true
+        expect(board_set_bg.set_bg(@cell_b2, piece_selected)).to eq(41)
       end
     end
 
     # Highlight the Last Move
     context "when the cell is equal to the previous move's @end_cell" do
       it 'returns 44 (Blue)' do
-        
+        # Last Move: Enemy Piece moved to Cell B1
+        last_move = instance_double(Move, end: @cell_b1)
+        allow(@move).to receive(:last).and_return(last_move)
+
+        piece_selected = true
+        expect(board_set_bg.set_bg(@cell_b1, piece_selected)).to eq(44)
       end
 
       # If the last cell is also a potential capture of the current turn's 
       # @active_piece, prioritize highlighting Red over highlighting Blue
       context "if the last move is a potential capture of the current @active_piece" do
+        before do
+          # Last Move: Enemy Piece moved to Cell B2
+          last_move = instance_double(Move, end: @cell_b2)
+          allow(@move).to receive(:last).and_return(last_move)
+          allow(@cell_b2).to receive(:piece).and_return(instance_double(Piece))
+        end
         it 'returns 41 (Red)' do
-          
+          piece_selected = true
+          expect(board_set_bg.set_bg(@cell_b2, piece_selected)).to eq(41)
         end
       end
     end
 
     # Default Black/White Backgrounds
     context "if none of the above are true" do
+      before do
+        @piece_selected = false
+      end
       it 'returns 40(Black) for even cells' do
-        
+        # A(97) + 1 => Even
+        expect(board_set_bg.set_bg(@cell_a1, @piece_selected)).to eq(40)
       end
 
       it 'returns 47(White) for odd cells' do
-        
-      end
-    end
-
-    context 'for the default Black or White backgrounds' do
-      it "returns 40 (Black) when the cell's @row + @column = EVEN" do
-        expect(set_background(@cell_a1)).to eq(40)
-      end
-
-      it "returns 47(White) when the cell @row+@column is ODD" do
-        expect(set_background(@cell_a2)).to eq(47)
+        # B(98) + 1 => Odd
+        expect(board_set_bg.set_bg(@cell_b1, @piece_selected)).to eq(47)
       end
     end
   end
