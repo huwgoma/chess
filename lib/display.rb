@@ -76,15 +76,15 @@ module Displayable
   end
 
   def set_bg(cell, piece_selected, last_cell = Move.last&.end)
-    #binding.pry
     case 
     when piece_selected && cell == @active_piece.position
       46
     when piece_selected && @active_piece.moves.values.flatten.include?(cell) && cell.piece
       41
+    when cell == last_cell
+      44
+    else
+      (cell.row + cell.column.ord).even? ? 40 : 47
     end
-    # Default Backgrounds 
-    # Even cells - Black (40); Odd cells - White (47)
-    #(cell.row + cell.column.ord).even? ? 40 : 47
   end
 end

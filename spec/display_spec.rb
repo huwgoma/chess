@@ -32,14 +32,14 @@ describe '#print_board' do
   # Calculate and return the string for the current cell (Piece or Blank)
   describe '#set_string' do
     context 'for the default Piece icons' do
-      xit "returns ♟ (Black Pawn) when the cell's @piece is a Black Pawn" do
+      it "returns ♟ (Black Pawn) when the cell's @piece is a Black Pawn" do
         pawn_a2 = instance_double(Pawn, class: Pawn, position: @cell_a2, color: :B)
         allow(@cell_a2).to receive(:piece).and_return(pawn_a2)
   
         expect(set_string(@cell_a2)).to eq('♙')
       end
   
-      xit "returns ♙.white (White Pawn) when the @piece is a White Pawn" do
+      it "returns ♙.white (White Pawn) when the @piece is a White Pawn" do
         pawn_b2 = instance_double(Pawn, class: Pawn, position: @cell_b2, color: :W)
         allow(@cell_b2).to receive(:piece).and_return(pawn_b2)
         expect(set_string(@cell_b2)).to eq('♟')
@@ -58,14 +58,14 @@ describe '#print_board' do
           board_set_string.instance_variable_set(:@active_piece, active_piece)
         end
 
-        xit 'returns ● to symbolize a potential move' do
+        it 'returns ● to symbolize a potential move' do
           piece_selected = true
           expect(board_set_string.set_string(@cell_a2, piece_selected)).to eq('●')
         end
       end
 
       context "when piece_selected is set to false" do
-        xit "returns an empty string(' ')" do
+        it "returns an empty string(' ')" do
           allow(@cell_b2).to receive(:piece).and_return(nil)
           expect(set_string(@cell_b2)).to eq(' ')
         end
@@ -85,9 +85,12 @@ describe '#print_board' do
     subject(:board_set_bg) { Board.new }
 
     before do
+      # Active Piece
       active_moves = { forward: [@cell_a2], initial: [], forward_left: [], forward_right: [@cell_b2] }
       @active_piece = instance_double(Piece, position: @cell_a1, moves: active_moves)  
       board_set_bg.instance_variable_set(:@active_piece, @active_piece)
+      # Last Move
+      @move = class_double(Move, last: nil).as_stubbed_const
     end
 
     # Highlight the Active Piece
@@ -112,36 +115,43 @@ describe '#print_board' do
     # Highlight the Last Move
     context "when the cell is equal to the previous move's @end_cell" do
       it 'returns 44 (Blue)' do
-        
+        # Last Move: Enemy Piece moved to Cell B1
+        last_move = instance_double(Move, end: @cell_b1)
+        allow(@move).to receive(:last).and_return(last_move)
+
+        piece_selected = true
+        expect(board_set_bg.set_bg(@cell_b1, piece_selected)).to eq(44)
       end
 
       # If the last cell is also a potential capture of the current turn's 
       # @active_piece, prioritize highlighting Red over highlighting Blue
       context "if the last move is a potential capture of the current @active_piece" do
+        before do
+          # Last Move: Enemy Piece moved to Cell B2
+          last_move = instance_double(Move, end: @cell_b2)
+          allow(@move).to receive(:last).and_return(last_move)
+          allow(@cell_b2).to receive(:piece).and_return(instance_double(Piece))
+        end
         it 'returns 41 (Red)' do
-          
+          piece_selected = true
+          expect(board_set_bg.set_bg(@cell_b2, piece_selected)).to eq(41)
         end
       end
     end
 
     # Default Black/White Backgrounds
     context "if none of the above are true" do
+      before do
+        @piece_selected = false
+      end
       it 'returns 40(Black) for even cells' do
-        
+        # A(97) + 1 => Even
+        expect(board_set_bg.set_bg(@cell_a1, @piece_selected)).to eq(40)
       end
 
       it 'returns 47(White) for odd cells' do
-        
-      end
-    end
-
-    context 'for the default Black or White backgrounds' do
-      xit "returns 40 (Black) when the cell's @row + @column = EVEN" do
-        expect(set_background(@cell_a1)).to eq(40)
-      end
-
-      xit "returns 47(White) when the cell @row+@column is ODD" do
-        expect(set_background(@cell_a2)).to eq(47)
+        # B(98) + 1 => Odd
+        expect(board_set_bg.set_bg(@cell_b1, @piece_selected)).to eq(47)
       end
     end
   end
