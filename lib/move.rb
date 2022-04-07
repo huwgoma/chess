@@ -21,6 +21,10 @@ class Move
     @@stack.pop
   end
 
+  def self.last
+    @@stack[@@stack.length - 1]
+  end
+
   # Revert the changes made to Cell/Piece states by the move
   def undo
     @piece.update_position(@start)

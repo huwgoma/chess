@@ -14,6 +14,7 @@ describe Move do
     @move_2 = described_class.new('d7', 'd3', 'BRook', 'WPawn')
     @stack = [@move_1, @move_2]
   end
+
   # Contains an array of Move objects - First in, Last out
   describe '::stack' do
     it "returns Move's @@stack class variable" do
@@ -31,6 +32,13 @@ describe Move do
     it 'returns the popped move' do
       expect(Move.pop).to eq(@move_2)
     end
+  end
+
+  # Last - Returns the last Move (without removing it)
+  describe '::last' do
+    it 'returns the last move in the @@stack' do
+      expect(Move.last).to eq(@move_2)
+    end  
   end
 
   # Undo - Revert the changes made to Cell@piece and Piece@position
