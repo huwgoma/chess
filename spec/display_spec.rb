@@ -35,14 +35,15 @@ describe '#print_board' do
       it "returns ♟ (Black Pawn) when the cell's @piece is a Black Pawn" do
         pawn_a2 = instance_double(Pawn, class: Pawn, position: @cell_a2, color: :B)
         allow(@cell_a2).to receive(:piece).and_return(pawn_a2)
-  
-        expect(set_string(@cell_a2)).to eq('♙')
+        piece_selected = false
+        expect(set_string(@cell_a2, piece_selected)).to eq('♙')
       end
   
       it "returns ♙.white (White Pawn) when the @piece is a White Pawn" do
         pawn_b2 = instance_double(Pawn, class: Pawn, position: @cell_b2, color: :W)
         allow(@cell_b2).to receive(:piece).and_return(pawn_b2)
-        expect(set_string(@cell_b2)).to eq('♟')
+        piece_selected = false
+        expect(set_string(@cell_b2, piece_selected)).to eq('♟')
       end
     end
   
@@ -67,17 +68,11 @@ describe '#print_board' do
       context "when piece_selected is set to false" do
         it "returns an empty string(' ')" do
           allow(@cell_b2).to receive(:piece).and_return(nil)
-          expect(set_string(@cell_b2)).to eq(' ')
+          piece_selected = false
+          expect(set_string(@cell_b2, piece_selected)).to eq(' ')
         end
       end
     end
-
-    # context "when the cell's @piece is nil (no piece)" do
-    #   it "returns an empty string ('')" do
-    #     allow(@cell_a2).to receive(:piece).and_return(nil)
-    #     expect(set_string(@cell_a2)).to eq(' ')
-    #   end
-    # end
   end
   
   # Calculate and return the BG Color for the current Cell
