@@ -152,7 +152,10 @@ class Board
   # King in Checkmate? - Check if the given color's King is in Checkmate
   # True if none of the [color]'s Pieces have any legal moves
   def king_in_checkmate?(king_color)
-
+    @living_pieces[king_color].none? do | piece |
+      moves = generate_legal_moves(piece)
+      moves.values.flatten.any?
+    end
   end
 
   # Given a Color, find and return that color's King's cell

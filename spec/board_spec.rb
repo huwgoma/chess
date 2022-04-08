@@ -696,17 +696,18 @@ describe Board do
         position: @cell_a8, moves: king_moves, update_position: nil)
       allow(@b_king).to receive(:is_a?).with(Pawn).and_return(false)
       
-      # White Rook at C7
-      @cell_c7 = board_checkmate.find_cell('c7')
-      @w_rook_2 = instance_double(Rook, class: Rook, is_a?: true, color: :W,
-        position: @cell_c7, moves: rook_moves)
+      # White Rook at C8
+      rook_moves = { top:[], right:[], bot:[], left:[] }
+
+      @cell_c8 = board_checkmate.find_cell('c8')
+      @w_rook_1 = instance_double(Rook, class: Rook, is_a?: true, color: :W,
+        position: @cell_c8, moves: rook_moves)
       allow(@w_rook_1).to receive(:is_a?).with(Pawn).and_return(false)
       allow(@w_rook_1).to receive(:is_a?).with(King).and_return(false)
 
       # White Rook at D7
-      rook_moves = { top:[], right:[], bot:[], left:[] }
       @cell_d7 = board_checkmate.find_cell('d7')
-      @w_rook_1 = instance_double(Rook, class: Rook, is_a?: true, color: :W,
+      @w_rook_2 = instance_double(Rook, class: Rook, is_a?: true, color: :W,
         position: @cell_d7, moves: rook_moves)
       allow(@w_rook_2).to receive(:is_a?).with(Pawn).and_return(false)
       allow(@w_rook_2).to receive(:is_a?).with(King).and_return(false)
@@ -735,7 +736,7 @@ describe Board do
     # Checkmate - when none of the living Pieces of that color have any legal moves
     context 'when the Black King is in Checkmate' do
       it 'returns true' do
-        
+        expect(board_checkmate.king_in_checkmate?(:B)).to be true
       end
     end
 
