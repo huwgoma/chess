@@ -29,6 +29,6 @@ end
 
 class InvalidInputMove < InputWarning
   def to_s
-
+    invalid_input_move_message
   end
 end

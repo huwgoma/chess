@@ -45,9 +45,9 @@ class Game
   def game_loop
     select_active_piece
 
-    # piece_selected? => true || active_piece => @board.active_piece
+    # piece_selected? => true (or...) active_piece => @board.active_piece
     @board.print_board(true)
-    
+    end_cell = select_active_move
     # select_active_move
     # pawn = @board.find_cell('e2').piece
     #knight = @board.find_cell('b1').piece
@@ -94,11 +94,13 @@ class Game
   # Select the Active Move (Cell to be moved to (by the Active Piece))
   def select_active_move
     puts "#{@current_player.name}, please enter the coordinates of the cell you want to move to:"
-    #input = #verify_move_input(gets.chomp)
-    # If Input is invalid (warning), #to_s, then recurse
-    # else:
-    #input_cell = @board.find_cell(input)
-    # 
+    input = verify_move_input(gets.chomp)
+    if input.is_a?(InputWarning)
+      puts input.to_s
+      select_active_move
+    else
+      @board.find_cell(input)
+    end
   end
 
   def verify_move_input(input)
@@ -112,4 +114,3 @@ class Game
     @board.active_piece.moves.values.flatten.include?(input_cell)
   end
 end
-

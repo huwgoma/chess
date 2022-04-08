@@ -363,15 +363,55 @@ describe Game do
   # If input is valid, return the Cell to move to
   # Otherwise, print a warning and recurse
   describe '#select_active_move' do
+    subject(:game_select_move) { described_class.new(@board) }
+    before do
+      @cell_a2 = instance_double(Cell, 'a2')
+      @cell_b2 = instance_double(Cell, 'b2')
+      @cell_b1 = instance_double(Cell, 'b1')
+
+      moves = { forward: [@cell_a2], initial: [], forward_left: [], forward_right: [@cell_b2] } 
+      @active_piece = instance_double(Piece, 'A1', moves: moves)
+      @board = instance_double(Board, active_piece: @active_piece)
+
+      player = instance_double(Player, name: 'Lei')
+      game_select_move.instance_variable_set(:@current_player, player)
+      allow(game_select_move).to receive(:puts)
+    end
+
     context "when the input cell is valid" do
+      before do
+        allow(game_select_move).to receive(:gets).and_return('a2')
+        allow(@board).to receive_messages(find_cell: @cell_a2, active_piece: @active_piece)
+      end
       it 'returns the destination cell' do
-        
+        expect(game_select_move.select_active_move).to eq(@cell_a2)
       end
     end
 
-    context "when the input cell is invalid once, then valid" do
-      it 'puts out the warning message' do
+    context "when the input cell is invalid twice, then valid" do
+      before do
+        allow(game_select_move).to receive(:gets).and_return('a22', 'b1', 'a2')
+        allow(@board).to receive(:find_cell).and_return(@cell_b1, @cell_a2)
+        # is_a?(InputWarning) => True
+        @invalid_format_string = "Invalid input! Please enter a valid set of alphanumeric coordinates (eg. d2)"
+        @format_warning = instance_double(InvalidInputFormat, is_a?: true, to_s: @invalid_format_string)
+        @invalid_input_format = class_double(InvalidInputFormat, new: @format_warning).as_stubbed_const
         
+        @invalid_move_string = "Invalid input! The selected piece cannot move to that cell."
+        @move_warning = instance_double(InvalidInputMove, is_a?: true, to_s: @invalid_move_string)
+        @invalid_input_move = class_double(InvalidInputMove, new: @move_warning).as_stubbed_const
+      end
+      
+      it 'calls #to_s on the returned Warning objects' do
+        expect(@format_warning).to receive(:to_s).once
+        expect(@move_warning).to receive(:to_s).once
+        game_select_move.select_active_move
+      end
+
+      it "#puts the returned string from the Warning objects' #to_s methods" do
+        expect(game_select_move).to receive(:puts).with(@invalid_format_string).once
+        expect(game_select_move).to receive(:puts).with(@invalid_move_string).once
+        game_select_move.select_active_move
       end
     end
   end
