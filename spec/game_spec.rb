@@ -379,6 +379,7 @@ describe Game do
   # If the input is not valid (see below), return a Warning object
   # If the input is valid, return the inputted CELL
   describe '#verify_move_input' do
+    subject(:game_verify_move) { described_class.new }
     context "when the input cell is valid" do
       it 'returns the Cell corresponding to the input' do
         
@@ -388,13 +389,22 @@ describe Game do
     context "when the input is invalid" do
       # Invalid: Not a 2 digit alphanumeric coordinate
       context "when the input format is invalid" do
+        before do
+          @warning = instance_double(InvalidInputFormat)
+          @invalid_input_format = class_double(InvalidInputFormat, new: @warning).as_stubbed_const
+        end
+
         it 'returns an InvalidInputFormat object' do
-          
+          input = 'd22'
+          expect(game_verify_move.verify_move_input(input)).to eq(@warning)
         end
       end
 
       # Invalid: Not a Cell that the @active_piece can move to
       context "when the input corresponds to a Cell that is not in the @active_piece's @moves" do
+        before do
+          
+        end
         it 'returns an InvalidInputMove object' do
           
         end
@@ -404,7 +414,7 @@ describe Game do
 
   # Valid: Input Cell is included within @active_piece's @moves
   describe '#input_move_valid?' do
-    subject(:game_input_move) { described_class.new }
+    subject(:game_input_move) { described_class.new(@board) }
     
     before do
       @cell_a2 = instance_double(Cell, 'a2')
@@ -415,7 +425,7 @@ describe Game do
       active_piece = instance_double(Piece, moves: moves)
       
       @board = instance_double(Board, active_piece: active_piece)
-      game_input_move.instance_variable_set(:@board, @board)
+      #game_input_move.instance_variable_set(:@board, @board)
     end
     
     context "when the input Cell is included in the @active_piece's @moves" do
