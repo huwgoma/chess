@@ -404,15 +404,33 @@ describe Game do
 
   # Valid: Input Cell is included within @active_piece's @moves
   describe '#input_move_valid?' do
+    subject(:game_input_move) { described_class.new }
+    
+    before do
+      @cell_a2 = instance_double(Cell, 'a2')
+      @cell_b2 = instance_double(Cell, 'b2')
+      @cell_b1 = instance_double(Cell, 'b1')
+
+      moves = { forward: [@cell_a2], initial: [], forward_left: [], forward_right: [@cell_b2] } 
+      active_piece = instance_double(Piece, moves: moves)
+      
+      @board = instance_double(Board, active_piece: active_piece)
+      game_input_move.instance_variable_set(:@board, @board)
+    end
+    
     context "when the input Cell is included in the @active_piece's @moves" do
       it 'returns true' do
-        
+        input = 'b2'
+        allow(@board).to receive(:find_cell).and_return(@cell_b2)
+        expect(game_input_move.input_move_valid?(input)).to be true
       end
     end
 
     context "when the input Cell is not included in @active_piece's @moves" do
       it 'returns false' do
-        
+        input = 'b1'
+        allow(@board).to receive(:find_cell).and_return(@cell_b1)
+        expect(game_input_move.input_move_valid?(input)).to be false
       end
     end
   end
