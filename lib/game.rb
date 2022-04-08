@@ -48,12 +48,8 @@ class Game
     # piece_selected? => true (or...) active_piece => @board.active_piece
     @board.print_board(true)
     end_cell = select_active_move
-    # select_active_move
-    # pawn = @board.find_cell('e2').piece
-    #knight = @board.find_cell('b1').piece
-    #moves = @board.generate_moves(knight)
-    #binding.pry
-    #@board.verify_moves(knight)
+    @board.move_piece(end_cell)
+    @board.print_board(false)
   end
 
   # Select the Active Piece (Piece to be Moved)
