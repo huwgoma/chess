@@ -10,11 +10,10 @@ class Game
   def play_game
     create_players
     set_current_player(@current_color)
-
     @board.prepare_board
     @board.print_board
-    
     game_loop
+    # game end
   end
 
   ## Game Setup
@@ -44,12 +43,15 @@ class Game
   ## Core Game Loop
   def game_loop
     select_active_piece
-
     # piece_selected? => true (or...) active_piece => @board.active_piece
     @board.print_board(true)
     end_cell = select_active_move
     @board.move_piece(end_cell)
     @board.print_board(false)
+    # if king in check? 
+    #   king_in_checkmate? ? break : print king_check_warning 
+    # end
+    # switch_current_player and switch current color
   end
 
   # Select the Active Piece (Piece to be Moved)
@@ -109,4 +111,6 @@ class Game
     input_cell = @board.find_cell(input)
     @board.active_piece.moves.values.flatten.include?(input_cell)
   end
+
+  
 end
