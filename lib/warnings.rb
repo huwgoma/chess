@@ -26,3 +26,9 @@ class InvalidInputPiece < InputWarning
     invalid_input_piece_message
   end
 end
+
+class InvalidInputMove < InputWarning
+  def to_s
+
+  end
+end

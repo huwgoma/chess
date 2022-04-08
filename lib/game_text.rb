@@ -33,6 +33,10 @@ To begin, please select one of the following game options:
   def invalid_input_piece_message
     "Invalid input! That piece does not have any legal moves it can make."
   end
+
+  def invalid_input_move_message
+    "Invalid input! The selected piece cannot move to that cell."
+  end
 end
 
 # Utility String Functions

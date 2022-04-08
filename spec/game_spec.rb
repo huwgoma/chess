@@ -360,7 +360,7 @@ describe Game do
   end
 
   # Collect the current player's input and verify it
-  # If input is valid, carry out the Move
+  # If input is valid, return the Cell to move to
   # Otherwise, print a warning and recurse
   describe '#select_active_move' do
     context "when the input cell is valid" do
@@ -377,12 +377,26 @@ describe Game do
   end
 
   # If the input is not valid (see below), return a Warning object
-  # If the input is valid, return the inputted CELL
+  # If the input is valid, return the input
   describe '#verify_move_input' do
-    subject(:game_verify_move) { described_class.new }
+    subject(:game_verify_move) { described_class.new(@board) }
+    
+    before do
+      @cell_a2 = instance_double(Cell, 'a2')
+      @cell_b2 = instance_double(Cell, 'b2')
+      @cell_b1 = instance_double(Cell, 'b1')
+
+      moves = { forward: [@cell_a2], initial: [], forward_left: [], forward_right: [@cell_b2] } 
+      active_piece = instance_double(Piece, moves: moves)
+      
+      @board = instance_double(Board, active_piece: active_piece)
+    end
+
     context "when the input cell is valid" do
-      it 'returns the Cell corresponding to the input' do
-        
+      it 'returns the input' do
+        input = 'b2'
+        allow(@board).to receive(:find_cell).and_return(@cell_b2)
+        expect(game_verify_move.verify_move_input(input)).to eq(input)
       end
     end
 
@@ -403,10 +417,13 @@ describe Game do
       # Invalid: Not a Cell that the @active_piece can move to
       context "when the input corresponds to a Cell that is not in the @active_piece's @moves" do
         before do
-          
+          @warning = instance_double(InvalidInputMove)
+          @invalid_input_move = class_double(InvalidInputMove, new: @warning).as_stubbed_const
+          allow(@board).to receive(:find_cell).and_return(@cell_b1)
         end
         it 'returns an InvalidInputMove object' do
-          
+          input = 'b1'
+          expect(game_verify_move.verify_move_input(input)).to eq(@warning)
         end
       end
     end
@@ -425,7 +442,6 @@ describe Game do
       active_piece = instance_double(Piece, moves: moves)
       
       @board = instance_double(Board, active_piece: active_piece)
-      #game_input_move.instance_variable_set(:@board, @board)
     end
     
     context "when the input Cell is included in the @active_piece's @moves" do

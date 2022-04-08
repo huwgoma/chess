@@ -94,16 +94,17 @@ class Game
   # Select the Active Move (Cell to be moved to (by the Active Piece))
   def select_active_move
     puts "#{@current_player.name}, please enter the coordinates of the cell you want to move to:"
-    #input_cell = #verify_move_input(gets.chomp)
+    #input = #verify_move_input(gets.chomp)
     # If Input is invalid (warning), #to_s, then recurse
     # else:
+    #input_cell = @board.find_cell(input)
     # 
   end
 
   def verify_move_input(input)
     return InvalidInputFormat.new unless input_format_valid?(input)
-    # If input is not a valid format, return invalidinputformat
-    # If input is not included in the active piece's moves, return invalidinputmove
+    return InvalidInputMove.new unless input_move_valid?(input)
+    input
   end
 
   def input_move_valid?(input)
