@@ -134,7 +134,7 @@ class Board
     end
   end
 
-  # King in Check? - Given a Color, check if that Color's King is in danger (Check)
+  # King in Check? - Check if the given color's King is in danger (Check)
   def king_in_check?(king_color)
     king_cell = find_king_cell(king_color)
     enemy_color = king_color == :W ? :B : :W
@@ -147,6 +147,12 @@ class Board
         enemy_move == king_cell
       end
     end
+  end
+
+  # King in Checkmate? - Check if the given color's King is in Checkmate
+  # True if none of the [color]'s Pieces have any legal moves
+  def king_in_checkmate?(king_color)
+
   end
 
   # Given a Color, find and return that color's King's cell

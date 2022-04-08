@@ -684,6 +684,74 @@ describe Board do
     end
   end
 
+  # King in Checkmate - Given a color, check if that color's King is in checkmate
+  describe '#king_in_checkmate?' do
+    subject(:board_checkmate) { described_class.new }
+
+    before do
+      # Black King at A8
+      king_moves = { top:[], top_right:[], right:[], bot_right:[], bot:[], bot_left:[], left:[], top_left:[] }
+      @cell_a8 = board_checkmate.find_cell('a8')
+      @b_king = instance_double(King, class: King, is_a?: true, color: :B,
+        position: @cell_a8, moves: king_moves, update_position: nil)
+      allow(@b_king).to receive(:is_a?).with(Pawn).and_return(false)
+      
+      # White Rook at C7
+      @cell_c7 = board_checkmate.find_cell('c7')
+      @w_rook_2 = instance_double(Rook, class: Rook, is_a?: true, color: :W,
+        position: @cell_c7, moves: rook_moves)
+      allow(@w_rook_1).to receive(:is_a?).with(Pawn).and_return(false)
+      allow(@w_rook_1).to receive(:is_a?).with(King).and_return(false)
+
+      # White Rook at D7
+      rook_moves = { top:[], right:[], bot:[], left:[] }
+      @cell_d7 = board_checkmate.find_cell('d7')
+      @w_rook_1 = instance_double(Rook, class: Rook, is_a?: true, color: :W,
+        position: @cell_d7, moves: rook_moves)
+      allow(@w_rook_2).to receive(:is_a?).with(Pawn).and_return(false)
+      allow(@w_rook_2).to receive(:is_a?).with(King).and_return(false)
+
+      # Generate Black King Moves
+      cell_b8 = board_checkmate.find_cell('b8')
+      cell_b7 = board_checkmate.find_cell('b7')
+      cell_a7 = board_checkmate.find_cell('a7')
+
+      # Verify Black King Moves
+      # B8:
+      allow(cell_b8).to receive(:empty?).and_return(true, false)
+      allow(cell_b8).to receive(:has_enemy?).with(:W).and_return(true)
+      # B7:
+      allow(cell_b7).to receive(:empty?).and_return(true, false, true)
+      allow(cell_b7).to receive(:has_enemy?).with(:W).and_return(true)
+      # A7:
+      allow(cell_a7).to receive(:empty?).and_return(true, false)
+      allow(cell_a7).to receive(:has_enemy?).with(:W).and_return(true)
+
+      # Living Pieces
+      @living_pieces = { W: [@w_rook_1, @w_rook_2], B: [@b_king] }
+      board_checkmate.instance_variable_set(:@living_pieces, @living_pieces)
+    end
+
+    # Checkmate - when none of the living Pieces of that color have any legal moves
+    context 'when the Black King is in Checkmate' do
+      it 'returns true' do
+        
+      end
+    end
+
+    # Add a Black Rook that can block the Checkmate
+    context 'when the Black King is not in Checkmate' do
+      it 'returns false' do
+        
+      end
+    end
+  end
+
+
+
+
+
+
   # Find King Cell - Given a Color, find+return that Color's King's Cell
   describe '#find_king_cell' do
     subject(:board_find_king) { described_class.new }
