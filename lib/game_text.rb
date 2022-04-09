@@ -45,6 +45,14 @@ To begin, please select one of the following game options:
   def king_checkmate_message(king_color)
     "#{king_color.to_string}'s King is in checkmate! #{@current_player.name} wins!"
   end
+
+  def replay_game_message
+    "Would you like to play again [P] or quit [Q]?"
+  end
+
+  def invalid_replay_input_warning
+    "Invalid input! Please enter P (play again) or Q (quit)."
+  end
 end
 
 # Utility String Methods

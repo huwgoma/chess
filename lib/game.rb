@@ -15,7 +15,7 @@ class Game
     @board.prepare_board
     @board.print_board
     game_loop
-    puts king_checkmate_message(@current_color.opposite)
+    game_end
   end
 
   ## Game Setup
@@ -35,9 +35,7 @@ class Game
   def select_color(player)
     puts "#{player}, would you like to play as [B] Black or [W] White?"
     input = gets.chomp.upcase
-
     return input.to_sym if ['B', 'W'].include?(input)
-
     puts 'Please enter [B] for Black or [W] for White!'
     select_color(player)
   end
@@ -97,7 +95,6 @@ class Game
 
   def input_piece_valid?(input)
     input_piece = @board.find_cell(input).piece
-    
     @board.generate_legal_moves(input_piece)
     input_piece.has_moves?
   end
@@ -123,5 +120,23 @@ class Game
   def input_move_valid?(input)
     input_cell = @board.find_cell(input)
     @board.active_piece.moves.values.flatten.include?(input_cell)
+  end
+
+  # End of Game
+  def game_end
+    puts king_checkmate_message(@current_color.opposite)
+    puts replay_game_message
+    replay?
+  end
+
+  def replay?
+    loop do
+      input = gets.chomp
+      unless ['P', 'Q'].include?(input.upcase)
+        puts invalid_replay_input_warning
+        next
+      end
+      break input.upcase == 'P'
+    end
   end
 end
