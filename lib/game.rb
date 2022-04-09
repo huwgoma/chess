@@ -61,10 +61,9 @@ class Game
         @board.king_in_checkmate?(enemy_color) ? break : puts(king_check_warning(enemy_color))
       end
 
-      
-    # switch_current_player and switch current color
+      switch_current_color(enemy_color)
+      set_current_player(enemy_color)
     end
-    
   end
 
   # Select the Active Piece (Piece to be Moved)
