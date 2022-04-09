@@ -2,6 +2,8 @@
 require './lib/game_text.rb'
 
 class Game
+  include GameTextable
+
   def initialize(board = Board.new, current_color = :W)
     @board = board
     @current_color = current_color
@@ -42,16 +44,25 @@ class Game
 
   ## Core Game Loop
   def game_loop
-    select_active_piece
-    # piece_selected? => true (or...) active_piece => @board.active_piece
-    @board.print_board(true)
-    end_cell = select_active_move
-    @board.move_piece(end_cell)
-    @board.print_board(false)
+    loop do
+      select_active_piece
+      # piece_selected? => true (or...) active_piece => @board.active_piece
+      @board.print_board(true)
+      end_cell = select_active_move
+      @board.move_piece(end_cell)
+      @board.print_board(false)
+
+      enemy_color = @current_color == :W ? :B : :W
+      if @board.king_in_check?(enemy_color)
+        @board.king_in_checkmate?(enemy_color) ? break : puts(king_check_warning(enemy_color))
+      end
+      #binding.pry
     # if king in check? 
     #   king_in_checkmate? ? break : print king_check_warning 
     # end
     # switch_current_player and switch current color
+    end
+    
   end
 
   # Select the Active Piece (Piece to be Moved)
@@ -111,6 +122,4 @@ class Game
     input_cell = @board.find_cell(input)
     @board.active_piece.moves.values.flatten.include?(input_cell)
   end
-
-  
 end

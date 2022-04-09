@@ -37,6 +37,10 @@ To begin, please select one of the following game options:
   def invalid_input_move_message
     "Invalid input! The selected piece cannot move to that cell."
   end
+
+  def king_check_warning(king_color)
+    "Warning! The #{king_color == :W ? 'White' : 'Black'} King is currently under Check!"
+  end
 end
 
 # Utility String Functions
