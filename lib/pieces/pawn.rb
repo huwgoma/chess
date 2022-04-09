@@ -14,8 +14,16 @@ class Pawn < Piece
 
   def initialize(color, cell)
     super
-    @forward = @color.white? ? 1 : -1 
-    # Initial advance is allowed
+    @forward = @color.white? ? 1 : -1
+    # 2-Space Leap is allowed 
+    @initial_position = cell
     @initial = true
+  end
+
+  def update_position(cell)
+    super
+    # If the Pawn is being moved (back) to its @initial_position, set @initial to true; 
+    # otherwise, @initial = false
+    @initial = cell == @initial_position
   end
 end
