@@ -41,6 +41,10 @@ To begin, please select one of the following game options:
   def king_check_warning(king_color)
     "Warning! The #{king_color.to_string} King is currently under Check!"
   end
+
+  def king_checkmate_message(king_color)
+    "#{king_color.to_string}'s King is in checkmate! #{@current_player.name} wins!"
+  end
 end
 
 # Utility String Methods

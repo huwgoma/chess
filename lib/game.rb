@@ -15,7 +15,7 @@ class Game
     @board.prepare_board
     @board.print_board
     game_loop
-    # game end
+    puts king_checkmate_message(@current_color.opposite)
   end
 
   ## Game Setup
@@ -50,7 +50,7 @@ class Game
   def game_loop
     loop do
       select_active_piece
-      # piece_selected? => true (or...) active_piece => @board.active_piece
+      # piece_selected? => true
       @board.print_board(true)
       end_cell = select_active_move
       @board.move_piece(end_cell)
