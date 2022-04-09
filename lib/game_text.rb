@@ -65,4 +65,9 @@ class Symbol
   def opposite
     self.white? ? :B : :W
   end
+
+  # Convert :W/:B to 'White'/'Black'
+  def to_string
+    self.white? ? 'White' : 'Black'
+  end
 end

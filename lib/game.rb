@@ -14,7 +14,6 @@ class Game
     set_current_player(@current_color)
     @board.prepare_board
     @board.print_board
-    binding.pry
     game_loop
     # game end
   end
