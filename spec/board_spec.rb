@@ -96,8 +96,13 @@ describe Board do
       end
   
       context 'when given an invalid out of bounds coordinate' do
-        it 'returns nil' do
-          coords = 'h9'
+        it 'returns nil when the column is out of bounds' do
+          coords = 'c1'
+          expect(board_find.find_cell(coords)).to be nil
+        end
+
+        it 'returns nil when the row is out of bounds' do
+          coords = 'a10'
           expect(board_find.find_cell(coords)).to be nil
         end
       end

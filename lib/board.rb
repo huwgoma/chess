@@ -53,7 +53,7 @@ class Board
 
   # Utility function for finding any cell on the board given a set of coordinates
   def find_cell(coords)
-    column, row = coords.downcase.split('')
+    column, row = coords.downcase.split('', 2)
     column_cells = @columns[column]
     row_cells = @rows[row.to_i]
     
