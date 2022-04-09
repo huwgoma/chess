@@ -42,6 +42,10 @@ class Game
     select_color(player)
   end
 
+  def switch_current_color(next_color)
+    @current_color = next_color
+  end
+
   ## Core Game Loop
   def game_loop
     loop do
@@ -56,10 +60,8 @@ class Game
       if @board.king_in_check?(enemy_color)
         @board.king_in_checkmate?(enemy_color) ? break : puts(king_check_warning(enemy_color))
       end
-      #binding.pry
-    # if king in check? 
-    #   king_in_checkmate? ? break : print king_check_warning 
-    # end
+
+      
     # switch_current_player and switch current color
     end
     

@@ -105,6 +105,14 @@ describe Game do
     end
   end
 
+  describe '#switch_current_color' do
+    subject(:game_switch_color) { described_class.new }
+    it 'changes @current_color to the given color' do
+      game_switch_color.switch_current_color(:B)
+      expect(game_switch_color.instance_variable_get(:@current_color)).to eq(:B)
+    end  
+  end
+
   describe '#game_loop' do
     
   end
