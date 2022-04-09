@@ -56,9 +56,13 @@ class String
   end
 end
 
-# Utility Symbol Methods
+# Utility Symbol Methods for Color Symbols (:W/:B)
 class Symbol
   def white?
     self == :W
+  end
+
+  def opposite
+    self.white? ? :B : :W
   end
 end
