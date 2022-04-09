@@ -43,7 +43,7 @@ To begin, please select one of the following game options:
   end
 end
 
-# Utility String Functions
+# Utility String Methods
 class String 
   # Utility Function for shifting a Cell's column string up or down (eg. b->a)
   def shift(increment = 1)
@@ -53,5 +53,12 @@ class String
   def numeric?
     # '0'.ord => 48; '9'.ord => 57
     self.ord.between?(48, 57)
+  end
+end
+
+# Utility Symbol Methods
+class Symbol
+  def white?
+    self == :W
   end
 end
