@@ -9,7 +9,7 @@ class Game
     @current_color = current_color
   end
 
-  def play_game
+  def play
     create_players
     set_current_player(@current_color)
     @board.prepare_board
@@ -124,12 +124,11 @@ class Game
 
   # End of Game
   def game_end
-    puts king_checkmate_message(@current_color.opposite)
+    puts king_checkmate_message(@current_color.opposite) #if king was checkmated; what about resign?
     puts replay_game_message
-    replay?
   end
 
-  def replay?
+  def play_again?
     loop do
       input = gets.chomp
       unless ['P', 'Q'].include?(input.upcase)
