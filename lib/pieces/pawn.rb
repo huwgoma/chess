@@ -14,7 +14,7 @@ class Pawn < Piece
 
   def initialize(color, cell)
     super
-    @forward = @color == :W ? 1 : -1 
+    @forward = @color.white? ? 1 : -1 
     # Initial advance is allowed
     @initial = true
   end

@@ -56,7 +56,7 @@ class Game
       @board.move_piece(end_cell)
       @board.print_board(false)
 
-      enemy_color = @current_color == :W ? :B : :W
+      enemy_color = @current_color.opposite
       if @board.king_in_check?(enemy_color)
         @board.king_in_checkmate?(enemy_color) ? break : puts(king_check_warning(enemy_color))
       end

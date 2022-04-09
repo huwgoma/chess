@@ -39,7 +39,7 @@ To begin, please select one of the following game options:
   end
 
   def king_check_warning(king_color)
-    "Warning! The #{king_color == :W ? 'White' : 'Black'} King is currently under Check!"
+    "Warning! The #{king_color.to_string} King is currently under Check!"
   end
 end
 
