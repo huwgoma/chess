@@ -7,6 +7,7 @@ class Game
   def initialize(board = Board.new, current_color = :W)
     @board = board
     @current_color = current_color
+    @resigned = false
   end
 
   def play
@@ -122,6 +123,11 @@ class Game
   def input_move_valid?(input)
     input_cell = @board.find_cell(input)
     @board.active_piece.moves.values.flatten.include?(input_cell)
+  end
+
+  # Resign
+  def resign
+    @resigned = true
   end
 
   # End of Game

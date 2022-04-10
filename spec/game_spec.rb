@@ -519,4 +519,13 @@ describe Game do
       end
     end
   end
+
+  # Set Game's @resigned to true
+  describe '#resign' do
+    subject(:game_resign) { described_class.new }
+    it "sets Game's @resigned to true" do
+      game_resign.resign
+      expect(game_resign.instance_variable_get(:@resigned)).to be true
+    end
+  end
 end
