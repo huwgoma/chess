@@ -46,6 +46,10 @@ To begin, please select one of the following game options:
     "#{king_color.to_string}'s King is in checkmate! #{@current_player.name} wins!"
   end
 
+  def resigned_message
+    "#{@current_player.name} resigned! #{Player.find(@current_color.opposite).name} wins!"
+  end
+
   def replay_game_message
     "Would you like to play again [P] or quit [Q]?"
   end

@@ -140,7 +140,7 @@ class Game
 
   # End of Game
   def game_end
-    puts king_checkmate_message(@current_color.opposite) #if king was checkmated; what about resign?
+    puts @resigned ? resigned_message : king_checkmate_message(@current_color.opposite) 
     puts replay_game_message
   end
 
