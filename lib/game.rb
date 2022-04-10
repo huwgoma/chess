@@ -74,6 +74,8 @@ class Game
     if input.is_a?(InputWarning)
       puts input.to_s
       select_active_piece
+    elsif input.is_a?(Proc)
+      return input
     else
       piece = @board.find_cell(input).piece
       @board.set_active_piece(piece)

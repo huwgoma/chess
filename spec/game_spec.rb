@@ -10,13 +10,9 @@ require './lib/warnings'
 require 'pry'
 
 describe Game do
-  before do
-    #allow(STDOUT).to receive(:write)
-  end
-
-  describe '#initialize' do
-    
-  end
+  # before do
+  #   allow(STDOUT).to receive(:write)
+  # end
 
   describe '#create_players' do
     subject(:game_players) { described_class.new }
@@ -129,6 +125,7 @@ describe Game do
       game_select_piece.instance_variable_set(:@current_player, @player_1)
     end
 
+    # Valid Coordinates
     context "when the current player enters a valid set of coordinates" do
       before do
         allow(@board).to receive_messages(find_cell: @cell, generate_legal_moves: nil, set_active_piece: nil)
@@ -150,7 +147,8 @@ describe Game do
       end
     end
 
-    context "when an invalid input is given once, followed by a valid input" do
+    # Invalid Coordinates
+    context 'when an invalid input is given once, followed by a valid input' do
       before do
         @warning = instance_double(InvalidInputFormat, is_a?: true)
         allow(@warning).to receive(:is_a?).with(InputWarning).and_return(true)
@@ -176,10 +174,20 @@ describe Game do
         game_select_piece.select_active_piece
       end
     end
+
+    # Quit
+    context 'when the input is Q' do
+      # verify_piece_input(Q) => Proc
+      it 'returns the Proc returned from verify_piece_input' do
+        allow(game_select_piece).to receive(:gets).and_return('Q')
+        expect(game_select_piece.select_active_piece).to be_a(Proc)
+      end
+    end
   end
 
   # If the input is not valid (see below), return a Warning object
   # If the input is valid, return the input
+  # If input is 'Q', return a Proc
   describe '#verify_piece_input' do
     subject(:game_verify_piece) { described_class.new(@board) }
     before do
