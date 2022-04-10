@@ -71,6 +71,7 @@ class Game
   # Select the Active Piece (Piece to be Moved)
   def select_active_piece
     puts "#{@current_player.name}, please enter the coordinates of the piece you want to move:"
+    puts "Enter [Q] to quit if you wish to resign."
     input = verify_piece_input(gets.chomp)
     case input 
     when InputWarning # Invalid input 

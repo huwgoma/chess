@@ -7,8 +7,15 @@ Dir.glob(('./lib/pieces/*.rb'), &method(:require))
 
 extend GameTextable
 
+def clear_game_environment
+  Move.stack.clear
+  Player.list.clear
+end
+
 loop do
+  clear_game_environment
   system 'clear'
+  
   puts tutorial_message
 # puts game_mode_message
   game = Game.new
@@ -19,4 +26,6 @@ loop do
     break
   end
 end
+
+
 
