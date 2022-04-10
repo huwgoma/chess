@@ -207,13 +207,9 @@ describe Game do
 
       # 'Q'
       context 'when the input is Q (Quit)' do
-        before do
-          @proc_resign = Proc.new { return @resigned = true }
-        end
-
         it 'returns a Proc object containing the #resign method' do
           input = 'Q'
-          expect(game_verify_piece.verify_piece_input(input)).to eq(@proc_resign)
+          expect(game_verify_piece.verify_piece_input(input)).to be_a(Proc)
         end
       end
     end
