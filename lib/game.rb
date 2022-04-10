@@ -15,6 +15,7 @@ class Game
     @board.prepare_board
     @board.print_board
     game_loop
+    binding.pry
     game_end
   end
 
@@ -47,12 +48,13 @@ class Game
   ## Core Game Loop
   def game_loop
     loop do
-      select_active_piece
+      piece = select_active_piece
+      #binding.pry
       # piece_selected? => true
       @board.print_board(true)
       end_cell = select_active_move
       @board.move_piece(end_cell)
-      @board.print_board(false)
+      @board.print_board
 
       enemy_color = @current_color.opposite
       if @board.king_in_check?(enemy_color)

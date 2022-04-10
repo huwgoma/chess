@@ -113,10 +113,6 @@ describe Game do
     end  
   end
 
-  describe '#game_loop' do
-    
-  end
-
   # Collect the current player's input and verify it
   # If input is valid, set @board's @active_piece to the Piece on the cell
   # Otherwise, print a warning and recurse
@@ -194,16 +190,31 @@ describe Game do
     end
 
     context "when the input is valid" do
-      before do
-        allow(@board).to receive(:find_cell).and_return(@cell)
-        allow(@cell).to receive(:has_ally?).and_return(true)
-        allow(@cell).to receive(:piece).and_return(@piece)
-        allow(@piece).to receive(:has_moves?).and_return(true)
+      # 'D2'
+      context 'when the input is a valid alphanumeric coordinate' do
+        before do
+          allow(@board).to receive(:find_cell).and_return(@cell)
+          allow(@cell).to receive(:has_ally?).and_return(true)
+          allow(@cell).to receive(:piece).and_return(@piece)
+          allow(@piece).to receive(:has_moves?).and_return(true)
+        end
+  
+        it "returns the input (string)" do
+          input = 'd2'
+          expect(game_verify_piece.verify_piece_input(input)).to eq(input)
+        end
       end
 
-      it "returns the input (string)" do
-        input = 'd2'
-        expect(game_verify_piece.verify_piece_input(input)).to eq(input)
+      # 'Q'
+      context 'when the input is Q (Quit)' do
+        before do
+          @proc_resign = Proc.new { return @resigned = true }
+        end
+
+        it 'returns a Proc object containing the #resign method' do
+          input = 'Q'
+          expect(game_verify_piece.verify_piece_input(input)).to eq(@proc_resign)
+        end
       end
     end
 
