@@ -51,6 +51,7 @@ class Game
     loop do
       piece = select_active_piece
       #binding.pry
+      piece.call 
       # piece_selected? => true
       @board.print_board(true)
       end_cell = select_active_move
@@ -72,12 +73,12 @@ class Game
     puts "#{@current_player.name}, please enter the coordinates of the piece you want to move:"
     input = verify_piece_input(gets.chomp)
     case input 
-    when InputWarning
+    when InputWarning # Invalid input 
       puts input.to_s
       select_active_piece
-    when Proc
+    when Proc # Quit
       return input 
-    when String
+    when String # Valid input
       piece = @board.find_cell(input).piece
       @board.set_active_piece(piece)
     end
@@ -85,7 +86,7 @@ class Game
 
   def verify_piece_input(input)
     # Quit
-    return Proc.new { return resign } if input.upcase == 'Q'
+    return :resign if input.upcase == 'Q'
 
     return InvalidInputFormat.new unless input_format_valid?(input)
     return InvalidInputCell.new(@current_color) unless input_cell_valid?(input)
