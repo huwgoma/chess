@@ -150,12 +150,15 @@ describe Game do
     # Invalid Coordinates
     context 'when an invalid input is given once, followed by a valid input' do
       before do
-        @warning = instance_double(InvalidInputFormat, is_a?: true)
-        allow(@warning).to receive(:is_a?).with(InputWarning).and_return(true)
+        # InvalidInputFormat object/class
         @string = "Invalid input! Please enter a valid set of alphanumeric coordinates (eg. d2)"
-        allow(@warning).to receive(:to_s).and_return(@string)
-
+        @warning = instance_double(InvalidInputFormat, to_s: @string)
         @invalid_input_format = class_double(InvalidInputFormat, new: @warning).as_stubbed_const
+        
+        # InputWarning Class Double
+        @input_warning = class_double(InputWarning).as_stubbed_const
+        allow(@input_warning).to receive(:===)
+        allow(@input_warning).to receive(:===).with(@warning).and_return(true)
       
         allow(game_select_piece).to receive(:gets).and_return('d22', 'd2')
         # Second, valid loop

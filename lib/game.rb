@@ -71,12 +71,13 @@ class Game
   def select_active_piece
     puts "#{@current_player.name}, please enter the coordinates of the piece you want to move:"
     input = verify_piece_input(gets.chomp)
-    if input.is_a?(InputWarning)
+    case input 
+    when InputWarning
       puts input.to_s
       select_active_piece
-    elsif input.is_a?(Proc)
-      return input
-    else
+    when Proc
+      return input 
+    when String
       piece = @board.find_cell(input).piece
       @board.set_active_piece(piece)
     end
