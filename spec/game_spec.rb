@@ -181,9 +181,9 @@ describe Game do
     # Quit
     context 'when the input is Q' do
       # verify_piece_input(Q) => Proc
-      xit 'returns the Proc returned from verify_piece_input' do
+      it 'returns the Proc returned from verify_piece_input' do
         allow(game_select_piece).to receive(:gets).and_return('Q')
-        expect(game_select_piece.select_active_piece).to be_a(Proc)
+        expect(game_select_piece.select_active_piece).to eq(:resign)
       end
     end
   end
