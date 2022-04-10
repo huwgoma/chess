@@ -76,7 +76,7 @@ class Game
     when InputWarning # Invalid input 
       puts input.to_s
       select_active_piece
-    when Proc # Quit
+    when Symbol # Quit
       return input 
     when String # Valid input
       piece = @board.find_cell(input).piece
