@@ -13,7 +13,7 @@ end
 
 class InvalidInputCell < InputWarning
   def initialize(current_color)
-    @current_color = current_color == :W ? 'White' : 'Black'
+    @current_color = current_color.to_string
   end
 
   def to_s
