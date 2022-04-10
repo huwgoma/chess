@@ -16,7 +16,6 @@ class Game
     @board.prepare_board
     @board.print_board
     game_loop
-    binding.pry
     game_end
   end
 
@@ -50,8 +49,9 @@ class Game
   def game_loop
     loop do
       piece = select_active_piece
-      #binding.pry
-      piece.call 
+      # Return out of game_loop early if piece is a Symbol ('Q' entered)
+      return send(piece) if piece.is_a?(Symbol)
+
       # piece_selected? => true
       @board.print_board(true)
       end_cell = select_active_move
