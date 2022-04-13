@@ -56,6 +56,7 @@ class Game
       @board.print_board(true)
       end_cell = select_active_move
       @board.move_piece(end_cell)
+      binding.pry
       @board.print_board
 
       enemy_color = @current_color.opposite

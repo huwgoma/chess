@@ -16,7 +16,7 @@ class Piece
   end
   
   def self.select_factory(type)
-    case type 
+    case type
     when :Pawn
       PawnFactory.new
     when :Rook

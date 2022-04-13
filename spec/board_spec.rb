@@ -51,6 +51,7 @@ describe Board do
       end
   
       # Iterate through the 32 Pieces and place them onto their initial Cells
+      # Add Pieces to @living_pieces as they are created/placed
       describe '#place_pieces' do
         before do
           @piece = class_double(Piece).as_stubbed_const
@@ -58,10 +59,11 @@ describe Board do
   
           board_prepare.instance_variable_set(:@columns, @column_hash)
           board_prepare.instance_variable_set(:@rows, @row_hash)
-  
+          
           @rook_factory = instance_double(RookFactory)
           allow(@piece).to receive(:select_factory).and_return(@rook_factory)
-          allow(@rook_factory).to receive(:place_piece)
+          @rook = instance_double(Rook, color: :W)
+          allow(@rook_factory).to receive(:place_piece).and_return(@rook)
         end
         
         it "calls ::select_factory on Piece using the current piece's type" do
@@ -74,6 +76,11 @@ describe Board do
         it "sends #place_piece to the PieceFactory subclass object" do
           expect(@rook_factory).to receive(:place_piece)
           board_prepare.place_pieces(@pieces)
+        end
+
+        it "adds the created Piece to @living_pieces" do
+          living_pieces = { W: [@rook], B: [] }
+          expect { board_prepare.place_pieces(@pieces) }.to change { board_prepare.living_pieces }.to(living_pieces)
         end
       end
     end
@@ -105,39 +112,6 @@ describe Board do
           coords = 'a10'
           expect(board_find.find_cell(coords)).to be nil
         end
-      end
-    end
-
-    # Set Living Pieces - Iterate through @rows and create a Hash of Pieces
-    # that are alive, sorted by their color
-    describe '#set_living_pieces' do
-      subject(:board_living_pieces) { described_class.new }
-      before do
-        # Place Pieces on custom 2x2 Board - White on A1/B1, Black on A2/B2 
-        @w_pawn_a1 = instance_double(Pawn, 'a1', killed: false, color: :W)
-        @w_pawn_b1 = instance_double(Pawn, 'b1', killed: false, color: :W)
-        @b_pawn_a2 = instance_double(Pawn, 'a2', killed: false, color: :B)
-        @b_pawn_b2 = instance_double(Pawn, 'b2', killed: false, color: :B)
-        # Update Cell Info
-        allow(@cell_a1).to receive_messages(empty?: false, piece: @w_pawn_a1)
-        allow(@cell_b1).to receive_messages(empty?: false, piece:@w_pawn_b1)
-        allow(@cell_a2).to receive_messages(empty?: false, piece:@b_pawn_a2)
-        allow(@cell_b2).to receive_messages(empty?: false, piece:@b_pawn_b2)
-
-        board_living_pieces.instance_variable_set(:@rows, @row_hash)
-      end
-
-      it 'returns a hash of living pieces, sorted by color' do
-        living_pieces = { W: [@w_pawn_a1, @w_pawn_b1], B: [@b_pawn_a2, @b_pawn_b2] }
-        expect(board_living_pieces.set_living_pieces).to eq(living_pieces)
-      end
-      
-      it 'skips empty cells' do
-        # Remove Black Pawn from Cell B2
-        allow(@cell_b2).to receive_messages(empty?: true)
-
-        living_pieces = { W: [@w_pawn_a1, @w_pawn_b1], B: [@b_pawn_a2]}
-        expect(board_living_pieces.set_living_pieces).to eq(living_pieces)
       end
     end
 

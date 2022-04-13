@@ -3,7 +3,7 @@
 class Move
   @@stack = []
 
-  attr_reader :killed, :start, :end
+  attr_reader :start, :end, :piece, :killed
 
   def initialize(start_cell, end_cell, piece, killed_piece)
     @start = start_cell

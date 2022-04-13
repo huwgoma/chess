@@ -10,6 +10,7 @@ class Board
   def initialize
     @cells = []
     @active_piece = nil
+    @living_pieces = { W: [], B: [] }
   end
 
   # Create Cells, set columns/rows for easier access, place Pieces on cells
@@ -18,7 +19,6 @@ class Board
     @columns = sort_cells(:column)
     @rows = sort_cells(:row)
     place_pieces(Piece::INITIAL_PIECES)
-    @living_pieces = set_living_pieces
   end
 
   # Create the 64 Cells of the Board
@@ -42,12 +42,13 @@ class Board
     end
   end
 
-  # Place the 32 Pieces on their initial positions
+  # Place the 32 Pieces on their initial positions, add Pieces to @living_pieces
   def place_pieces(pieces)
     pieces.each do | coords, piece |
       cell = find_cell(coords)
       piece_factory = Piece.select_factory(piece[:type])
-      piece_factory.place_piece(piece[:color], cell)
+      piece = piece_factory.place_piece(piece[:color], cell)
+      @living_pieces[piece.color] << piece
     end
   end
 
@@ -59,16 +60,6 @@ class Board
     
     # If both column and row cells exist 
     [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
-  end
-
-  # Iterate through @rows and create a Hash of Pieces that are alive (sorted by color)
-  def set_living_pieces
-    @rows.values.flatten.reduce({}) do | hash, cell |
-      next hash if cell.empty?
-      color = cell.piece.color
-      hash.has_key?(color) ? hash[color] << cell.piece : hash[color] = [cell.piece]
-      hash
-    end
   end
 
   # Update @active_piece to the given Piece
