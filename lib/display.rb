@@ -1,31 +1,5 @@
 # frozen_string_literal: true
-require 'pry'
 require './lib/move'
-
-class String
-
-  # Black String
-  def black; "\u001b[30;1m#{self}\u001b[0m" end
-
-  # White String
-  def white; "\u001b[37;1m#{self}\u001b[0m" end
-
-  # Default Black BG
-  def bg_black; "\u001b[40;1m#{self}\u001b[0m" end
-  #100
-
-  # Default White BG
-  def bg_white; "\u001b[47;1m#{self}\u001b[0m" end
-
-  # Possible Piece Capture BG
-  def bg_red; "\u001b[41;1m#{self}\u001b[0m" end
-
-  # Selected Piece BG
-  def bg_cyan; "\u001b[46;1m#{self}\u001b[0m" end
-
-  # Previous Move Piece BG
-  def bg_blue; "\u001b[44;1m#{self}\u001b[0m" end
-end
 
 module Displayable
   def print_board(piece_selected = false)

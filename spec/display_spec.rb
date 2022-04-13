@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 require './lib/board'
 require './lib/cell'
-require './lib/display'
 require './lib/pieces/piece'
 require './lib/pieces/pawn'
 
-# Board
+# Board Include
 RSpec.configure do
   include Displayable
 end

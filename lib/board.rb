@@ -1,9 +1,12 @@
 # frozen_string_literal: true
-require './lib/pieces/piece'
+
 require './lib/display'
+require './lib/special_moves'
+
 
 class Board
   include Displayable
+  include SpecialMoves
 
   attr_reader :columns, :rows, :active_piece, :cells, :living_pieces
 
