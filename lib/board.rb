@@ -120,7 +120,7 @@ class Board
   def verify_moves(piece)
     piece.moves.each do | dir, cells |
       cells.reject! do | cell |
-        move_piece(cell, piece, piece.position)
+        move_piece(cell, piece.position, piece)
         reject_cell = king_in_check?(piece.color)
         undo_last_move
         reject_cell
@@ -131,7 +131,7 @@ class Board
   # King in Check? - Check if the given color's King is in danger (Check)
   def king_in_check?(king_color)
     king_cell = find_king_cell(king_color)
-    enemy_color = king_color == :W ? :B : :W
+    enemy_color = king_color.opposite
     # Does ANY living enemy Piece...
     @living_pieces[enemy_color].any? do | enemy_piece |
       # Have ANY move...
@@ -158,12 +158,12 @@ class Board
   end
 
   # Given a Piece, a Start Cell, and an End Cell, move the Piece from Start to End
-  def move_piece(end_cell, piece = @active_piece, start_cell = @active_piece.position)
+  def move_piece(end_cell, start_cell = @active_piece.position, piece = @active_piece)
     start_cell.update_piece(nil)
     piece.update_position(end_cell)
     kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
     end_cell.update_piece(piece)
-    Move.new(start_cell, end_cell, piece, kill)
+    Move.new(end_cell, start_cell, piece, kill)
   end
 
   # Kill the given Piece and remove it from @living_pieces

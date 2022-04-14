@@ -10,8 +10,8 @@ describe Move do
   end
 
   before do
-    @move_1 = described_class.new('d2', 'd3', 'WPawn', nil)
-    @move_2 = described_class.new('d7', 'd3', 'BRook', 'WPawn')
+    @move_1 = described_class.new('d3', 'd2', 'WPawn', nil)
+    @move_2 = described_class.new('d3', 'd7', 'BRook', 'WPawn')
     @stack = [@move_1, @move_2]
   end
 
@@ -60,7 +60,7 @@ describe Move do
       allow(@killed).to receive(:update_position)
     end
 
-    subject(:move_undo) { described_class.new(@start, @end, @piece, @killed) }
+    subject(:move_undo) { described_class.new(@end, @start, @piece, @killed) }
     
     # Move the Moving Piece back to Start Cell
     it 'sends #update_position with @start Cell to the moving @piece' do
