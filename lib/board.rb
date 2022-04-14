@@ -6,6 +6,7 @@ require './lib/special_moves'
 
 class Board
   include Displayable
+  include GameTextable
   include SpecialMoves
 
   attr_reader :columns, :rows, :active_piece, :cells, :living_pieces

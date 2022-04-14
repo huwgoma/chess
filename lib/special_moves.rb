@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require './lib/game_text'
 
 # Namespace for Methods concerning Pawn Promotion
 module PawnPromotion
@@ -32,6 +33,18 @@ module PawnPromotion
     # piece_hash = { coords => { color: pawn.color, type: type }}
     # kill_piece(pawn)
     # place_pieces(piece_hash)
+  end
+
+  def choose_promotion_type
+    puts pawn_promotion_message
+    input = verify_promotion_input(gets.chomp)
+    case input
+    when InputWarning
+      puts input.to_s
+      choose_promotion_type
+    when String
+      PROMOTION_OPTIONS[input]
+    end
   end
 
   def verify_promotion_input(input)

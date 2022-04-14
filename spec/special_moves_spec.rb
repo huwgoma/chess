@@ -105,9 +105,55 @@ describe SpecialMoves do
     end
   end
 
+  # Prompt the current player to enter a piece type to promote to
+  # If input is valid, return the corresponding type Symbol
+  # If input is invalid, print a warning and recurse
+  describe '#choose_promotion_type' do
+    subject(:board_choose_promotion) { Board.new }
+   
+    before do
+      current_player = instance_double(Player, name: 'Lei')
+      board_choose_promotion.instance_variable_set(:@current_player, current_player)  
+    end
+
+    context 'when the user input is valid' do
+      before do
+        allow(board_choose_promotion).to receive(:gets).and_return('q')
+      end
+      it 'returns the corresponding piece type Symbol' do
+        expect(board_choose_promotion.choose_promotion_type).to eq(:Queen)
+      end
+    end
+
+    context 'when the user input is invalid twice, then valid' do
+      before do
+        allow(board_choose_promotion).to receive(:gets).and_return('w', 'w', 'q')
+        allow(board_choose_promotion).to receive(:puts)
+        @warning_string = "Invalid input! Please enter one of the above options for your Pawn to promote to."
+        @warning = instance_double(InvalidPromotionInput, to_s: @warning_string)
+        @invalid_promotion_input = class_double(InvalidPromotionInput, new: @warning).as_stubbed_const
+        
+        input_warning = class_double(InputWarning).as_stubbed_const
+        allow(input_warning).to receive(:===)
+        allow(input_warning).to receive(:===).with(@warning).and_return(true)
+      end
+
+      it 'calls #to_s on the returned Warning object' do
+        expect(@warning).to receive(:to_s).twice
+        board_choose_promotion.choose_promotion_type
+      end
+
+      it "#puts the returned string from the Warning object's #to_s method" do
+        expect(board_choose_promotion).to receive(:puts).with(@warning_string)
+        board_choose_promotion.choose_promotion_type
+      end
+    end
+  end
+
   # Return a Warning object if invalid; if valid, return the input
   describe '#verify_promotion_input' do
     subject(:board_verify_promotion) { Board.new }
+
     context 'when the input is valid' do
       it 'returns the input, capitalized' do
         input = 'q'
