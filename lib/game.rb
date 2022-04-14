@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 require './lib/game_text.rb'
+require './lib/special_moves'
 
 class Game
   include GameTextable
+  include SpecialMoves
 
   def initialize(board = Board.new, current_color = :W)
     @board = board
@@ -56,7 +58,13 @@ class Game
       @board.print_board(true)
       end_cell = select_active_move
       move = @board.move_piece(end_cell)
-      # promote_pawn if promotion_possible?(move)
+      
+      # Pawn Promotion 
+      if promotion_possible?(move)
+        puts pawn_promotion_message
+        promote_pawn(move) 
+      end
+
       @board.print_board
 
       enemy_color = @current_color.opposite

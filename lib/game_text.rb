@@ -60,13 +60,13 @@ To begin, please select one of the following game options:
 
   def pawn_promotion_message
     <<-HEREDOC
-"#{@current_player.name}, your Pawn is being promoted! Please choose the piece type to promote to:"
+#{@current_player.name}, your Pawn is being promoted! Select one of the following:
     [Q]-Queen   [R]-Rook    [B]-Bishop    [Kn]-Knight
     HEREDOC
   end
 
   def invalid_promotion_message
-    "Invalid input! Please enter one of the above options for your Pawn to promote to."
+    "Invalid input! Please select one of the types above for your Pawn to promote to."
   end
 end
 
