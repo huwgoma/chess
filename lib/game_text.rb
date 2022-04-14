@@ -57,6 +57,17 @@ To begin, please select one of the following game options:
   def invalid_replay_input_warning
     "Invalid input! Please enter P (play again) or Q (quit)."
   end
+
+  def pawn_promotion_message
+    <<-HEREDOC
+"#{@current_player.name}, your Pawn is being promoted! Please choose the piece type to promote to:"
+    [Q]-Queen   [R]-Rook    [B]-Bishop    [Kn]-Knight
+    HEREDOC
+  end
+
+  def invalid_promotion_message
+    "Invalid input! Please enter one of the above options for your Pawn to promote to."
+  end
 end
 
 # Utility String Methods

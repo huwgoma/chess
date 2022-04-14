@@ -32,3 +32,9 @@ class InvalidInputMove < InputWarning
     invalid_input_move_message
   end
 end
+
+class InvalidPromotionInput < InputWarning
+  def to_s
+    invalid_promotion_message
+  end
+end

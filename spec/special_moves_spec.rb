@@ -109,14 +109,20 @@ describe SpecialMoves do
   describe '#verify_promotion_input' do
     subject(:board_verify_promotion) { Board.new }
     context 'when the input is valid' do
-      it 'returns the input (string)' do
-        
+      it 'returns the input, capitalized' do
+        input = 'q'
+        expect(verify_promotion_input(input)).to eq('Q')
       end
     end
     
     context 'when the input is invalid' do
+      before do
+        @warning = instance_double(InvalidPromotionInput)
+        @invalid_promotion_input = class_double(InvalidPromotionInput, new: @warning).as_stubbed_const
+      end
       it 'returns an InvalidPromotionInput object' do
-        
+        input = 'k'
+        expect(verify_promotion_input(input)).to eq(@warning)
       end
     end
   end
@@ -126,14 +132,14 @@ describe SpecialMoves do
     subject(:board_promotion_valid) { Board.new }
     context 'when the given input matches one of the keys of PROMOTION_OPTIONS' do
       it 'returns true' do
-        input = 'q'
+        input = 'Q'
         expect(promotion_input_valid?(input)).to be true
       end
     end
 
     context 'when the given input does not match one of the above keys' do
       it 'returns false' do
-        input = 'k'
+        input = 'K'
         expect(promotion_input_valid?(input)).to be false
       end
     end

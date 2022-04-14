@@ -35,11 +35,13 @@ module PawnPromotion
   end
 
   def verify_promotion_input(input)
-    # Return InvalidPromotionInput unless PROMOTION_TYPES.keys.include?(input)
+    input = input.upcase
+    return InvalidPromotionInput.new unless promotion_input_valid?(input)
+    input
   end
 
   def promotion_input_valid?(input)
-    PROMOTION_OPTIONS.keys.include?(input.upcase)
+    PROMOTION_OPTIONS.keys.include?(input)
   end
 end
 
