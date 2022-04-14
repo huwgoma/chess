@@ -95,13 +95,28 @@ describe SpecialMoves do
   # Promote the Pawn (Kill Pawn, create and place a new Piece)
   describe '#promote_pawn' do
     subject(:board_promote_pawn) { Board.new }
-    
+
     it "passes the last Move's @piece (the Pawn) to #kill_piece" do
       
     end
 
     it "passes a Hash of the new Piece's details to #place_pieces" do
       
+    end
+  end
+
+  # Promotion Input is Valid if Input matches one of the given options
+  describe '#verify_promotion_input' do
+    context 'when the input is valid' do
+      it 'returns the input (string)' do
+        
+      end
+    end
+    
+    context 'when the input is invalid' do
+      it 'returns an InvalidPromotionInput object' do
+        
+      end
     end
   end
 end

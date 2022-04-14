@@ -10,6 +10,13 @@ module PawnPromotion
     last_move.end.row == end_row
   end
 
+  PROMOTION_TYPES = {
+    'Q' => :Queen,
+    'R' => :Rook,
+    'B' => :Bishop,
+    'KN' => :Knight
+  }
+
   def promote_pawn(last_move)
     # type = choose_promotion_type
     #   "[name], your Pawn is being promoted! Select what you want to promote it to"
@@ -25,6 +32,10 @@ module PawnPromotion
     # piece_hash = { coords => { color: pawn.color, type: type }}
     # kill_piece(pawn)
     # place_pieces(piece_hash)
+  end
+
+  def verify_promotion_input(input)
+    # Return InvalidPromotionInput unless PROMOTION_TYPES.keys.include?(input)
   end
 end
 
