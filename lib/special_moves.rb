@@ -19,20 +19,12 @@ module PawnPromotion
   }
 
   def promote_pawn(last_move)
-    # type = choose_promotion_type
-    #   "[name], your Pawn is being promoted! Select what you want to promote it to"
-    #   input = verify_promotion_choice(gets.chomp) (returns InputWarning or input)
-    #   case input
-    #   when InputWarning 
-    #     puts input.to_s; choose_promotion
-    #   when String
-    #     return PROMOTION_TYPES[input] #=> :Queen
-    #   end
-    # pawn = last_move.piece
-    # coords = last_move.end.column + last_move.end.row.to_s
-    # piece_hash = { coords => { color: pawn.color, type: type }}
-    # kill_piece(pawn)
-    # place_pieces(piece_hash)
+    type = choose_promotion_type
+    pawn = last_move.piece
+    coords = last_move.end.column + last_move.end.row.to_s
+    piece_hash = { coords => { color: pawn.color, type: type } }
+    kill_piece(pawn)
+    place_pieces(piece_hash)
   end
 
   def choose_promotion_type

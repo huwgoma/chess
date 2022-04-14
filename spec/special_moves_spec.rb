@@ -96,12 +96,35 @@ describe SpecialMoves do
   describe '#promote_pawn' do
     subject(:board_promote_pawn) { Board.new }
 
-    it "passes the last Move's @piece (the Pawn) to #kill_piece" do
+    before do
+      # Current Player
+      current_player = instance_double(Player, name: 'Lei')
+      board_promote_pawn.instance_variable_set(:@current_player, current_player)
       
+      # Last Move
+      @cell_d8 = board_promote_pawn.find_cell('d8')
+      @pawn = instance_double(Pawn, color: :W, is_killed: nil)
+      @last_move = instance_double(Move, piece: @pawn, end: @cell_d8)
+      
+      # Living Pieces
+      @living_pieces = { W: [@pawn], B:[] }
+      
+      allow(board_promote_pawn).to receive(:gets).and_return('Q')
+      # Place Pieces - Piece Factory
+      @queen_piece = instance_double(Queen, color: :W)
+      @queen_factory = instance_double(QueenFactory, place_piece: @queen_piece)
+      @piece = class_double(Piece, select_factory: @queen_factory).as_stubbed_const
     end
 
-    it "passes a Hash of the new Piece's details to #place_pieces" do
-      
+    it "sends #is_killed to the last Move's @piece (Pawn)" do
+      expect(@pawn).to receive(:is_killed)
+      expect(board_promote_pawn.promote_pawn(@last_move))
+    end
+
+    it "calls #place_pieces with a Hash of the new Piece's details" do
+      hash = { 'd8' => { color: :W, type: :Queen } }
+      expect(board_promote_pawn).to receive(:place_pieces).with(hash)
+      board_promote_pawn.promote_pawn(@last_move)
     end
   end
 
