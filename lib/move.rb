@@ -5,11 +5,11 @@ class Move
 
   attr_reader :start, :end, :piece, :killed
 
-  def initialize(end_cell, start_cell, piece, killed_piece)
+  def initialize(end_cell, start_cell, piece, killed)
     @end = end_cell
     @start = start_cell
     @piece = piece
-    @killed = killed_piece
+    @killed = killed
     @@stack << self
   end
 

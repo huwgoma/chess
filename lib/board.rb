@@ -161,10 +161,9 @@ class Board
   def move_piece(end_cell, start_cell = @active_piece.position, piece = @active_piece)
     start_cell.update_piece(nil)
     piece.update_position(end_cell)
-    kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
+    killed = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
     end_cell.update_piece(piece)
-    # promoted = promotion_possible?
-    Move.new(end_cell, start_cell, piece, kill)
+    Move.new(end_cell, start_cell, piece, killed)
   end
 
   # Kill the given Piece and remove it from @living_pieces

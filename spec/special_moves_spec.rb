@@ -40,54 +40,53 @@ describe SpecialMoves do
       @cell_d8 = board_pawn_promotion.find_cell('d8')
       @cell_d7 = board_pawn_promotion.find_cell('d7')
       @cell_d1 = board_pawn_promotion.find_cell('d1')
+
+      @piece = instance_double(Pawn, is_a?: true)
+      @last_move = instance_double(Move, piece: @piece)
     end
 
     context "when the @active_piece is a Pawn" do
-      before do
-        @active_piece = instance_double(Pawn, is_a?: true)
-      end
-      
       context "when the @active_piece's @position is at the END of the board" do
         context 'when the @active_piece is white' do
           before do
-            allow(@active_piece).to receive_messages(color: :W, position: @cell_d8)
-            board_pawn_promotion.set_active_piece(@active_piece)
+            allow(@piece).to receive_messages(color: :W)
+            allow(@last_move).to receive(:end).and_return(@cell_d8)
           end
           it 'returns true' do
-            expect(board_pawn_promotion.promotion_possible?).to be true
+            expect(board_pawn_promotion.promotion_possible?(@last_move)).to be true
           end
         end
         
         context 'when the @active_piece is black' do
           before do
-            allow(@active_piece).to receive_messages(color: :B, position: @cell_d1)
-            board_pawn_promotion.set_active_piece(@active_piece)
+            allow(@piece).to receive_messages(color: :B)
+            allow(@last_move).to receive(:end).and_return(@cell_d1)
           end
           it 'also returns true' do
-            expect(board_pawn_promotion.promotion_possible?).to be true
+            expect(board_pawn_promotion.promotion_possible?(@last_move)).to be true
           end
         end
       end
 
       context "when the  @active_piece's @position is not at the end of the board" do
         before do
-          allow(@active_piece).to receive_messages(color: :W, position: @cell_d7)
+          allow(@piece).to receive_messages(color: :W)
+          allow(@last_move).to receive(:end).and_return(@cell_d7)
         end
         it 'returns false' do
-          expect(board_pawn_promotion.promotion_possible?).to be false
+          expect(board_pawn_promotion.promotion_possible?(@last_move)).to be false
         end
       end
     end
 
     context 'when the @active_piece is not a Pawn' do
       before do
-        active_piece = instance_double(Rook, is_a?: true, 
-          color: :W, position: @cell_d8)
-        allow(active_piece).to receive(:is_a?).with(Pawn).and_return(false)
-        board_pawn_promotion.set_active_piece(active_piece)
+        rook = instance_double(Rook, is_a?: true, color: :W)
+        allow(rook).to receive(:is_a?).with(Pawn).and_return(false)
+        allow(@last_move).to receive(:piece).and_return(rook)
       end
       it 'returns false' do
-        expect(board_pawn_promotion.promotion_possible?).to be false 
+        expect(board_pawn_promotion.promotion_possible?(@last_move)).to be false 
       end
     end
   end
