@@ -56,7 +56,7 @@ class Game
       @board.print_board(true)
       end_cell = select_active_move
       move = @board.move_piece(end_cell)
-      # promote_pawn if promotion_possible?
+      # promote_pawn if promotion_possible?(move)
       @board.print_board
 
       enemy_color = @current_color.opposite

@@ -34,12 +34,13 @@ describe SpecialMoves do
   end
 
   # PawnPromotion
+  # Check if Pawn Promotion is possible for the Move that just occurred 
   describe '#promotion_possible?' do
-    subject(:board_pawn_promotion) { Board.new }
+    subject(:board_promote_possible) { Board.new }
     before do
-      @cell_d8 = board_pawn_promotion.find_cell('d8')
-      @cell_d7 = board_pawn_promotion.find_cell('d7')
-      @cell_d1 = board_pawn_promotion.find_cell('d1')
+      @cell_d8 = board_promote_possible.find_cell('d8')
+      @cell_d7 = board_promote_possible.find_cell('d7')
+      @cell_d1 = board_promote_possible.find_cell('d1')
 
       @piece = instance_double(Pawn, is_a?: true)
       @last_move = instance_double(Move, piece: @piece)
@@ -53,7 +54,7 @@ describe SpecialMoves do
             allow(@last_move).to receive(:end).and_return(@cell_d8)
           end
           it 'returns true' do
-            expect(board_pawn_promotion.promotion_possible?(@last_move)).to be true
+            expect(board_promote_possible.promotion_possible?(@last_move)).to be true
           end
         end
         
@@ -63,7 +64,7 @@ describe SpecialMoves do
             allow(@last_move).to receive(:end).and_return(@cell_d1)
           end
           it 'also returns true' do
-            expect(board_pawn_promotion.promotion_possible?(@last_move)).to be true
+            expect(board_promote_possible.promotion_possible?(@last_move)).to be true
           end
         end
       end
@@ -74,7 +75,7 @@ describe SpecialMoves do
           allow(@last_move).to receive(:end).and_return(@cell_d7)
         end
         it 'returns false' do
-          expect(board_pawn_promotion.promotion_possible?(@last_move)).to be false
+          expect(board_promote_possible.promotion_possible?(@last_move)).to be false
         end
       end
     end
@@ -86,8 +87,21 @@ describe SpecialMoves do
         allow(@last_move).to receive(:piece).and_return(rook)
       end
       it 'returns false' do
-        expect(board_pawn_promotion.promotion_possible?(@last_move)).to be false 
+        expect(board_promote_possible.promotion_possible?(@last_move)).to be false 
       end
+    end
+  end
+
+  # Promote the Pawn (Kill Pawn, create and place a new Piece)
+  describe '#promote_pawn' do
+    subject(:board_promote_pawn) { Board.new }
+    
+    it "passes the last Move's @piece (the Pawn) to #kill_piece" do
+      
+    end
+
+    it "passes a Hash of the new Piece's details to #place_pieces" do
+      
     end
   end
 end
