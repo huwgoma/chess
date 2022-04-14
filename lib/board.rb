@@ -163,6 +163,7 @@ class Board
     piece.update_position(end_cell)
     kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
     end_cell.update_piece(piece)
+    # promoted = promotion_possible?
     Move.new(end_cell, start_cell, piece, kill)
   end
 
