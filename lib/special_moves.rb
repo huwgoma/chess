@@ -10,7 +10,7 @@ module PawnPromotion
     last_move.end.row == end_row
   end
 
-  PROMOTION_TYPES = {
+  PROMOTION_OPTIONS = {
     'Q' => :Queen,
     'R' => :Rook,
     'B' => :Bishop,
@@ -39,7 +39,7 @@ module PawnPromotion
   end
 
   def promotion_input_valid?(input)
-
+    PROMOTION_OPTIONS.keys.include?(input.upcase)
   end
 end
 
