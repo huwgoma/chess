@@ -105,7 +105,7 @@ describe SpecialMoves do
     end
   end
 
-  # Promotion Input is Valid if Input matches one of the given options
+  # Return a Warning object if invalid; if valid, return the input
   describe '#verify_promotion_input' do
     context 'when the input is valid' do
       it 'returns the input (string)' do
@@ -115,6 +115,23 @@ describe SpecialMoves do
     
     context 'when the input is invalid' do
       it 'returns an InvalidPromotionInput object' do
+        
+      end
+    end
+  end
+
+  # Promotion Input is Valid if Input matches one of the keys of PROMOTION_TYPES
+  describe '#promotion_input_valid?' do
+    subject(:board_promote_valid) { Board.new }
+    
+    context 'when the given input matches one of the keys of PROMOTION_types' do
+      it 'returns true' do
+        
+      end
+    end
+
+    context 'when the given input does not match one of the above keys' do
+      it 'returns false' do
         
       end
     end
