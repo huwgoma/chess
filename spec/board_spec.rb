@@ -56,9 +56,6 @@ describe Board do
         before do
           @piece = class_double(Piece).as_stubbed_const
           @pieces = { 'a1' => { color: :W, type: :Rook } } 
-  
-          board_prepare.instance_variable_set(:@columns, @column_hash)
-          board_prepare.instance_variable_set(:@rows, @row_hash)
           
           @rook_factory = instance_double(RookFactory)
           allow(@piece).to receive(:select_factory).and_return(@rook_factory)
@@ -90,13 +87,11 @@ describe Board do
       subject(:board_find) { described_class.new }
   
       before do
-        board_find.instance_variable_set(:@columns, @column_hash)
-        board_find.instance_variable_set(:@rows, @row_hash)
+        board_find.instance_variable_set(:@cells, @cell_list)
       end
   
       context 'when given a valid alphanumeric coordinate' do
         it 'returns the corresponding Cell object' do
-          #cell_a1 = instance_double(Cell, 'a1', column: 'a', row: 1)
           coords = 'a1'
           expect(board_find.find_cell(coords)).to eq(@cell_a1)
         end
@@ -141,12 +136,6 @@ describe Board do
 
     # Set each Board (subject)'s @cells to @cell_doubles
     subject.instance_variable_set(:@cells, @cell_doubles)
-    # Sort @cell_doubles for each Board into column/row Hashes
-    @columns = subject.sort_cells(:column)
-    @rows = subject.sort_cells(:row)
-    # Then set each Board's @columns/@rows to the sorted @cell_double Hashes
-    subject.instance_variable_set(:@columns, @columns)
-    subject.instance_variable_set(:@rows, @rows)    
   end
 
   # Generate Moves - Given a Piece, generate its possible moves

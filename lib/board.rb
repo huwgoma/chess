@@ -59,11 +59,7 @@ class Board
   # Utility function for finding any cell on the board given a set of coordinates
   def find_cell(coords)
     column, row = coords.downcase.split('', 2)
-    column_cells = @columns[column]
-    row_cells = @rows[row.to_i]
-    
-    # If both column and row cells exist 
-    [column_cells, row_cells].all? ? (column_cells & row_cells)[0] : nil
+    @cells.find { |cell| cell.column == column && cell.row == row.to_i }
   end
 
   # Update @active_piece to the given Piece
@@ -119,6 +115,7 @@ class Board
   # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
   # each move can be made without putting the allied King into check
   def verify_moves(piece)
+    #binding.pry
     piece.moves.each do | dir, cells |
       cells.reject! do | cell |
         move_piece(cell, piece.position, piece)
