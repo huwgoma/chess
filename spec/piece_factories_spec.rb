@@ -20,13 +20,6 @@ describe PieceFactory do
           allow(rook_factory).to receive(:create_piece).and_return(@rook)
         end
 
-        it 'sends #update_position to the Piece subclass object' do
-          color = :W
-          cell = @cell_a1
-          expect(@rook).to receive(:update_position).with(cell)
-          rook_factory.place_piece(color, cell)
-        end
-
         it 'sends #update_piece to the Cell object' do
           color = :W
           cell = @cell_a1
