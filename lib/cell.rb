@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class Cell
-  attr_reader :column, :row, :piece
+  attr_reader :column, :row, :coords, :piece
 
   def initialize(column, row, piece = nil)
     @column = column
     @row = row
+    @coords = @column + @row.to_s
     @piece = piece
   end
 
