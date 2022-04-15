@@ -58,8 +58,7 @@ class Board
 
   # Utility function for finding any cell on the board given a set of coordinates
   def find_cell(coords)
-    column, row = coords.downcase.split('', 2)
-    @cells.find { |cell| cell.column == column && cell.row == row.to_i }
+    @cells.find { |cell| cell.coords == coords }
   end
 
   # Update @active_piece to the given Piece
@@ -70,6 +69,7 @@ class Board
   # Generate Legal Moves - Generate the given Piece's legal moves
   def generate_legal_moves(piece)
     generate_moves(piece)
+    #binding.pry
     verify_moves(piece)
   end
 

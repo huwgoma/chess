@@ -10,10 +10,10 @@ describe Board do
     before do
       @cell = class_double(Cell).as_stubbed_const
   
-      @cell_a1 = instance_double(Cell, 'a1', column: 'a', row: 1)
-      @cell_a2 = instance_double(Cell, 'a2', column: 'a', row: 2)
-      @cell_b1 = instance_double(Cell, 'b1', column: 'b', row: 1)
-      @cell_b2 = instance_double(Cell, 'b2', column: 'b', row: 2)
+      @cell_a1 = instance_double(Cell, 'a1', column: 'a', row: 1, coords: 'a1')
+      @cell_a2 = instance_double(Cell, 'a2', column: 'a', row: 2, coords: 'a2')
+      @cell_b1 = instance_double(Cell, 'b1', column: 'b', row: 1, coords: 'b1')
+      @cell_b2 = instance_double(Cell, 'b2', column: 'b', row: 2, coords: 'b2')
   
       @cell_list = [@cell_a1, @cell_a2, @cell_b1, @cell_b2]
   
@@ -65,7 +65,6 @@ describe Board do
         
         it "calls ::select_factory on Piece using the current piece's type" do
           cell_a1_type = :Rook
-  
           expect(@piece).to receive(:select_factory).with(cell_a1_type)
           board_prepare.place_pieces(@pieces)
         end
@@ -127,8 +126,8 @@ describe Board do
       column = (x + 97).chr
       8.times do | y |
         row = (y + 1)
-        @cell_doubles << instance_double(Cell, "#{column+row.to_s}", 
-          column: column, row: row, 
+        @cell_doubles << instance_double(Cell, 
+          column: column, row: row, coords: "#{column+row.to_s}",
           piece: nil, empty?: true, has_enemy?: false, has_ally?: false,
           update_piece: nil)
       end
