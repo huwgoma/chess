@@ -137,6 +137,9 @@ describe Board do
     subject.instance_variable_set(:@cells, @cell_doubles)
   end
 
+
+
+
   # Generate Moves - Given a Piece, generate its possible moves
   # - Does not account for the King's safety
   describe '#generate_moves' do

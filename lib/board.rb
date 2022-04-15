@@ -69,8 +69,16 @@ class Board
   # Generate Legal Moves - Generate the given Piece's legal moves
   def generate_legal_moves(piece)
     generate_moves(piece)
-    #binding.pry
-    verify_moves(piece)
+    clone_board = Marshal.load(Marshal.dump(self))
+    clone_piece = clone_board.find_cell(piece.position.coords).piece
+    
+    
+    clone_moves = clone_board.verify_moves(clone_piece)
+    piece.moves.each do | dir, cells |
+      cells.keep_if do | cell |
+        clone_moves[dir].find { |clone_cell| clone_cell.coords == cell.coords }
+      end
+    end
   end
 
   # Generate Moves - Given a Piece, generate its possible moves
