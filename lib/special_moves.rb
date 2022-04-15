@@ -51,20 +51,10 @@ module PawnPromotion
   end
 end
 
+# Namespace for Methods concerning Castling
+module Castling
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+end
 
 
 
@@ -72,5 +62,6 @@ end
 
 module SpecialMoves
   include PawnPromotion
+  include Castling
 end
 
