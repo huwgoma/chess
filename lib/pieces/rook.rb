@@ -9,4 +9,14 @@ class Rook < Piece
     bot:    { column: 0, row: -1 },
     left:   { column: -1, row: 0 }
   }
+
+  def initialize(color, cell)
+    super
+    @moved = false
+  end
+
+  def update_position(cell)
+    super
+    @moved = true
+  end
 end

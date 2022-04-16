@@ -71,14 +71,9 @@ class Board
     generate_moves(piece)
     clone_board = Marshal.load(Marshal.dump(self))
     clone_piece = clone_board.find_cell(piece.position.coords).piece
-    
-    
     clone_moves = clone_board.verify_moves(clone_piece)
-    piece.moves.each do | dir, cells |
-      cells.keep_if do | cell |
-        clone_moves[dir].find { |clone_cell| clone_cell.coords == cell.coords }
-      end
-    end
+    # Transfer the clone piece's moves to the real piece's moves
+    transfer_clone_moves(piece.moves, clone_moves)
   end
 
   # Generate Moves - Given a Piece, generate its possible moves
@@ -102,6 +97,29 @@ class Board
     end
   end
 
+  # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
+  # each move can be made without putting the allied King into check
+  def verify_moves(piece)
+    piece.moves.each do | dir, cells |
+      cells.reject! do | cell |
+        move_piece(cell, piece.position, piece)
+        reject_cell = king_in_check?(piece.color)
+        undo_last_move
+        reject_cell
+      end
+    end
+  end
+
+  # Keep each of the real Piece's @moves only if its clone equivalent also
+  # includes that move
+  def transfer_clone_moves(real_moves, clone_moves)
+    real_moves.each do | dir, cells |
+      cells.keep_if do | cell |
+        clone_moves[dir].find { |clone_cell| clone_cell.coords == cell.coords }
+      end
+    end
+  end
+
   # Given a Piece's possible end Cell, decide whether to keep it or not
   def keep_piece_move?(cell, piece)
     cell.empty? || cell.has_enemy?(piece.color)
@@ -117,20 +135,6 @@ class Board
       pawn.initial && forward_cell.empty? && cell.empty?
     when :forward_left, :forward_right
       cell.has_enemy?(pawn.color)
-    end
-  end
-
-  # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
-  # each move can be made without putting the allied King into check
-  def verify_moves(piece)
-    #binding.pry
-    piece.moves.each do | dir, cells |
-      cells.reject! do | cell |
-        move_piece(cell, piece.position, piece)
-        reject_cell = king_in_check?(piece.color)
-        undo_last_move
-        reject_cell
-      end
     end
   end
 
@@ -190,5 +194,5 @@ class Board
   def revive_piece(piece)
     piece.is_revived
     @living_pieces[piece.color] << piece
-  end
+  end 
 end
