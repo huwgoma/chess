@@ -193,4 +193,8 @@ describe SpecialMoves do
       end
     end
   end
+
+  describe Castling do
+    
+  end
 end
