@@ -573,10 +573,11 @@ describe Board do
       # Killed Piece
       @killed = instance_double(Piece, 'killed', color: :B)
       allow(@killed).to receive(:is_killed)
-
+      # End Cell
       @end = instance_double(Cell, 'end', piece: @killed, has_enemy?: false)
       allow(@end).to receive(:update_piece)
-
+      # Direction
+      @dir = :forward
       # Set Living Pieces
       @living_pieces = { W: [@piece], B: [@killed] }
       board_move.instance_variable_set(:@living_pieces, @living_pieces)
@@ -584,12 +585,12 @@ describe Board do
 
     it 'sends #update_piece with nil to the start cell' do
       expect(@start).to receive(:update_piece).with(nil)
-      board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end)
+      board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
     end
 
     it 'sends #update_position with the end cell to the moving piece' do
       expect(@piece).to receive(:update_position).with(@end)
-      board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end)
+      board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
     end
 
     context "if the end cell already has an enemy piece occupying it" do
@@ -599,27 +600,27 @@ describe Board do
 
       it 'kills the enemy piece' do
         expect(board_move).to receive(:kill_piece).with(@killed)
-        board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end)
+        board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
       end
 
       # If a Killed Piece exists, send that Piece to Move#new
       it 'creates a new Move object with the Killed Piece' do
         move = class_double(Move).as_stubbed_const
         expect(move).to receive(:new).with(piece: @piece, start_cell: @start, end_cell: @end, kill: @killed)
-        board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end)
+        board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
       end
     end
 
     it 'sends #update_piece with the moving piece to the end cell' do
       expect(@end).to receive(:update_piece).with(@piece)
-      board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end)
+      board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
     end
 
     # If no Piece was killed, killed = nil is passed to Move#new
     it 'creates a new Move object' do
       move = class_double(Move).as_stubbed_const
       expect(move).to receive(:new).with(piece: @piece, start_cell: @start, end_cell: @end, kill: nil)
-      board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end)
+      board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
     end
   end
 
