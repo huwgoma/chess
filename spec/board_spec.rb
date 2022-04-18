@@ -605,7 +605,7 @@ describe Board do
       # If a Killed Piece exists, send that Piece to Move#new
       it 'creates a new Move object with the Killed Piece' do
         move = class_double(Move).as_stubbed_const
-        expect(move).to receive(:new).with(@end, @start, @piece, @killed)
+        expect(move).to receive(:new).with(piece: @piece, start_cell: @start, end_cell: @end, kill: @killed)
         board_move.move_piece(@end, @start, @piece)
       end
     end
@@ -618,7 +618,7 @@ describe Board do
     # If no Piece was killed, killed = nil is passed to Move#new
     it 'creates a new Move object' do
       move = class_double(Move).as_stubbed_const
-      expect(move).to receive(:new).with(@end, @start, @piece, nil)
+      expect(move).to receive(:new).with(piece: @piece, start_cell: @start, end_cell: @end, kill: nil)
       board_move.move_piece(@end, @start, @piece)
     end
   end
@@ -840,7 +840,7 @@ describe Board do
       @living_pieces = { W:[], B:[] }
       board_undo.instance_variable_set(:@living_pieces, @living_pieces)
       # Mock the last Move Object
-      @last_move = instance_double(Move, killed: nil)
+      @last_move = instance_double(Move, kill: nil)
       allow(@last_move).to receive(:undo)
       # Mock the Move Class
       @move = class_double(Move).as_stubbed_const
@@ -859,7 +859,7 @@ describe Board do
 
     context "if there was a Killed Piece" do
       before do
-        allow(@last_move).to receive(:killed).and_return(@killed_piece)
+        allow(@last_move).to receive(:kill).and_return(@killed_piece)
       end
       it 'calls Board#revive_piece to revive the Piece' do
         expect(board_undo).to receive(:revive_piece).with(@killed_piece)

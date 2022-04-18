@@ -6,7 +6,7 @@ require './lib/special_moves'
 
 class Board
   include Displayable
-  include GameTextable
+  #include GameTextable
   include SpecialMoves
 
   attr_reader :columns, :rows, :active_piece, :cells, :living_pieces
@@ -171,9 +171,9 @@ class Board
   def move_piece(end_cell, start_cell = @active_piece.position, piece = @active_piece)
     start_cell.update_piece(nil)
     piece.update_position(end_cell)
-    killed = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
+    kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
     end_cell.update_piece(piece)
-    Move.new(end_cell, start_cell, piece, killed)
+    Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, kill: kill)
   end
 
   # Kill the given Piece and remove it from @living_pieces
@@ -187,7 +187,7 @@ class Board
   def undo_last_move
     last_move = Move.pop
     last_move.undo
-    revive_piece(last_move.killed) if last_move.killed
+    revive_piece(last_move.kill) if last_move.kill
   end
   
   # Revive the given Piece and add it back to @living_pieces

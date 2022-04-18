@@ -3,14 +3,15 @@
 class Move
   @@stack = []
 
-  attr_reader :start, :end, :piece, :killed
+  attr_reader :start, :end, :piece, :kill
 
-  def initialize(end_cell, start_cell, piece, killed)
-    @end = end_cell
-    @start = start_cell
+  def initialize(piece:, start_cell:, end_cell:, kill: nil, **castle)
     @piece = piece
-    @killed = killed
-    @@stack << self
+    @start = start_cell
+    @end = end_cell
+    @kill = kill
+    
+    @@stack << self unless castle[:secondary]
   end
 
   def self.stack
@@ -31,8 +32,8 @@ class Move
     @start.update_piece(@piece)
     
     # @killed = nil if no Piece was killed; @killed = Killed piece (if Piece was killed)
-    @end.update_piece(@killed)
+    @end.update_piece(@kill)
     # If there was a Killed Piece, place it back on @end Cell
-    @killed.update_position(@end) if @killed
+    @kill.update_position(@end) if @kill
   end
 end
