@@ -386,7 +386,7 @@ describe Game do
   end
 
   # Collect the current player's input and verify it
-  # If input is valid, return the Cell to move to
+  # If input is valid, return the Direction-Cell to move to
   # Otherwise, print a warning and recurse
   describe '#select_active_move' do
     subject(:game_select_move) { described_class.new(@board) }
@@ -409,8 +409,9 @@ describe Game do
         allow(game_select_move).to receive(:gets).and_return('a2')
         allow(@board).to receive_messages(find_cell: @cell_a2, active_piece: @active_piece)
       end
-      it 'returns the destination cell' do
-        expect(game_select_move.select_active_move).to eq(@cell_a2)
+      it 'returns a Hash of the Direction and Destination Cell' do
+        hash = { dir: :forward, cell: @cell_a2 }
+        expect(game_select_move.select_active_move).to eq(hash)
       end
     end
 

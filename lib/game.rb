@@ -57,8 +57,8 @@ class Game
 
       # piece_selected? => true
       @board.print_board(true)
-      end_cell = select_active_move
-      move = @board.move_piece(end_cell)
+      dir_cell = select_active_move
+      move = @board.move_piece(end_cell: dir_cell[:cell], dir: dir_cell[:dir])
       
       # Pawn Promotion 
       if promotion_possible?(move)
@@ -128,7 +128,9 @@ class Game
       puts input.to_s
       select_active_move
     else
-      @board.find_cell(input)
+      cell = @board.find_cell(input)
+      direction = @board.active_piece.moves.select { |dir, cells| cells.include?(cell) }.keys.first
+      { dir: direction, cell: cell }
     end
   end
 
