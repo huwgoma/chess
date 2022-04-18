@@ -195,6 +195,20 @@ describe SpecialMoves do
   end
 
   describe Castling do
-    
+    # Called when the Direction in Board#move_piece is :castle (ie. Piece is a King)
+    # King is moved => It moves the Rook, then creates a Move object for Rook
+    describe '#castle_move_piece' do
+      context "when the piece is a King" do
+        it 'finds the start cell of the castling Rook' do
+          
+        end
+
+        it 'finds the end cell of the castling Rook' do
+          
+        end
+
+        it 'calls #move_piece with the '
+      end
+    end
   end
 end

@@ -6,7 +6,6 @@ require './lib/special_moves'
 
 class Board
   include Displayable
-  #include GameTextable
   include SpecialMoves
 
   attr_reader :columns, :rows, :active_piece, :cells, :living_pieces
@@ -174,6 +173,13 @@ class Board
     kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
     end_cell.update_piece(piece)
 
+    # if Dir is Castle: 
+    # case piece
+    # when King
+    #   # move_castling_rook(piece, dir) #=> castle_move
+    #   Move.new(piece, start, end, castle_move)
+    # when Rook
+    #   Move.new(piece, start, end, secondary: true)
     Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, kill: kill)
   end
 

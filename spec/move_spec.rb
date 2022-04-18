@@ -20,6 +20,11 @@ describe Move do
     it "returns Move's @@stack class variable" do
       expect(Move.stack).to eq(@stack)
     end
+
+    it 'does not add Moves to @@stack if the Move has the secondary: true flag' do
+      move_3 = described_class.new(piece: 'WRook', start_cell: 'h1', end_cell: 'f1', secondary: true)
+      expect(Move.stack).to eq(@stack)
+    end
   end
 
   # Pop - Removes and returns the last Move object in @@stack

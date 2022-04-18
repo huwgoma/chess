@@ -560,6 +560,10 @@ describe Board do
     end
   end
 
+
+
+
+  
   # Move Piece - Given a Piece, Start, and End, move the Piece from Start to End Cell
   describe '#move_piece' do
     subject(:board_move) { described_class.new }
@@ -623,6 +627,12 @@ describe Board do
       board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
     end
   end
+
+
+
+
+
+
 
   # King in Check? - Given a Color, check if that Color's King is in danger
   describe '#king_in_check?' do
