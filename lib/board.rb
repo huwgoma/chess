@@ -102,7 +102,7 @@ class Board
   def verify_moves(piece)
     piece.moves.each do | dir, cells |
       cells.reject! do | cell |
-        move_piece(cell, piece.position, piece)
+        move_piece(piece: piece, start_cell: piece.position, end_cell: cell)
         reject_cell = king_in_check?(piece.color)
         undo_last_move
         reject_cell
@@ -168,7 +168,7 @@ class Board
   end
 
   # Given a Piece, a Start Cell, and an End Cell, move the Piece from Start to End
-  def move_piece(end_cell, start_cell = @active_piece.position, piece = @active_piece)
+  def move_piece(piece: @active_piece, start_cell: @active_piece.position, end_cell:)
     start_cell.update_piece(nil)
     piece.update_position(end_cell)
     kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
