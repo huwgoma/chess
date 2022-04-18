@@ -195,19 +195,37 @@ describe SpecialMoves do
   end
 
   describe Castling do
-    # Called when the Direction in Board#move_piece is :castle (ie. Piece is a King)
-    # King is moved => It moves the Rook, then creates a Move object for Rook
-    describe '#castle_move_piece' do
-      context "when the piece is a King" do
-        it 'finds the start cell of the castling Rook' do
-          
-        end
+    # Calculate the move details of the castling Rook, then move the Rook
+    describe '#move_castling_rook' do
+      subject(:board_move_castle) { Board.new }
+      
+      before do
+        @cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
+        @cell_f1 = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
+        @cell_g1 = instance_double(Cell, column: 'g', row: 1, coords: 'g1')
+        @cell_h1 = instance_double(Cell, column: 'h', row: 1, coords: 'h1')
+        @cells = [@cell_e1, @cell_f1, @cell_g1, @cell_h1]
 
-        it 'finds the end cell of the castling Rook' do
-          
-        end
+        board_move_castle.instance_variable_set(:@cells, @cells)
 
-        it 'calls #move_piece with the '
+        @king = instance_double(King, position: @cell_e1)
+        @rook = instance_double(Rook, position: @cell_h1)
+
+        @rook_start = @cell_h1
+        allow(@rook_start).to receive(:piece).and_return(@rook)
+        @rook_end = @cell_f1
+        @dir = :castle_king
+      end
+
+      it "calls #move_piece with the castling Rook's move details" do
+        expect(board_move_castle).to receive(:move_piece).with(piece: @rook, start_cell: rook_start, end_cell: rook_end, dir: dir)
+        board_move_castle.move_castling_rook(@king, dir)
+      end
+
+      it 'returns the Rook Move object from #move_piece' do
+        rook_move = instance_double(Move, piece: @rook, start: @rook_start, end: @rook_end)
+        move = class_double(Move, new: rook_move).as_stubbed_const
+        expect(board_move_castle.move_castling_rook(@king, @dir)).to eq(rook_move)
       end
     end
   end

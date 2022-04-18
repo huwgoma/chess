@@ -53,7 +53,9 @@ end
 
 # Namespace for Methods concerning Castling
 module Castling
-  
+  def move_castling_rook(king, dir)
+    #binding.pry
+  end
 end
 
 
