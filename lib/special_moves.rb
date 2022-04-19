@@ -55,11 +55,11 @@ end
 module Castling
   def move_castling_rook(king, dir)
     rook_start_col, rook_end_col = dir.match?(/king/) ? ['h', 'f'] : ['a', 'd']
-    rook_start_cell = find_cell(rook_start_col + king.position.row.to_s)
-    rook_end_cell = find_cell(rook_end_col + king.position.row.to_s)
-    rook = rook_start_cell.piece
+    rook_start = find_cell(rook_start_col + king.position.row.to_s)
+    rook_end = find_cell(rook_end_col + king.position.row.to_s)
+    rook = rook_start.piece
 
-    
+    move_piece(piece: rook, start_cell: rook_start, end_cell: rook_end, dir: dir)
   end
 end
 
