@@ -198,34 +198,67 @@ describe SpecialMoves do
     # Calculate the move details of the castling Rook, then move the Rook
     describe '#move_castling_rook' do
       subject(:board_move_castle) { Board.new }
-      
+
       before do
-        @cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
-        @cell_f1 = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
-        @cell_g1 = instance_double(Cell, column: 'g', row: 1, coords: 'g1')
-        @cell_h1 = instance_double(Cell, column: 'h', row: 1, coords: 'h1')
-        @cells = [@cell_e1, @cell_f1, @cell_g1, @cell_h1]
+        @king = instance_double(King)
+        @rook = instance_double(Rook, color: :W)
+      end
+      
+      context 'when the White King is castling Kingside' do
+        before do
+          king_start = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
+          allow(@king).to receive(:position).and_return(king_start)
+          king_end = instance_double(Cell, column: 'g', row: 1, coords: 'g1')
 
-        board_move_castle.instance_variable_set(:@cells, @cells)
+          @rook_start = instance_double(Cell, column: 'h', row: 1, coords: 'h1', piece: @rook)
+          @rook_end = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
 
-        @king = instance_double(King, position: @cell_e1)
-        @rook = instance_double(Rook, position: @cell_h1)
+          cells = [king_start, @rook_end, king_end, @rook_start]
+          board_move_castle.instance_variable_set(:@cells, cells)
 
-        @rook_start = @cell_h1
-        allow(@rook_start).to receive(:piece).and_return(@rook)
-        @rook_end = @cell_f1
-        @dir = :castle_king
+          @dir = :castle_king
+
+          # move_piece
+          allow(@rook_start).to receive(:update_piece)
+          allow(@rook).to receive(:update_position)
+          allow(@rook_end).to receive(:has_enemy?).and_return(false)
+          allow(@rook_end).to receive(:update_piece)
+        end
+
+        it "calls #move_piece and returns the Move object for the castling Rook's move" do
+          rook_move = instance_double(Move, piece: @rook, start: @rook_start, end: @rook_end)
+          move = class_double(Move, new: rook_move).as_stubbed_const
+          expect(board_move_castle.move_castling_rook(@king, @dir)).to eq(rook_move)
+        end
+
       end
 
-      it "calls #move_piece with the castling Rook's move details" do
-        expect(board_move_castle).to receive(:move_piece).with(piece: @rook, start_cell: rook_start, end_cell: rook_end, dir: dir)
-        board_move_castle.move_castling_rook(@king, dir)
-      end
+      context 'when the Black King is castling Queenside' do
+        before do
+          king_start = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
+          allow(@king).to receive(:position).and_return(king_start)
+          king_end = instance_double(Cell, column: 'c', row: 8, coords: 'c8')
 
-      it 'returns the Rook Move object from #move_piece' do
-        rook_move = instance_double(Move, piece: @rook, start: @rook_start, end: @rook_end)
-        move = class_double(Move, new: rook_move).as_stubbed_const
-        expect(board_move_castle.move_castling_rook(@king, @dir)).to eq(rook_move)
+          @rook_start = instance_double(Cell, column: 'a', row: 8, coords: 'a8', piece: @rook)
+          @rook_end = instance_double(Cell, column: 'd', row: 8, coords: 'd8')
+
+          cells = [@rook_start, king_end, @rook_end, king_start]
+          board_move_castle.instance_variable_set(:@cells, cells)
+
+          @dir = :castle_queen
+
+          # move_piece
+          allow(@rook_start).to receive(:update_piece)
+          allow(@rook).to receive(:update_position)
+          allow(@rook_end).to receive(:has_enemy?).and_return(false)
+          allow(@rook_end).to receive(:update_piece)
+        end
+
+        it 'correctly calculates Rook move details' do
+          rook_move = instance_double(Move, piece: @rook, start: @rook_start, end: @rook_end)
+          move = class_double(Move, new: rook_move).as_stubbed_const
+          expect(board_move_castle.move_castling_rook(@king, @dir)).to eq(rook_move)
+        end
       end
     end
   end
