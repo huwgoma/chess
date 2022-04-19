@@ -166,7 +166,8 @@ class Board
     @living_pieces[king_color].find { | piece | piece.is_a?(King) }.position
   end
 
-  # Given a Piece, a Start Cell, and an End Cell, move the Piece from Start to End
+  # Given Piece, Start, and End, move the Piece from Start to End
+  # and create a Move object
   def move_piece(piece: @active_piece, start_cell: @active_piece.position, end_cell:, dir:)
     start_cell.update_piece(nil)
     piece.update_position(end_cell)
@@ -175,20 +176,15 @@ class Board
 
     if dir.match?(/castle/)
       case piece
+      when King
+        castle_move = move_castling_rook(piece, dir)
+        Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, rook_move: castle_move)
       when Rook
         Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, secondary: true)
       end
     else
       Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, kill: kill)
     end
-    # if Dir is Castle: 
-    # case piece
-    # when King
-    #   # move_castling_rook(piece, dir) #=> castle_move
-    #   Move.new(piece, start, end, castle_move)
-    # when Rook
-    #   Move.new(piece, start, end, secondary: true)
-    
   end
 
   # Kill the given Piece and remove it from @living_pieces

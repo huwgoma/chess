@@ -200,17 +200,19 @@ describe SpecialMoves do
       subject(:board_move_castle) { Board.new }
 
       before do
-        @king = instance_double(King)
-        @rook = instance_double(Rook, color: :W)
+        @king_piece = instance_double(King)
+        @rook_piece = instance_double(Rook, color: :W)
+        rook = class_double(Rook).as_stubbed_const
+        allow(rook).to receive(:===).with(@rook_piece).and_return(true)
       end
       
       context 'when the White King is castling Kingside' do
         before do
           king_start = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
-          allow(@king).to receive(:position).and_return(king_start)
+          allow(@king_piece).to receive(:position).and_return(king_start)
           king_end = instance_double(Cell, column: 'g', row: 1, coords: 'g1')
 
-          @rook_start = instance_double(Cell, column: 'h', row: 1, coords: 'h1', piece: @rook)
+          @rook_start = instance_double(Cell, column: 'h', row: 1, coords: 'h1', piece: @rook_piece)
           @rook_end = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
 
           cells = [king_start, @rook_end, king_end, @rook_start]
@@ -220,15 +222,15 @@ describe SpecialMoves do
 
           # move_piece
           allow(@rook_start).to receive(:update_piece)
-          allow(@rook).to receive(:update_position)
+          allow(@rook_piece).to receive(:update_position)
           allow(@rook_end).to receive(:has_enemy?).and_return(false)
           allow(@rook_end).to receive(:update_piece)
         end
 
         it "calls #move_piece and returns the Move object for the castling Rook's move" do
-          rook_move = instance_double(Move, piece: @rook, start: @rook_start, end: @rook_end)
+          rook_move = instance_double(Move, piece: @rook_piece, start: @rook_start, end: @rook_end)
           move = class_double(Move, new: rook_move).as_stubbed_const
-          expect(board_move_castle.move_castling_rook(@king, @dir)).to eq(rook_move)
+          expect(board_move_castle.move_castling_rook(@king_piece, @dir)).to eq(rook_move)
         end
 
       end
@@ -236,10 +238,10 @@ describe SpecialMoves do
       context 'when the Black King is castling Queenside' do
         before do
           king_start = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
-          allow(@king).to receive(:position).and_return(king_start)
+          allow(@king_piece).to receive(:position).and_return(king_start)
           king_end = instance_double(Cell, column: 'c', row: 8, coords: 'c8')
 
-          @rook_start = instance_double(Cell, column: 'a', row: 8, coords: 'a8', piece: @rook)
+          @rook_start = instance_double(Cell, column: 'a', row: 8, coords: 'a8', piece: @rook_piece)
           @rook_end = instance_double(Cell, column: 'd', row: 8, coords: 'd8')
 
           cells = [@rook_start, king_end, @rook_end, king_start]
@@ -249,15 +251,15 @@ describe SpecialMoves do
 
           # move_piece
           allow(@rook_start).to receive(:update_piece)
-          allow(@rook).to receive(:update_position)
+          allow(@rook_piece).to receive(:update_position)
           allow(@rook_end).to receive(:has_enemy?).and_return(false)
           allow(@rook_end).to receive(:update_piece)
         end
 
         it 'correctly calculates Rook move details' do
-          rook_move = instance_double(Move, piece: @rook, start: @rook_start, end: @rook_end)
+          rook_move = instance_double(Move, piece: @rook_piece, start: @rook_start, end: @rook_end)
           move = class_double(Move, new: rook_move).as_stubbed_const
-          expect(board_move_castle.move_castling_rook(@king, @dir)).to eq(rook_move)
+          expect(board_move_castle.move_castling_rook(@king_piece, @dir)).to eq(rook_move)
         end
       end
     end

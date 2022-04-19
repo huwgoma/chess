@@ -627,36 +627,59 @@ describe Board do
       before do
         @dir = :castle_king
         @move = class_double(Move).as_stubbed_const
+
+        # Castling Rook
+        @rook_piece = instance_double(Rook, color: :W)
+        @rook_start = instance_double(Cell, coords: 'h1', piece: @rook_piece)
+        @rook_end = instance_double(Cell, coords: 'f1')
+
+        # Move Rook
+        allow(@rook_start).to receive(:update_piece)
+        allow(@rook_piece).to receive(:update_position)
+        allow(@rook_end).to receive_messages(has_enemy?: false, update_piece: @rook_piece)
+        
+        # Rook
+        rook = class_double(Rook).as_stubbed_const
+        allow(rook).to receive(:===).with(@rook_piece).and_return(true)
       end
 
       context 'when the type of the moving Piece is King' do
         before do
-          @cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
-          @king = instance_double(King, position: @cell_e1)
-          allow(@king).to receive(:===).with(King).and_return(true)
+          # King
+          @king_start = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
+          @king_piece = instance_double(King, position: @king_start, color: :W)
+          @king_end = instance_double(Cell, coords: 'g1')
+          
+          king = class_double(King).as_stubbed_const
+          allow(king).to receive(:===).with(@king_piece).and_return(true)
+          allow(king).to receive(:===).with(@rook_piece).and_return(false)
+
+          
+          
+          # Move King
+          allow(@king_start).to receive(:update_piece)
+          allow(@king_piece).to receive(:update_position)
+          allow(@king_end).to receive_messages(has_enemy?: false, update_piece: @king_piece)
+
+          # Rook Castle Cells
+          cells = [@rook_start, @rook_end]
+          board_move.instance_variable_set(:@cells, cells)
         end
 
-        it "sends #new to Move with the details of the King's move - including the castling Rook's move" do
+        it "returns the Move object for the King's castle move" do
+          rook_move = instance_double(Move, 'r', piece: @rook_piece, start: @rook_start, end: @rook_end)
+          king_move = instance_double(Move, 'k', piece: @king_piece, start: @king_start, end: @king_end, rook_move: rook_move)
+          allow(@move).to receive(:new).and_return(rook_move, king_move)
           
+          expect(board_move.move_piece(piece: @king_piece, start_cell: @king_start, end_cell: @king_end, dir: @dir)).to eq(king_move)
         end
       end
 
       context 'when the type of the moving Piece is Rook' do
-        before do
-          @rook_piece = instance_double(Rook, color: :W)
-          rook = class_double(Rook).as_stubbed_const
-          allow(rook).to receive(:===).with(@rook_piece).and_return(true)
-
-          @rook_start = instance_double(Cell, coords: 'h1')
-          @rook_end = instance_double(Cell, coords: 'f1')
-
-          # Move Piece
-          allow(@rook_start).to receive(:update_piece)
-          allow(@rook_piece).to receive(:update_position)
-          allow(@rook_end).to receive_messages(has_enemy?: false, update_piece: @rook_piece)
-        end
-
         it "sends #new to Move with the details of the castling Rook's move - secondary flag set to true" do
+          #rook = class_double(Rook).as_stubbed_const
+          #allow(rook).to receive(:===).with(@rook_piece).and_return(true)
+          
           expect(@move).to receive(:new).with(piece: @rook_piece, start_cell: @rook_start, end_cell: @rook_end, secondary: true)
           board_move.move_piece(piece: @rook_piece, start_cell: @rook_start, end_cell: @rook_end, dir: @dir)
         end

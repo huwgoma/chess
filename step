@@ -1,0 +1,32 @@
+
+[1mFrom:[0m /home/hugo/the_odin_project/chess/lib/board.rb:181 Board#move_piece:
+
+    [1;34m171[0m: [32mdef[0m [1;34mmove_piece[0m([35mpiece[0m: @active_piece, [35mstart_cell[0m: @active_piece.position, [35mend_cell[0m:, [35mdir[0m:)
+    [1;34m172[0m:   start_cell.update_piece([1;36mnil[0m)
+    [1;34m173[0m:   piece.update_position(end_cell)
+    [1;34m174[0m:   kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : [1;36mnil[0m
+    [1;34m175[0m:   end_cell.update_piece(piece)
+    [1;34m176[0m: 
+    [1;34m177[0m:   [32mif[0m dir.match?([35m[1;35m/[0m[35mcastle[1;35m/[0m[35m[0m)
+    [1;34m178[0m:     [32mcase[0m piece
+    [1;34m179[0m:     [32mwhen[0m [1;34;4mKing[0m
+    [1;34m180[0m:       binding.pry
+ => [1;34m181[0m:       castle_move = move_castling_rook(piece, dir)
+    [1;34m182[0m:       
+    [1;34m183[0m:       [1;34;4mMove[0m.new([35mpiece[0m: piece, [35mstart_cell[0m: start_cell, [35mend_cell[0m: end_cell, [35mrook_move[0m: castle_move)
+    [1;34m184[0m:     [32mwhen[0m [1;34;4mRook[0m
+    [1;34m185[0m:       [1;34;4mMove[0m.new([35mpiece[0m: piece, [35mstart_cell[0m: start_cell, [35mend_cell[0m: end_cell, [35msecondary[0m: [1;36mtrue[0m)
+    [1;34m186[0m:     [32mend[0m
+    [1;34m187[0m:   [32melse[0m
+    [1;34m188[0m:     [1;34;4mMove[0m.new([35mpiece[0m: piece, [35mstart_cell[0m: start_cell, [35mend_cell[0m: end_cell, [35mkill[0m: kill)
+    [1;34m189[0m:   [32mend[0m
+    [1;34m190[0m:   [1;34m# if Dir is Castle: [0m
+    [1;34m191[0m:   [1;34m# case piece[0m
+    [1;34m192[0m:   [1;34m# when King[0m
+    [1;34m193[0m:   [1;34m#   # move_castling_rook(piece, dir) #=> castle_move[0m
+    [1;34m194[0m:   [1;34m#   Move.new(piece, start, end, castle_move)[0m
+    [1;34m195[0m:   [1;34m# when Rook[0m
+    [1;34m196[0m:   [1;34m#   Move.new(piece, start, end, secondary: true)[0m
+    [1;34m197[0m:   
+    [1;34m198[0m: [32mend[0m
+

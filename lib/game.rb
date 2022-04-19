@@ -50,7 +50,6 @@ class Game
   ## Core Game Loop
   def game_loop
     loop do
-      #binding.pry
       piece = select_active_piece
 
       # Return out of game_loop early if piece is a Symbol ('Q' entered)

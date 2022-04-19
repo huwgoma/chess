@@ -3,7 +3,7 @@
 class Move
   @@stack = []
 
-  attr_reader :start, :end, :piece, :kill
+  attr_reader :start, :end, :piece, :kill, :rook_move
 
   def initialize(piece:, start_cell:, end_cell:, kill: nil, **castle)
     @piece = piece
@@ -11,6 +11,8 @@ class Move
     @end = end_cell
     @kill = kill
     
+    @rook_move = castle[:rook_move] if castle[:rook_move]
+
     @@stack << self unless castle[:secondary]
   end
 
