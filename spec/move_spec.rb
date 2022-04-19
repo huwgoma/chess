@@ -104,5 +104,20 @@ describe Move do
         move_undo.undo
       end
     end
+
+    context 'if there is a secondary Rook move' do
+      # it undoes that move as well
+      it "sends #update_position to the Rook with Rook's @start" do
+        
+      end
+
+      it "sends #update_piece to the Rook's @start cell with the Rook" do
+        
+      end
+
+      it "sends #update_piece to the Rook's @end cell with nil" do
+        
+      end
+    end
   end
 end
