@@ -560,10 +560,6 @@ describe Board do
     end
   end
 
-
-
-
-  
   # Move Piece - Given a Piece, Start, and End, move the Piece from Start to End Cell
   describe '#move_piece' do
     subject(:board_move) { described_class.new }
@@ -626,13 +622,47 @@ describe Board do
       expect(move).to receive(:new).with(piece: @piece, start_cell: @start, end_cell: @end, kill: nil)
       board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
     end
+
+    context 'when the direction of the move is castle_king' do
+      before do
+        @dir = :castle_king
+        @move = class_double(Move).as_stubbed_const
+      end
+
+      context 'when the type of the moving Piece is King' do
+        before do
+          @cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
+          @king = instance_double(King, position: @cell_e1)
+          allow(@king).to receive(:===).with(King).and_return(true)
+        end
+
+        it "sends #new to Move with the details of the King's move - including the castling Rook's move" do
+          
+        end
+      end
+
+      context 'when the type of the moving Piece is Rook' do
+        before do
+          @rook_piece = instance_double(Rook, color: :W)
+          rook = class_double(Rook).as_stubbed_const
+          allow(rook).to receive(:===).with(@rook_piece).and_return(true)
+
+          @rook_start = instance_double(Cell, coords: 'h1')
+          @rook_end = instance_double(Cell, coords: 'f1')
+
+          # Move Piece
+          allow(@rook_start).to receive(:update_piece)
+          allow(@rook_piece).to receive(:update_position)
+          allow(@rook_end).to receive_messages(has_enemy?: false, update_piece: @rook_piece)
+        end
+
+        it "sends #new to Move with the details of the castling Rook's move - secondary flag set to true" do
+          expect(@move).to receive(:new).with(piece: @rook_piece, start_cell: @rook_start, end_cell: @rook_end, secondary: true)
+          board_move.move_piece(piece: @rook_piece, start_cell: @rook_start, end_cell: @rook_end, dir: @dir)
+        end
+      end
+    end
   end
-
-
-
-
-
-
 
   # King in Check? - Given a Color, check if that Color's King is in danger
   describe '#king_in_check?' do

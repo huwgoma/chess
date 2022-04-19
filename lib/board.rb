@@ -173,6 +173,14 @@ class Board
     kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
     end_cell.update_piece(piece)
 
+    if dir.match?(/castle/)
+      case piece
+      when Rook
+        Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, secondary: true)
+      end
+    else
+      Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, kill: kill)
+    end
     # if Dir is Castle: 
     # case piece
     # when King
@@ -180,7 +188,7 @@ class Board
     #   Move.new(piece, start, end, castle_move)
     # when Rook
     #   Move.new(piece, start, end, secondary: true)
-    Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, kill: kill)
+    
   end
 
   # Kill the given Piece and remove it from @living_pieces
