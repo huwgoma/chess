@@ -106,17 +106,29 @@ describe Move do
     end
 
     context 'if there is a secondary Rook move' do
+      before do
+        @rook_start = instance_double(Cell, update_piece: nil)
+        @rook = instance_double(Piece, 'rook', update_position: @rook_start)
+        @rook_end = instance_double(Cell, update_piece: nil)
+        rook_move = described_class.new(piece: @rook, start_cell: @rook_start, end_cell: @rook_end, secondary: true)
+
+        # Give our primary Move a secondary @rook_move
+        move_undo.instance_variable_set(:@rook_move, rook_move)
+      end
       # it undoes that move as well
       it "sends #update_position to the Rook with Rook's @start" do
-        
+        expect(@rook).to receive(:update_position).with(@rook_start)
+        move_undo.undo
       end
 
       it "sends #update_piece to the Rook's @start cell with the Rook" do
-        
+        expect(@rook_start).to receive(:update_piece).with(@rook)
+        move_undo.undo
       end
 
       it "sends #update_piece to the Rook's @end cell with nil" do
-        
+        expect(@rook_end).to receive(:update_piece).with(nil)
+        move_undo.undo
       end
     end
   end

@@ -33,9 +33,12 @@ class Move
     @piece.update_position(@start)
     @start.update_piece(@piece)
     
-    # @killed = nil if no Piece was killed; @killed = Killed piece (if Piece was killed)
+    # @kill = nil or the piece that was killed 
     @end.update_piece(@kill)
     # If there was a Killed Piece, place it back on @end Cell
     @kill.update_position(@end) if @kill
+
+    # If the Move has a secondary @rook_move (ie. Castling), undo that as well
+    @rook_move.undo if @rook_move
   end
 end
