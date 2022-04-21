@@ -295,8 +295,8 @@ describe Board do
     end
   end
 
-  # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
-  # each move can be made without putting the allied King into check
+  # Verify Moves - Given a Piece and a @moves Hash, verify each move by 
+  # checking whether the piece can be moved without putting the ally King in check 
   describe '#verify_moves' do
     subject(:board_verify) { described_class.new }
     before do
