@@ -159,7 +159,7 @@ describe Board do
         @cell_d4 = board_moves.find_cell('d4')
         @w_pawn_d4 = instance_double(Pawn, class: Pawn, is_a?: true,
           moves: pawn_moves, initial: false, 
-          position: @cell_d4, color: :W, forward: 1)
+          position: @cell_d4, color: :W, forward: 1)   
 
         @cell_d5 = board_moves.find_cell('d5')
 
@@ -167,6 +167,12 @@ describe Board do
         @b_pawn_d7 = instance_double(Pawn, class: Pawn, is_a?: true,
           moves: pawn_moves, initial: true,
           position: @cell_d7, color: :B, forward: -1)
+        
+        # Pawn Class Double
+        @pawn = class_double(Pawn).as_stubbed_const
+        allow(@pawn).to receive(:===).with(@w_pawn_d2).and_return(true)
+        allow(@pawn).to receive(:===).with(@w_pawn_d4).and_return(true)
+        allow(@pawn).to receive(:===).with(@b_pawn_d7).and_return(true)
       end
       
       # Forward - Move 1 cell forward (D4->D5)
@@ -260,6 +266,10 @@ describe Board do
         @cell_b6 = board_moves.find_cell('b6')
         @cell_b7 = board_moves.find_cell('b7')
         @cell_b8 = board_moves.find_cell('b8')
+
+        # Rook Class Double
+        rook = class_double(Rook).as_stubbed_const
+        allow(rook).to receive(:===).with(@w_rook_b4).and_return(true)
       end
 
       context "when there are no other Pieces in its path" do
@@ -295,12 +305,6 @@ describe Board do
     end
   end
 
-
-
-
-
-
-
   # Verify Moves - Given a Piece and a @moves Hash, verify each move by 
   # checking whether the piece can be moved without putting the ally King in check 
   describe '#verify_moves' do
@@ -315,6 +319,11 @@ describe Board do
       allow(@w_pawn).to receive(:is_a?)
       allow(@w_pawn).to receive(:is_a?).with(Pawn).and_return(true)
       allow(@cell_e2).to receive(:piece).and_return(@w_pawn)
+
+      # Pawn Class Double
+      pawn = class_double(Pawn).as_stubbed_const
+      allow(pawn).to receive(:===)
+      allow(pawn).to receive(:===).with(@w_pawn).and_return(true)
 
       # Mock Pawn Cells
       @cell_e3 = board_verify.find_cell('e3')
@@ -355,7 +364,7 @@ describe Board do
       marshal = class_double(Marshal).as_stubbed_const
       allow(marshal).to receive(:dump)
       allow(marshal).to receive(:load).and_return(@clone_board)
-
+      
     end
 
     # Verify Moves - Test Cases
@@ -470,7 +479,6 @@ describe Board do
     end
   end
 
-  
   # Copy Clone Moves - Keep each of the real Piece's @moves only if its equivalent 
   # clone @moves also contains that move
   describe '#transfer_clone_moves' do
