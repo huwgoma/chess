@@ -69,14 +69,7 @@ class Board
   # Generate Legal Moves - Generate the given Piece's legal moves
   def generate_legal_moves(piece)
     generate_moves(piece)
-    #binding.pry
-    clone_board = Marshal.load(Marshal.dump(self))
-    clone_piece = clone_board.find_cell(piece.position.coords).piece
-    clone_moves = clone_board.verify_moves(clone_piece)
-    # Transfer the clone piece's moves to the real piece's moves
-    transfer_clone_moves(piece.moves, clone_moves)
-
-    # piece.moves = verify_moves(piece, moves)
+    verify_moves(piece)
   end
 
   # Generate Moves - Given a Piece, generate its possible moves
@@ -103,11 +96,15 @@ class Board
   # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
   # each move can be made without putting the allied King into check
   def verify_moves(piece, moves = piece.moves)
+    clone_board = Marshal.load(Marshal.dump(self))
+    clone_piece = clone_board.find_cell(piece.position.coords).piece
+
     moves.each do | dir, cells |
       cells.reject! do | cell |
-        move_piece(piece: piece, start_cell: piece.position, end_cell: cell, dir: dir)
-        reject_cell = king_in_check?(piece.color)
-        undo_last_move
+        clone_board.move_piece(piece: clone_piece, start_cell: clone_piece.position, 
+          end_cell: clone_board.find_cell(cell.coords), dir: dir)
+        reject_cell = clone_board.king_in_check?(piece.color)
+        clone_board.undo_last_move
         reject_cell
       end
     end

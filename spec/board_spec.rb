@@ -295,6 +295,12 @@ describe Board do
     end
   end
 
+
+
+
+
+
+
   # Verify Moves - Given a Piece and a @moves Hash, verify each move by 
   # checking whether the piece can be moved without putting the ally King in check 
   describe '#verify_moves' do
@@ -308,6 +314,7 @@ describe Board do
         position: @cell_e2, color: :W, forward: 1)
       allow(@w_pawn).to receive(:is_a?)
       allow(@w_pawn).to receive(:is_a?).with(Pawn).and_return(true)
+      allow(@cell_e2).to receive(:piece).and_return(@w_pawn)
 
       # Mock Pawn Cells
       @cell_e3 = board_verify.find_cell('e3')
@@ -338,11 +345,20 @@ describe Board do
       # Mock Living Pieces
       living_pieces = { W: [@w_pawn, @w_king], B: [@b_rook_1, @b_rook_2] }
       board_verify.instance_variable_set(:@living_pieces, living_pieces)
+
+      # Clone Board
+      @clone_board = described_class.new 
+      @clone_board.instance_variable_set(:@cells, @cell_doubles)
+      @clone_board.instance_variable_set(:@living_pieces, living_pieces)
+      #allow(@clone_board).to receive(:find_king_cell).with(:B).and_return(@cell_b8, @cell_b7, @cell_a7)
+
+      marshal = class_double(Marshal).as_stubbed_const
+      allow(marshal).to receive(:dump)
+      allow(marshal).to receive(:load).and_return(@clone_board)
+
     end
 
     # Verify Moves - Test Cases
-    # Imminent threat - When the King is 1 move away from being in Check;
-    # only being protected by the moving Piece
     context "when the King is under no imminent threat" do
       # ie. All generated moves are legal 
       before do
@@ -354,6 +370,8 @@ describe Board do
       end
     end
 
+    # Imminent threat - When the King is 1 move away from being in Check;
+    # only being protected by the moving Piece
     context "when the King is under imminent threat" do
       before do
         # Move Rook 1 to E5
@@ -382,7 +400,8 @@ describe Board do
         allow(@cell_e3).to receive(:has_enemy?).with(:B).and_return(true)
         allow(@cell_e3).to receive(:piece).and_return(@w_pawn, nil)
 
-        allow(@cell_e2).to receive_messages(empty?: true, piece: nil)
+        allow(@cell_e2).to receive(:empty?).and_return(true)
+        allow(@cell_e2).to receive(:piece).and_return(@w_pawn, nil)
         allow(@cell_e1).to receive_messages(empty?: false, has_enemy?: true, piece: @w_king)
       end
       it 'does not allow the Piece to make a move that would put the King into check' do
@@ -440,6 +459,7 @@ describe Board do
           allow(@b_rook_2).to receive_messages(is_killed: nil, update_position: nil, is_revived: nil)
 
           allow(@cell_e2).to receive(:empty?).and_return(true)
+          allow(@cell_e2).to receive(:piece).and_return(@w_pawn, nil)
           allow(cell_f2).to receive_messages(empty?: false, has_enemy?: true)      
         end
         it 'does not allow the Piece to move' do
@@ -450,6 +470,7 @@ describe Board do
     end
   end
 
+  
   # Copy Clone Moves - Keep each of the real Piece's @moves only if its equivalent 
   # clone @moves also contains that move
   describe '#transfer_clone_moves' do
