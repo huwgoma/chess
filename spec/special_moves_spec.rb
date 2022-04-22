@@ -308,7 +308,8 @@ describe SpecialMoves do
         # Lane Clear? E1(King) -> F1 -> G1 -> H1(Rook)
         allow(@cell_f1).to receive(:empty?).and_return(true)
         allow(@cell_g1).to receive(:empty?).and_return(true)
-        
+        # King in Check? 
+        allow(board_castle).to receive(:king_in_check?).and_return(false)
         @dir = :castle_king
       end
 
@@ -342,8 +343,8 @@ describe SpecialMoves do
       end
 
       context 'if the King is currently in check' do
-        xit 'returns false' do
-          allow(board_castle).to receive(:king_in_check?).with(:W)
+        it 'returns false' do
+          allow(board_castle).to receive(:king_in_check?).with(:W).and_return(true)
 
           expect(board_castle.castling_possible?(@king, @dir)).to be false
         end
