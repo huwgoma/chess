@@ -201,7 +201,8 @@ describe SpecialMoves do
 
       before do
         @king_piece = instance_double(King)
-        @rook_piece = instance_double(Rook, color: :W)
+        @rook_piece = instance_double(Rook, color: :W, is_a?: true)
+        allow(@rook_piece).to receive(:is_a?).with(Rook).and_return(true)
         rook = class_double(Rook).as_stubbed_const
         allow(rook).to receive(:===).with(@rook_piece).and_return(true)
       end
@@ -316,15 +317,53 @@ describe SpecialMoves do
     # Find and return the castling Rook (ie. the piece on the Rook's cell)
     # If piece is not a Rook or is nil, return nil 
     describe '#find_castling_rook' do
+      subject(:board_find_rook) { Board.new }
+      before do
+        cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
+        @king = instance_double(King, position: cell_e1)
+
+        @cell_h1 = instance_double(Cell, column: 'h', row: 1, coords: 'h1')
+        @rook = instance_double(Rook, is_a?: true)
+        allow(@rook).to receive(:is_a?).with(Rook).and_return(true)
+
+        @cell_e8 = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
+        @cell_a8 = instance_double(Cell, column: 'a', row: 8, coords: 'a8')
+        # Board Cells
+        cells = [cell_e1, @cell_h1, @cell_e8, @cell_a8]
+        board_find_rook.instance_variable_set(:@cells, cells)
+        
+        @dir = :castle_king
+      end
+
       context 'when the Rook is present (on its starting cell)' do
+        before do
+          allow(@cell_h1).to receive(:piece).and_return(@rook)
+        end
+
         it 'returns the Rook piece' do
-          
+          expect(board_find_rook.find_castling_rook(@king, @dir)).to eq(@rook)
+        end
+
+        it 'works for Black + Queenside castling too' do
+          black_king = instance_double(King, position: @cell_e8)
+          allow(@cell_a8).to receive(:piece).and_return(@rook)
+          dir = :castle_queen
+
+          expect(board_find_rook.find_castling_rook(black_king, dir)).to eq(@rook)
         end
       end
 
-      context 'when the Rook is missing (not on A1/H1/A8/H8)' do
-        it 'returns nil' do
-          
+      context 'when there is no Piece, or a non-Rook Piece, on A1/H1/A8/H8' do
+        it 'returns nil (no Piece)' do
+          allow(@cell_h1).to receive(:piece).and_return(nil)
+          expect(board_find_rook.find_castling_rook(@king, @dir)).to be nil
+        end
+
+        it 'returns nil(non-Rook Piece)' do
+          not_rook = instance_double(Piece)
+          allow(@cell_h1).to receive(:piece).and_return(not_rook)
+
+          expect(board_find_rook.find_castling_rook(@king, @dir)).to be nil
         end
       end
     end
