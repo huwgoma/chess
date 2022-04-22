@@ -51,12 +51,11 @@ class Game
   def game_loop
     loop do
       piece = select_active_piece
-
       # Return out of game_loop early if piece is a Symbol ('Q' entered)
       return send(piece) if piece.is_a?(Symbol)
 
       # piece_selected? => true
-      @board.print_board(true)
+      @board.print_board(piece_selected: true)
       dir_cell = select_active_move
       move = @board.move_piece(end_cell: dir_cell[:cell], dir: dir_cell[:dir])
       

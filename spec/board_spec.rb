@@ -159,7 +159,7 @@ describe Board do
         @cell_d4 = board_moves.find_cell('d4')
         @w_pawn_d4 = instance_double(Pawn, class: Pawn, is_a?: true,
           moves: pawn_moves, initial: false, 
-          position: @cell_d4, color: :W, forward: 1)
+          position: @cell_d4, color: :W, forward: 1)   
 
         @cell_d5 = board_moves.find_cell('d5')
 
@@ -167,6 +167,12 @@ describe Board do
         @b_pawn_d7 = instance_double(Pawn, class: Pawn, is_a?: true,
           moves: pawn_moves, initial: true,
           position: @cell_d7, color: :B, forward: -1)
+        
+        # Pawn Class Double
+        @pawn = class_double(Pawn).as_stubbed_const
+        allow(@pawn).to receive(:===).with(@w_pawn_d2).and_return(true)
+        allow(@pawn).to receive(:===).with(@w_pawn_d4).and_return(true)
+        allow(@pawn).to receive(:===).with(@b_pawn_d7).and_return(true)
       end
       
       # Forward - Move 1 cell forward (D4->D5)
@@ -260,6 +266,10 @@ describe Board do
         @cell_b6 = board_moves.find_cell('b6')
         @cell_b7 = board_moves.find_cell('b7')
         @cell_b8 = board_moves.find_cell('b8')
+
+        # Rook Class Double
+        rook = class_double(Rook).as_stubbed_const
+        allow(rook).to receive(:===).with(@w_rook_b4).and_return(true)
       end
 
       context "when there are no other Pieces in its path" do
@@ -295,8 +305,8 @@ describe Board do
     end
   end
 
-  # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
-  # each move can be made without putting the allied King into check
+  # Verify Moves - Given a Piece and a @moves Hash, verify each move by 
+  # checking whether the piece can be moved without putting the ally King in check 
   describe '#verify_moves' do
     subject(:board_verify) { described_class.new }
     before do
@@ -308,6 +318,12 @@ describe Board do
         position: @cell_e2, color: :W, forward: 1)
       allow(@w_pawn).to receive(:is_a?)
       allow(@w_pawn).to receive(:is_a?).with(Pawn).and_return(true)
+      allow(@cell_e2).to receive(:piece).and_return(@w_pawn)
+
+      # Pawn Class Double
+      pawn = class_double(Pawn).as_stubbed_const
+      allow(pawn).to receive(:===)
+      allow(pawn).to receive(:===).with(@w_pawn).and_return(true)
 
       # Mock Pawn Cells
       @cell_e3 = board_verify.find_cell('e3')
@@ -338,11 +354,19 @@ describe Board do
       # Mock Living Pieces
       living_pieces = { W: [@w_pawn, @w_king], B: [@b_rook_1, @b_rook_2] }
       board_verify.instance_variable_set(:@living_pieces, living_pieces)
+
+      # Clone Board
+      @clone_board = described_class.new 
+      @clone_board.instance_variable_set(:@cells, @cell_doubles)
+      @clone_board.instance_variable_set(:@living_pieces, living_pieces)
+      #allow(@clone_board).to receive(:find_king_cell).with(:B).and_return(@cell_b8, @cell_b7, @cell_a7)
+
+      marshal = class_double(Marshal).as_stubbed_const
+      allow(marshal).to receive(:dump)
+      allow(marshal).to receive(:load).and_return(@clone_board)
     end
 
     # Verify Moves - Test Cases
-    # Imminent threat - When the King is 1 move away from being in Check;
-    # only being protected by the moving Piece
     context "when the King is under no imminent threat" do
       # ie. All generated moves are legal 
       before do
@@ -354,6 +378,8 @@ describe Board do
       end
     end
 
+    # Imminent threat - When the King is 1 move away from being in Check;
+    # only being protected by the moving Piece
     context "when the King is under imminent threat" do
       before do
         # Move Rook 1 to E5
@@ -382,7 +408,8 @@ describe Board do
         allow(@cell_e3).to receive(:has_enemy?).with(:B).and_return(true)
         allow(@cell_e3).to receive(:piece).and_return(@w_pawn, nil)
 
-        allow(@cell_e2).to receive_messages(empty?: true, piece: nil)
+        allow(@cell_e2).to receive(:empty?).and_return(true)
+        allow(@cell_e2).to receive(:piece).and_return(@w_pawn, nil)
         allow(@cell_e1).to receive_messages(empty?: false, has_enemy?: true, piece: @w_king)
       end
       it 'does not allow the Piece to make a move that would put the King into check' do
@@ -440,6 +467,7 @@ describe Board do
           allow(@b_rook_2).to receive_messages(is_killed: nil, update_position: nil, is_revived: nil)
 
           allow(@cell_e2).to receive(:empty?).and_return(true)
+          allow(@cell_e2).to receive(:piece).and_return(@w_pawn, nil)
           allow(cell_f2).to receive_messages(empty?: false, has_enemy?: true)      
         end
         it 'does not allow the Piece to move' do
@@ -556,6 +584,38 @@ describe Board do
       it 'returns false if the Cell is empty or has an ally on it' do
         cell = instance_double(Cell, has_enemy?: false)
         expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be false
+      end
+    end
+  end
+
+  # Keep King Move - If the move direction is castling, check if castling_possible?;
+  # otherwise, run the default keep_piece_move? check
+  
+  # but add castling_possible? test later
+  describe '#keep_king_move?' do
+    subject(:board_king_move) { described_class.new }
+    before do
+      @king = instance_double(King, color: :W)
+
+    end
+    context 'when the given direction is NOT castle' do
+      before do
+        @dir = :top
+      end
+
+      it 'returns true if the given cell is empty' do
+        empty_cell = instance_double(Cell, empty?: true)
+        expect(board_king_move.keep_king_move?(empty_cell, @dir, @king)).to be true
+      end
+
+      it 'returns true if the given cell has an enemy piece on it' do
+        enemy_cell = instance_double(Cell, empty?: false, has_enemy?: true)
+        expect(board_king_move.keep_king_move?(enemy_cell, @dir, @king)).to be true
+      end
+
+      it 'returns false if the given cell has an ally piece on it' do
+        ally_cell = instance_double(Cell, empty?: false, has_enemy?: false)
+        expect(board_king_move.keep_king_move?(ally_cell, @dir, @king)).to be false
       end
     end
   end

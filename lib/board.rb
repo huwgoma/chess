@@ -68,11 +68,7 @@ class Board
   # Generate Legal Moves - Generate the given Piece's legal moves
   def generate_legal_moves(piece)
     generate_moves(piece)
-    clone_board = Marshal.load(Marshal.dump(self))
-    clone_piece = clone_board.find_cell(piece.position.coords).piece
-    clone_moves = clone_board.verify_moves(clone_piece)
-    # Transfer the clone piece's moves to the real piece's moves
-    transfer_clone_moves(piece.moves, clone_moves)
+    verify_moves(piece)
   end
 
   # Generate Moves - Given a Piece, generate its possible moves
@@ -82,14 +78,21 @@ class Board
     piece.moves.each do | dir, cells |
       cells.clear
       forward = piece.is_a?(Pawn) ? piece.forward : 1
-
+      
       (1).upto(movement[:infinite] ? 7 : 1) do | i |
         column = piece.position.column.shift(i * movement[dir][:column])
         row = piece.position.row + (i * movement[dir][:row] * forward)
         cell = find_cell(column + row.to_s)
+        
         break if cell.nil?
+        
+        keep_cell = case piece
+        when Pawn
+          keep_pawn_move?(cell, dir, piece)
+        else
+          keep_piece_move?(cell, piece)
+        end
 
-        keep_cell = piece.is_a?(Pawn) ? keep_pawn_move?(cell, dir, piece) : keep_piece_move?(cell, piece)
         cells << cell if keep_cell
         break if cell.piece
       end
@@ -98,12 +101,16 @@ class Board
 
   # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
   # each move can be made without putting the allied King into check
-  def verify_moves(piece)
-    piece.moves.each do | dir, cells |
+  def verify_moves(piece, moves = piece.moves)
+    clone_board = Marshal.load(Marshal.dump(self))
+    clone_piece = clone_board.find_cell(piece.position.coords).piece
+
+    moves.each do | dir, cells |
       cells.reject! do | cell |
-        move_piece(piece: piece, start_cell: piece.position, end_cell: cell, dir: dir)
-        reject_cell = king_in_check?(piece.color)
-        undo_last_move
+        clone_board.move_piece(piece: clone_piece, start_cell: clone_piece.position, 
+          end_cell: clone_board.find_cell(cell.coords), dir: dir)
+        reject_cell = clone_board.king_in_check?(piece.color)
+        clone_board.undo_last_move
         reject_cell
       end
     end
@@ -134,6 +141,15 @@ class Board
       pawn.initial && forward_cell.empty? && cell.empty?
     when :forward_left, :forward_right
       cell.has_enemy?(pawn.color)
+    end
+  end
+
+  # Given a King's possible end Cell, decide whether that move is possible or not
+  def keep_king_move?(cell, direction, king)
+    if direction.match?(/castle/)
+      #castle possible?
+    else
+      keep_piece_move?(cell, king)
     end
   end
 

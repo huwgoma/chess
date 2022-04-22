@@ -2,7 +2,7 @@
 require './lib/move'
 
 module Displayable
-  def print_board(piece_selected = false)
+  def print_board(piece_selected: false)
     # Clear the terminal every time the board is printed
     system 'clear'
 
