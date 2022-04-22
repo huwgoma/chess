@@ -268,7 +268,7 @@ describe SpecialMoves do
     describe '#castling_possible?' do
       subject(:board_castle) { Board.new }
       before do
-        
+        @king = instance_double()
       end
 
       context 'when the King has previously moved' do

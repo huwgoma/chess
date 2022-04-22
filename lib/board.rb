@@ -89,6 +89,8 @@ class Board
         keep_cell = case piece
         when Pawn
           keep_pawn_move?(cell, dir, piece)
+        when King
+          keep_king_move?(cell, dir, piece)
         else
           keep_piece_move?(cell, piece)
         end
