@@ -197,23 +197,23 @@ describe SpecialMoves do
   describe Castling do
     before do
       # White King Cells
-      @cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
-      @cell_g1 = instance_double(Cell, column: 'g', row: 1, coords: 'g1')
-      @cell_c1 = instance_double(Cell, column: 'c', row: 1, coords: 'c1')
+      @cell_e1 = instance_double(Cell, 'e1', column: 'e', row: 1, coords: 'e1')
+      @cell_g1 = instance_double(Cell, 'g1', column: 'g', row: 1, coords: 'g1')
+      @cell_c1 = instance_double(Cell, 'c1', column: 'c', row: 1, coords: 'c1')
       # Black King Cells
-      @cell_e8 = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
-      @cell_g8 = instance_double(Cell, column: 'g', row: 8, coords: 'g8')
-      @cell_c8 = instance_double(Cell, column: 'c', row: 8, coords: 'c8')
+      @cell_e8 = instance_double(Cell, 'e8', column: 'e', row: 8, coords: 'e8')
+      @cell_g8 = instance_double(Cell, 'g8', column: 'g', row: 8, coords: 'g8')
+      @cell_c8 = instance_double(Cell, 'c8', column: 'c', row: 8, coords: 'c8')
       # White Rook Cells
-      @cell_a1 = instance_double(Cell, column: 'a', row: 1, coords: 'a1')
-      @cell_d1 = instance_double(Cell, column: 'd', row: 1, coords: 'd1')
-      @cell_f1 = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
-      @cell_h1 = instance_double(Cell, column: 'h', row: 1, coords: 'h1')
+      @cell_a1 = instance_double(Cell, 'a1', column: 'a', row: 1, coords: 'a1')
+      @cell_d1 = instance_double(Cell, 'd1', column: 'd', row: 1, coords: 'd1')
+      @cell_f1 = instance_double(Cell, 'f1', column: 'f', row: 1, coords: 'f1')
+      @cell_h1 = instance_double(Cell, 'h1', column: 'h', row: 1, coords: 'h1')
       # Black Rook Cells
-      @cell_a8 = instance_double(Cell, column: 'a', row: 8, coords: 'a8')
-      @cell_d8 = instance_double(Cell, column: 'd', row: 8, coords: 'd8')
-      @cell_f8 = instance_double(Cell, column: 'f', row: 8, coords: 'f8')
-      @cell_h8 = instance_double(Cell, column: 'h', row: 8, coords: 'h8')
+      @cell_a8 = instance_double(Cell, 'a8', column: 'a', row: 8, coords: 'a8')
+      @cell_d8 = instance_double(Cell, 'd8', column: 'd', row: 8, coords: 'd8')
+      @cell_f8 = instance_double(Cell, 'f8', column: 'f', row: 8, coords: 'f8')
+      @cell_h8 = instance_double(Cell, 'h8', column: 'h', row: 8, coords: 'h8')
 
       cells = [
         @cell_e1, @cell_g1, @cell_c1, 
@@ -318,9 +318,19 @@ describe SpecialMoves do
         end
       end
 
+      context 'when the castling Rook is not present on its cell' do
+        it 'returns false' do
+          allow(@cell_h1).to receive(:piece).and_return(nil)
+          expect(board_castle.castling_possible?(@king, @dir)).to be false
+        end
+      end
+
       context 'when the lane between the King and the Rook is blocked' do
         it 'returns false' do
-          
+          allow(@cell_f1).to receive(:empty?).and_return(true)
+          allow(@cell_g1).to receive(:empty?).and_return(false)
+          allow(@cell_h1).to receive(:piece).and_return(@rook)
+          expect(board_castle.castling_possible?(@king, @dir)).to be false
         end
       end
 

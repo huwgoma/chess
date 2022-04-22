@@ -66,12 +66,11 @@ module Castling
     return false if king.moved
 
     rook = find_castling_rook(king, dir)
-    return false if rook.moved
+    return false if rook&.moved || rook.nil?
 
-    # lane_dir = rook.position.coords <=> king.position.coords
+    lane_dir = rook.position.coords <=> king.position.coords
     # 1: Rook > King ; -1: Rook < King
-    
-    # return false unless castle_lane_clear?(king.position, castling_rook.position, lane_dir)
+    return false unless castle_lane_clear?(king.position, rook.position, lane_dir)
     true
   end
 
