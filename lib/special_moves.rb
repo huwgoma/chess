@@ -63,15 +63,19 @@ module Castling
   end
 
   def castling_possible?(king, dir)
+    # King Moved?
     return false if king.moved
-
+    # Rook Moved?
     rook = find_castling_rook(king, dir)
     return false if rook&.moved || rook.nil?
-    
+    # Lane Clear?
     lane_dir = rook.position.coords <=> king.position.coords
     return false unless castle_lane_clear?(king.position, rook.position, lane_dir)
-    
+    # King in Check?
     return false if king_in_check?(king.color)
+    # Middle Cell Attacked?
+
+
     true
   end
 
@@ -95,6 +99,7 @@ module Castling
     { start: rook_start, end: rook_end }
   end
 
+  # Check if the lane between the King and castling Rook is clear
   def castle_lane_clear?(cell, rook_cell, lane_dir)
     cell = find_cell(cell.column.shift(lane_dir) + cell.row.to_s)
     # Base case: If we make it to the rook cell
@@ -104,6 +109,11 @@ module Castling
     else
       false
     end
+  end
+
+  # Check if the horizontal adjacent cell to the King (D1/F1 or D8/F8) is threatened
+  def adjacent_cell_attacked?(king, middle_cell)
+    
   end
 end
 

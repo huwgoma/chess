@@ -468,7 +468,7 @@ describe SpecialMoves do
       end
     end
 
-    # Check if the lane between the King and Rook is blocked
+    # Check if the lane between the King and Rook is clear
     describe '#castle_lane_clear?' do
       subject(:board_lane) { Board.new }
 
@@ -531,6 +531,22 @@ describe SpecialMoves do
           it 'returns false' do
             expect(board_lane.castle_lane_clear?(@cell_e1, @cell_a1, @lane_dir)).to be false
           end
+        end
+      end
+    end
+
+    # Check if the horizontally adjacent cell (*D1* <- E1 -> *F1*) is under attack
+    # ie. If the King moves to this Cell, will it be in check?
+    describe '#adjacent_cell_attacked?' do
+      context 'when the horizontally adjacent cell is under attack' do
+        it 'returns true' do
+          
+        end
+      end
+
+      context 'when the horizontally adjacent cell is safe' do
+        it 'returns false' do
+          
         end
       end
     end
