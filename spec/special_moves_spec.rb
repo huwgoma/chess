@@ -297,9 +297,18 @@ describe SpecialMoves do
     # Check if Castling is possible (in the given Direction)
     describe '#castling_possible?' do
       subject(:board_castle) { Board.new }
+
       before do
+        # Default Behavior - Pass all castling_possible? checks
+        # King Moved?
         @king = instance_double(King, color: :W, moved: false, position: @cell_e1)
+        # Rook Moved? / Rook Present?
         @rook = instance_double(Rook, color: :W, moved: false, is_a?: true, position: @cell_h1)
+        allow(@cell_h1).to receive(:piece).and_return(@rook)
+        # Lane Clear? E1(King) -> F1 -> G1 -> H1(Rook)
+        allow(@cell_f1).to receive(:empty?).and_return(true)
+        allow(@cell_g1).to receive(:empty?).and_return(true)
+        
         @dir = :castle_king
       end
 
@@ -327,16 +336,16 @@ describe SpecialMoves do
 
       context 'when the lane between the King and the Rook is blocked' do
         it 'returns false' do
-          allow(@cell_f1).to receive(:empty?).and_return(true)
           allow(@cell_g1).to receive(:empty?).and_return(false)
-          allow(@cell_h1).to receive(:piece).and_return(@rook)
           expect(board_castle.castling_possible?(@king, @dir)).to be false
         end
       end
 
       context 'if the King is currently in check' do
-        it 'returns false' do
-          
+        xit 'returns false' do
+          allow(board_castle).to receive(:king_in_check?).with(:W)
+
+          expect(board_castle.castling_possible?(@king, @dir)).to be false
         end
       end
 
