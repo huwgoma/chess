@@ -263,5 +263,50 @@ describe SpecialMoves do
         end
       end
     end
+
+    # Check if Castling is possible (in the given Direction)
+    describe '#castling_possible?' do
+      subject(:board_castle) { Board.new }
+      before do
+        
+      end
+
+      context 'when the King has previously moved' do
+        it 'returns false' do
+          
+        end
+      end
+
+      context 'when the castling Rook has previously moved' do
+        it 'returns false' do
+          
+        end
+      end
+
+      context 'when the lane between the King and the Rook is blocked' do
+        it 'returns false' do
+          
+        end
+      end
+
+      context 'if the King is currently in check' do
+        it 'returns false' do
+          
+        end
+      end
+
+      # Adjacent Cell - the first Cell that King lands on when moving towards Rook
+      context 'if the King would be in check by moving to the adjacent cell' do
+        it 'returns false' do
+          
+        end
+      end
+
+      context 'if none of the above conditions are met' do
+        it 'returns true' do
+          
+        end
+      end
+    end
   end
 end

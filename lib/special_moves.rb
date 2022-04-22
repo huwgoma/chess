@@ -61,6 +61,10 @@ module Castling
 
     move_piece(piece: rook, start_cell: rook_start, end_cell: rook_end, dir: dir)
   end
+
+  def castling_possible?(king, dir)
+
+  end
 end
 
 
