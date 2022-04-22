@@ -195,6 +195,35 @@ describe SpecialMoves do
   end
 
   describe Castling do
+    before do
+      # White King Cells
+      @cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
+      @cell_g1 = instance_double(Cell, column: 'g', row: 1, coords: 'g1')
+      @cell_c1 = instance_double(Cell, column: 'c', row: 1, coords: 'c1')
+      # Black King Cells
+      @cell_e8 = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
+      @cell_g8 = instance_double(Cell, column: 'g', row: 8, coords: 'g8')
+      @cell_c8 = instance_double(Cell, column: 'c', row: 8, coords: 'c8')
+      # White Rook Cells
+      @cell_a1 = instance_double(Cell, column: 'a', row: 1, coords: 'a1')
+      @cell_d1 = instance_double(Cell, column: 'd', row: 1, coords: 'd1')
+      @cell_f1 = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
+      @cell_h1 = instance_double(Cell, column: 'h', row: 1, coords: 'h1')
+      # Black Rook Cells
+      @cell_a8 = instance_double(Cell, column: 'a', row: 8, coords: 'a8')
+      @cell_d8 = instance_double(Cell, column: 'd', row: 8, coords: 'd8')
+      @cell_f8 = instance_double(Cell, column: 'f', row: 8, coords: 'f8')
+      @cell_h8 = instance_double(Cell, column: 'h', row: 8, coords: 'h8')
+
+      cells = [
+        @cell_e1, @cell_g1, @cell_c1, 
+        @cell_e8, @cell_g8, @cell_c8,
+        @cell_a1, @cell_d1, @cell_f1, @cell_h1,
+        @cell_a8, @cell_d8, @cell_f8, @cell_h8
+      ]
+      subject.instance_variable_set(:@cells, cells)
+    end
+
     # Calculate the move details of the castling Rook, then move the Rook
     describe '#move_castling_rook' do
       subject(:board_move_castle) { Board.new }
@@ -210,7 +239,7 @@ describe SpecialMoves do
       context 'when the White King is castling Kingside' do
         before do
           king_start = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
-          allow(@king_piece).to receive(:position).and_return(king_start)
+          allow(@king_piece).to receive_messages(position: king_start, color: :W)
           king_end = instance_double(Cell, column: 'g', row: 1, coords: 'g1')
 
           @rook_start = instance_double(Cell, column: 'h', row: 1, coords: 'h1', piece: @rook_piece)
@@ -239,7 +268,7 @@ describe SpecialMoves do
       context 'when the Black King is castling Queenside' do
         before do
           king_start = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
-          allow(@king_piece).to receive(:position).and_return(king_start)
+          allow(@king_piece).to receive_messages(position: king_start, color: :B)
           king_end = instance_double(Cell, column: 'c', row: 8, coords: 'c8')
 
           @rook_start = instance_double(Cell, column: 'a', row: 8, coords: 'a8', piece: @rook_piece)
@@ -270,7 +299,7 @@ describe SpecialMoves do
       subject(:board_castle) { Board.new }
       before do
         @king = instance_double(King, color: :W, moved: false)
-        @rook = instance_double(Rook, color: :W, moved: false)
+        @rook = instance_double(Rook, color: :W, moved: false, is_a?: true)
         @dir = :castle_king
       end
 
@@ -282,8 +311,10 @@ describe SpecialMoves do
       end
 
       context 'when the castling Rook has previously moved' do
-        xit 'returns false' do
+        it 'returns false' do
+          
           allow(@rook).to receive(:moved).and_return(true)
+          allow(@cell_h1).to receive(:piece).and_return(@rook)
           expect(board_castle.castling_possible?(@king, @dir)).to be false
         end
       end
@@ -319,18 +350,17 @@ describe SpecialMoves do
     describe '#find_castling_rook' do
       subject(:board_find_rook) { Board.new }
       before do
-        cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
-        @king = instance_double(King, position: cell_e1)
+        @king = instance_double(King, position: @cell_e1, color: :W)
 
-        @cell_h1 = instance_double(Cell, column: 'h', row: 1, coords: 'h1')
+        #@cell_h1 = instance_double(Cell, column: 'h', row: 1, coords: 'h1')
         @rook = instance_double(Rook, is_a?: true)
         allow(@rook).to receive(:is_a?).with(Rook).and_return(true)
 
         @cell_e8 = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
-        @cell_a8 = instance_double(Cell, column: 'a', row: 8, coords: 'a8')
+        #@cell_a8 = instance_double(Cell, column: 'a', row: 8, coords: 'a8')
         # Board Cells
-        cells = [cell_e1, @cell_h1, @cell_e8, @cell_a8]
-        board_find_rook.instance_variable_set(:@cells, cells)
+        # cells = [cell_e1, @cell_h1, @cell_e8, @cell_a8]
+        # board_find_rook.instance_variable_set(:@cells, cells)
         
         @dir = :castle_king
       end
@@ -345,7 +375,7 @@ describe SpecialMoves do
         end
 
         it 'works for Black + Queenside castling too' do
-          black_king = instance_double(King, position: @cell_e8)
+          black_king = instance_double(King, position: @cell_e8, color: :B)
           allow(@cell_a8).to receive(:piece).and_return(@rook)
           dir = :castle_queen
 
@@ -373,25 +403,9 @@ describe SpecialMoves do
       subject(:board_rook_cells) { Board.new }
       before do
         # White King, Row 1
-        @cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
         @w_king = instance_double(King, color: :W, position: @cell_e1)
         # Black King, Row 8
-        @cell_e8 = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
-        @b_king = instance_double(King, color: :B, position: @cell_e8)
-
-        # White Rook Cells
-        @cell_a1 = instance_double(Cell, column: 'a', row: 1, coords: 'a1')
-        @cell_d1 = instance_double(Cell, column: 'd', row: 1, coords: 'd1')
-        @cell_f1 = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
-        @cell_h1 = instance_double(Cell, column: 'h', row: 1, coords: 'h1')
-        # Black Rook Cells
-        @cell_a8 = instance_double(Cell, column: 'a', row: 8, coords: 'a8')
-        @cell_d8 = instance_double(Cell, column: 'd', row: 8, coords: 'd8')
-        @cell_f8 = instance_double(Cell, column: 'f', row: 8, coords: 'f8')
-        @cell_h8 = instance_double(Cell, column: 'h', row: 8, coords: 'h8')
-
-        cells = [@cell_a1, @cell_d1, @cell_f1, @cell_h1, @cell_a8, @cell_d8, @cell_f8, @cell_h8]
-        board_rook_cells.instance_variable_set(:@cells, cells)
+        @b_king = instance_double(King, color: :B, position: @cell_e8) 
       end
 
       context 'when the King is castling Kingside' do
