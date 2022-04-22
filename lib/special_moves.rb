@@ -54,11 +54,9 @@ end
 # Namespace for Methods concerning Castling
 module Castling
   def move_castling_rook(king, dir)
-    #rook = find_castling_rook(king, dir)
-    
-    rook_start_col, rook_end_col = dir.match?(/king/) ? ['h', 'f'] : ['a', 'd']
-    rook_start = find_cell(rook_start_col + king.position.row.to_s)
-    rook_end = find_cell(rook_end_col + king.position.row.to_s)
+    rook_cells = find_rook_cells(king, dir)
+    rook_start = rook_cells[:start]
+    rook_end = rook_cells[:end]
     rook = rook_start.piece
 
     move_piece(piece: rook, start_cell: rook_start, end_cell: rook_end, dir: dir)
@@ -66,15 +64,15 @@ module Castling
 
   def castling_possible?(king, dir)
     return false if king.moved
-    
+    castling_rook = find_castling_rook(king, dir)
+    return false if castling_rook.moved
     true
   end
 
   # Helper methods for Castling
   # Find and return the castling Rook Piece
   def find_castling_rook(king, dir)
-    rook_col = dir.match?(/king/) ? 'h' : 'a'
-    rook = find_cell(rook_col + king.position.row.to_s).piece
+    rook = find_rook_cells(king, dir)[:start].piece
     return rook if rook.is_a?(Rook)
   end
 
