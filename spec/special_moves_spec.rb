@@ -372,30 +372,65 @@ describe SpecialMoves do
     describe '#find_rook_cells' do
       subject(:board_rook_cells) { Board.new }
       before do
-        
+        # White King, Row 1
+        @cell_e1 = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
+        @w_king = instance_double(King, color: :W, position: @cell_e1)
+        # Black King, Row 8
+        @cell_e8 = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
+        @b_king = instance_double(King, color: :B, position: @cell_e8)
+
+        # White Rook Cells
+        @cell_a1 = instance_double(Cell, column: 'a', row: 1, coords: 'a1')
+        @cell_d1 = instance_double(Cell, column: 'd', row: 1, coords: 'd1')
+        @cell_f1 = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
+        @cell_h1 = instance_double(Cell, column: 'h', row: 1, coords: 'h1')
+        # Black Rook Cells
+        @cell_a8 = instance_double(Cell, column: 'a', row: 8, coords: 'a8')
+        @cell_d8 = instance_double(Cell, column: 'd', row: 8, coords: 'd8')
+        @cell_f8 = instance_double(Cell, column: 'f', row: 8, coords: 'f8')
+        @cell_h8 = instance_double(Cell, column: 'h', row: 8, coords: 'h8')
+
+        cells = [@cell_a1, @cell_d1, @cell_f1, @cell_h1, @cell_a8, @cell_d8, @cell_f8, @cell_h8]
+        board_rook_cells.instance_variable_set(:@cells, cells)
       end
-      
-      context 'when the King is white and is castling Kingside' do
-        it 'returns Cells H1 and F1' do
-          
+
+      context 'when the King is castling Kingside' do
+        before do
+          @dir = :castle_king
+        end
+
+        context 'when the King is white (row 1)' do
+          it 'returns Cells H1 and F1' do
+            hash = { start: @cell_h1, end: @cell_f1 }
+            expect(board_rook_cells.find_rook_cells(@w_king, @dir)).to eq(hash)
+          end
+        end
+
+        context 'when the King is black (row 8)' do
+          it 'returns Cells H8 and F8' do
+            hash = { start: @cell_h8, end: @cell_f8 }
+            expect(board_rook_cells.find_rook_cells(@b_king, @dir)).to eq(hash)
+          end
         end
       end
 
-      context 'when the King is white and is castling Queenside' do
-        it 'returns Cells A1 and D1' do
-          
+      context 'when the King is castling Queenside' do
+        before do
+          @dir = :castle_queen
         end
-      end
 
-      context 'when the King is black and is castling Kingside' do
-        it 'returns Cells H8 and F8' do
-          
+        context 'when the King is white (row 1)' do
+          it 'returns Cells A1 and D1' do
+            hash = { start: @cell_a1, end: @cell_d1 }
+            expect(board_rook_cells.find_rook_cells(@w_king, @dir)).to eq(hash)
+          end
         end
-      end
 
-      context 'when the King is black and is castling Queenside' do
-        it 'returns Cells A8 and D8' do
-          
+        context 'when the King is black (row 8)' do
+          it 'returns Cells A8 and D8' do
+            hash = { start: @cell_a8, end: @cell_d8 }
+            expect(board_rook_cells.find_rook_cells(@b_king, @dir)).to eq(hash)
+          end
         end
       end
     end

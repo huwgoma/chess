@@ -80,7 +80,17 @@ module Castling
 
   # find rook cells
   # return: { start: 'h1', end: 'f1' } or { start: 'a1', end: 'd1' }
+  def find_rook_cells(king, dir)
+    # Refactor - Extract below logic to a separate method (shared with PawnPromotion)
+    # minmax_rows = @board.rows.minmax.flatten.filter(&Integer.method(:===))
+    # end_row = last_move.piece.color.white? ? minmax_rows.max : minmax_rows.min
 
+    row = king.color.white? ? 1 : 8
+    start_col, end_col = dir.match?(/king/) ? ['h', 'f'] : ['a', 'd']
+    rook_start = find_cell(start_col + row.to_s)
+    rook_end = find_cell(end_col + row.to_s)
+    { start: rook_start, end: rook_end }
+  end
 end
 
 
