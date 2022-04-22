@@ -67,6 +67,12 @@ module Castling
     
     true
   end
+
+  # Helper methods for Castling
+  def find_castling_rook(king, dir)
+    rook_col = dir.match?(/king/) ? ['h', 'f'] : ['a', 'd']
+    
+  end
 end
 
 

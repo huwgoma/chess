@@ -281,7 +281,7 @@ describe SpecialMoves do
       end
 
       context 'when the castling Rook has previously moved' do
-        it 'returns false' do
+        xit 'returns false' do
           allow(@rook).to receive(:moved).and_return(true)
           expect(board_castle.castling_possible?(@king, @dir)).to be false
         end
@@ -308,6 +308,22 @@ describe SpecialMoves do
 
       context 'if none of the above conditions are met' do
         it 'returns true' do
+          
+        end
+      end
+    end
+
+    # Find and return the castling Rook (ie. the piece on the Rook's cell)
+    # If piece is not a Rook or is nil, return nil 
+    describe '#find_castling_rook' do
+      context 'when the Rook is present (on its starting cell)' do
+        it 'returns the Rook piece' do
+          
+        end
+      end
+
+      context 'when the Rook is missing (not on A1/H1/A8/H8)' do
+        it 'returns nil' do
           
         end
       end
