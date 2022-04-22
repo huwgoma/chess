@@ -367,5 +367,37 @@ describe SpecialMoves do
         end
       end
     end
+
+    # Return a Hash of the castling Rook's start and end cells (based on row + direction)
+    describe '#find_rook_cells' do
+      subject(:board_rook_cells) { Board.new }
+      before do
+        
+      end
+      
+      context 'when the King is white and is castling Kingside' do
+        it 'returns Cells H1 and F1' do
+          
+        end
+      end
+
+      context 'when the King is white and is castling Queenside' do
+        it 'returns Cells A1 and D1' do
+          
+        end
+      end
+
+      context 'when the King is black and is castling Kingside' do
+        it 'returns Cells H8 and F8' do
+          
+        end
+      end
+
+      context 'when the King is black and is castling Queenside' do
+        it 'returns Cells A8 and D8' do
+          
+        end
+      end
+    end
   end
 end

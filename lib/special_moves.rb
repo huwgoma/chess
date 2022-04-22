@@ -78,6 +78,9 @@ module Castling
     return rook if rook.is_a?(Rook)
   end
 
+  # find rook cells
+  # return: { start: 'h1', end: 'f1' } or { start: 'a1', end: 'd1' }
+
 end
 
 
