@@ -145,6 +145,15 @@ class Board
     end
   end
 
+  # Given a King's possible end Cell, decide whether that move is possible or not
+  def keep_king_move?(cell, direction, king)
+    if direction.match?(/castle/)
+      #castle possible?
+    else
+      keep_piece_move?(cell, king)
+    end
+  end
+
   # King in Check? - Check if the given color's King is in danger (Check)
   def king_in_check?(king_color)
     king_cell = find_king_cell(king_color)

@@ -53,7 +53,6 @@ end
 
 # Namespace for Methods concerning Castling
 module Castling
-
 end
 
 

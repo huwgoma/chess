@@ -364,7 +364,6 @@ describe Board do
       marshal = class_double(Marshal).as_stubbed_const
       allow(marshal).to receive(:dump)
       allow(marshal).to receive(:load).and_return(@clone_board)
-      
     end
 
     # Verify Moves - Test Cases
@@ -585,6 +584,38 @@ describe Board do
       it 'returns false if the Cell is empty or has an ally on it' do
         cell = instance_double(Cell, has_enemy?: false)
         expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be false
+      end
+    end
+  end
+
+  # Keep King Move - If the move direction is castling, check if castling_possible?;
+  # otherwise, run the default keep_piece_move? check
+  
+  # but add castling_possible? test later
+  describe '#keep_king_move?' do
+    subject(:board_king_move) { described_class.new }
+    before do
+      @king = instance_double(King, color: :W)
+
+    end
+    context 'when the given direction is NOT castle' do
+      before do
+        @dir = :top
+      end
+
+      it 'returns true if the given cell is empty' do
+        empty_cell = instance_double(Cell, empty?: true)
+        expect(board_king_move.keep_king_move?(empty_cell, @dir, @king)).to be true
+      end
+
+      it 'returns true if the given cell has an enemy piece on it' do
+        enemy_cell = instance_double(Cell, empty?: false, has_enemy?: true)
+        expect(board_king_move.keep_king_move?(enemy_cell, @dir, @king)).to be true
+      end
+
+      it 'returns false if the given cell has an ally piece on it' do
+        ally_cell = instance_double(Cell, empty?: false, has_enemy?: false)
+        expect(board_king_move.keep_king_move?(ally_cell, @dir, @king)).to be false
       end
     end
   end
