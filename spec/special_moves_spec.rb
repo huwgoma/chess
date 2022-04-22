@@ -312,7 +312,6 @@ describe SpecialMoves do
 
       context 'when the castling Rook has previously moved' do
         it 'returns false' do
-          
           allow(@rook).to receive(:moved).and_return(true)
           allow(@cell_h1).to receive(:piece).and_return(@rook)
           expect(board_castle.castling_possible?(@king, @dir)).to be false
@@ -444,6 +443,39 @@ describe SpecialMoves do
           it 'returns Cells A8 and D8' do
             hash = { start: @cell_a8, end: @cell_d8 }
             expect(board_rook_cells.find_rook_cells(@b_king, @dir)).to eq(hash)
+          end
+        end
+      end
+    end
+
+    # Check if the lane between the King and Rook is blocked
+    describe '#castle_lane_blocked?' do
+      subject(:board_lane) { Board.new }
+      
+      context 'when the King is castling Kingside' do
+        context 'if the lane is not blocked' do
+          it 'returns false' do
+            
+          end
+        end
+
+        context 'if the lane is blocked' do
+          it 'returns true' do
+            
+          end
+        end
+      end
+
+      context 'when the King is castling Queenside' do
+        context 'if the lane is not blocked' do
+          it 'returns false' do
+            
+          end
+        end
+        
+        context 'if the lane is blocked' do
+          it 'returns true' do
+            
           end
         end
       end

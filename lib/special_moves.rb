@@ -66,6 +66,7 @@ module Castling
     return false if king.moved
     castling_rook = find_castling_rook(king, dir)
     return false if castling_rook.moved
+    # return false if castle_lane_blocked?(king.position, castling_rook.position, dir)
     true
   end
 
@@ -76,8 +77,7 @@ module Castling
     return rook if rook.is_a?(Rook)
   end
 
-  # find rook cells
-  # return: { start: 'h1', end: 'f1' } or { start: 'a1', end: 'd1' }
+  # Find and return a Hash of castling Rook's start/end cells
   def find_rook_cells(king, dir)
     # Refactor - Extract below logic to a separate method (shared with PawnPromotion)
     # minmax_rows = @board.rows.minmax.flatten.filter(&Integer.method(:===))
@@ -88,6 +88,10 @@ module Castling
     rook_start = find_cell(start_col + row.to_s)
     rook_end = find_cell(end_col + row.to_s)
     { start: rook_start, end: rook_end }
+  end
+
+  def castle_lane_blocked?
+
   end
 end
 
