@@ -268,18 +268,22 @@ describe SpecialMoves do
     describe '#castling_possible?' do
       subject(:board_castle) { Board.new }
       before do
-        @king = instance_double()
+        @king = instance_double(King, color: :W, moved: false)
+        @rook = instance_double(Rook, color: :W, moved: false)
+        @dir = :castle_king
       end
 
       context 'when the King has previously moved' do
         it 'returns false' do
-          
+          allow(@king).to receive(:moved).and_return(true)
+          expect(board_castle.castling_possible?(@king, @dir)).to be false
         end
       end
 
       context 'when the castling Rook has previously moved' do
         it 'returns false' do
-          
+          allow(@rook).to receive(:moved).and_return(true)
+          expect(board_castle.castling_possible?(@king, @dir)).to be false
         end
       end
 

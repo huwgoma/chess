@@ -63,7 +63,9 @@ module Castling
   end
 
   def castling_possible?(king, dir)
-
+    return false if king.moved
+    
+    true
   end
 end
 
