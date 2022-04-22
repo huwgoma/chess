@@ -64,9 +64,14 @@ module Castling
 
   def castling_possible?(king, dir)
     return false if king.moved
-    castling_rook = find_castling_rook(king, dir)
-    return false if castling_rook.moved
-    # return false if castle_lane_blocked?(king.position, castling_rook.position, dir)
+
+    rook = find_castling_rook(king, dir)
+    return false if rook.moved
+
+    # lane_dir = rook.position.coords <=> king.position.coords
+    # 1: Rook > King ; -1: Rook < King
+    
+    # return false unless castle_lane_clear?(king.position, castling_rook.position, lane_dir)
     true
   end
 
@@ -90,8 +95,15 @@ module Castling
     { start: rook_start, end: rook_end }
   end
 
-  def castle_lane_blocked?
-
+  def castle_lane_clear?(cell, rook_cell, lane_dir)
+    cell = find_cell(cell.column.shift(lane_dir) + cell.row.to_s)
+    # Base case: If we make it to the rook cell
+    return true if cell == rook_cell
+    if cell.empty?
+      castle_lane_clear?(cell, rook_cell, lane_dir)
+    else
+      false
+    end
   end
 end
 

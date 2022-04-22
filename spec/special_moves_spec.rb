@@ -298,8 +298,8 @@ describe SpecialMoves do
     describe '#castling_possible?' do
       subject(:board_castle) { Board.new }
       before do
-        @king = instance_double(King, color: :W, moved: false)
-        @rook = instance_double(Rook, color: :W, moved: false, is_a?: true)
+        @king = instance_double(King, color: :W, moved: false, position: @cell_e1)
+        @rook = instance_double(Rook, color: :W, moved: false, is_a?: true, position: @cell_h1)
         @dir = :castle_king
       end
 
@@ -449,33 +449,67 @@ describe SpecialMoves do
     end
 
     # Check if the lane between the King and Rook is blocked
-    describe '#castle_lane_blocked?' do
+    describe '#castle_lane_clear?' do
       subject(:board_lane) { Board.new }
-      
+
       context 'when the King is castling Kingside' do
-        context 'if the lane is not blocked' do
-          it 'returns false' do
-            
+        before do
+          @king = instance_double(King, color: :W, position: @cell_e1)
+          @rook = instance_double(Rook, color: :W, position: @cell_h1)
+          @lane_dir = 1
+          # Cells - E1, F1, G1, H1
+        end
+
+        context 'if the lane is clear (not blocked)' do
+          before do
+            allow(@cell_f1).to receive(:empty?).and_return(true)
+            allow(@cell_g1).to receive(:empty?).and_return(true)
+          end
+          it 'returns true' do
+            expect(board_lane.castle_lane_clear?(@cell_e1, @cell_h1, @lane_dir)).to be true
           end
         end
 
         context 'if the lane is blocked' do
-          it 'returns true' do
-            
+          before do
+            allow(@cell_f1).to receive(:empty?).and_return(true)
+            allow(@cell_g1).to receive(:empty?).and_return(false)
           end
-        end
+          it 'returns false' do
+            expect(board_lane.castle_lane_clear?(@cell_e1, @cell_h1, @lane_dir)).to be false
+          end
+        end        
       end
 
       context 'when the King is castling Queenside' do
-        context 'if the lane is not blocked' do
-          it 'returns false' do
-            
+        before do
+          @king = instance_double(King, color: :W, position: @cell_e1)
+          @rook = instance_double(Rook, color: :W, position: @cell_a1)
+          @lane_dir = -1
+        end
+
+        context 'if the lane is clear (not blocked)' do
+          before do
+            # Add Cell B1 to @cells 
+            @cell_b1 = instance_double(Cell, column: 'b', row: 1, coords: 'b1')
+            board_lane.cells << @cell_b1
+
+            allow(@cell_d1).to receive(:empty?).and_return(true)
+            allow(@cell_c1).to receive(:empty?).and_return(true)
+            allow(@cell_b1).to receive(:empty?).and_return(true)
+          end
+          it 'returns true' do
+            expect(board_lane.castle_lane_clear?(@cell_e1, @cell_a1, @lane_dir)).to be true
           end
         end
         
         context 'if the lane is blocked' do
-          it 'returns true' do
-            
+          before do
+            allow(@cell_d1).to receive(:empty?).and_return(true)
+            allow(@cell_c1).to receive(:empty?).and_return(false)
+          end
+          it 'returns false' do
+            expect(board_lane.castle_lane_clear?(@cell_e1, @cell_a1, @lane_dir)).to be false
           end
         end
       end
