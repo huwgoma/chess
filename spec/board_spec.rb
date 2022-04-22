@@ -303,6 +303,10 @@ describe Board do
       end
       
     end
+
+    context 'when the given Piece is a King' do
+      # it calls keep_king_move?
+    end
   end
 
   # Verify Moves - Given a Piece and a @moves Hash, verify each move by 
@@ -503,34 +507,34 @@ describe Board do
     end
   end
 
-  # Given a Piece's possible end Cell, decide whether to keep it or not;
-  # Is the Cell a valid Cell for the Piece to move to? 
-  describe '#keep_piece_move?' do
-    subject(:board_piece_move) { described_class.new }
+  # Given a Piece's possible end Cell, decide whether to keep it or not - 
+  # Is the Cell a valid Cell for the Piece to move to? (empty or has enemy)
+  describe '#keep_normal_move?' do
+    subject(:board_keep_normal) { described_class.new }
     before do
-      @piece = instance_double(Rook, color: :W)
+      @piece = instance_double(Piece, color: :W)
     end
-    
     it 'returns true if the given cell is empty' do
       empty_cell = instance_double(Cell, empty?: true)
-      expect(board_piece_move.keep_piece_move?(empty_cell, @piece)).to be true
+      expect(board_keep_normal.keep_normal_move?(empty_cell, @piece)).to be true
     end
 
     it 'returns true if the given cell has an enemy piece on it' do
       enemy_cell = instance_double(Cell, empty?: false, has_enemy?: true)
-      expect(board_piece_move.keep_piece_move?(enemy_cell, @piece)).to be true
+      expect(board_keep_normal.keep_normal_move?(enemy_cell, @piece)).to be true
     end
 
     it 'returns false if the given cell has an ally piece on it' do
       ally_cell = instance_double(Cell, empty?: false, has_enemy?: false)
-      expect(board_piece_move.keep_piece_move?(ally_cell, @piece)).to be false
+      expect(board_keep_normal.keep_normal_move?(ally_cell, @piece)).to be false
     end
   end
 
-  # Pawns follow a different ruleset from other Pieces - Decide whether to
-  # keep the given Cell for the given Pawn
+  # Pawns and Kings have special movement rules:
+
+  # Keep Pawn Move?
   describe '#keep_pawn_move?' do
-    subject (:board_pawn_move) { described_class.new }
+    subject (:board_keep_pawn) { described_class.new }
     before do
       @pawn = instance_double(Pawn, color: :W, forward: 1)
     end
@@ -541,20 +545,20 @@ describe Board do
       end
       it 'returns true if the given cell is empty' do
         cell = instance_double(Cell, empty?: true)
-        expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be true
+        expect(board_keep_pawn.keep_pawn_move?(cell, @direction, @pawn)).to be true
       end
 
       it 'returns false if the given cell is not empty' do
         cell = instance_double(Cell, empty?: false)
-        expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be false
+        expect(board_keep_pawn.keep_pawn_move?(cell, @direction, @pawn)).to be false
       end
     end
 
     context "when the given direction is :initial" do
       before do
         @direction = :initial
-        @initial_cell = board_pawn_move.find_cell('a4')
-        @forward_cell = board_pawn_move.find_cell('a3')
+        @initial_cell = board_keep_pawn.find_cell('a4')
+        @forward_cell = board_keep_pawn.find_cell('a3')
       end
       
       # Initial only returns true under the following circumstances:
@@ -562,12 +566,12 @@ describe Board do
       # The initial cell (+2) and forward cell (+1) are both unoccupied
       it 'returns true if the Pawn has not moved, the forward cell is empty, AND the given cell is empty' do
         allow(@pawn).to receive(:initial).and_return(true)
-        expect(board_pawn_move.keep_pawn_move?(@initial_cell, @direction, @pawn)).to be true
+        expect(board_keep_pawn.keep_pawn_move?(@initial_cell, @direction, @pawn)).to be true
       end
 
       it 'returns false otherwise' do
         allow(@pawn).to receive(:initial).and_return(false)
-        expect(board_pawn_move.keep_pawn_move?(@initial_cell, @direction, @pawn)).to be false
+        expect(board_keep_pawn.keep_pawn_move?(@initial_cell, @direction, @pawn)).to be false
       end
     end
 
@@ -578,12 +582,12 @@ describe Board do
 
       it 'returns true if the Cell has an enemy on it' do
         enemy_cell = instance_double(Cell, has_enemy?: true)
-        expect(board_pawn_move.keep_pawn_move?(enemy_cell, @direction, @pawn)).to be true
+        expect(board_keep_pawn.keep_pawn_move?(enemy_cell, @direction, @pawn)).to be true
       end
 
       it 'returns false if the Cell is empty or has an ally on it' do
         cell = instance_double(Cell, has_enemy?: false)
-        expect(board_pawn_move.keep_pawn_move?(cell, @direction, @pawn)).to be false
+        expect(board_keep_pawn.keep_pawn_move?(cell, @direction, @pawn)).to be false
       end
     end
   end
@@ -593,10 +597,9 @@ describe Board do
   
   # but add castling_possible? test later
   describe '#keep_king_move?' do
-    subject(:board_king_move) { described_class.new }
+    subject(:board_keep_king) { described_class.new }
     before do
       @king = instance_double(King, color: :W)
-
     end
     context 'when the given direction is NOT castle' do
       before do
@@ -605,20 +608,21 @@ describe Board do
 
       it 'returns true if the given cell is empty' do
         empty_cell = instance_double(Cell, empty?: true)
-        expect(board_king_move.keep_king_move?(empty_cell, @dir, @king)).to be true
+        expect(board_keep_king.keep_king_move?(empty_cell, @dir, @king)).to be true
       end
 
       it 'returns true if the given cell has an enemy piece on it' do
         enemy_cell = instance_double(Cell, empty?: false, has_enemy?: true)
-        expect(board_king_move.keep_king_move?(enemy_cell, @dir, @king)).to be true
+        expect(board_keep_king.keep_king_move?(enemy_cell, @dir, @king)).to be true
       end
 
       it 'returns false if the given cell has an ally piece on it' do
         ally_cell = instance_double(Cell, empty?: false, has_enemy?: false)
-        expect(board_king_move.keep_king_move?(ally_cell, @dir, @king)).to be false
+        expect(board_keep_king.keep_king_move?(ally_cell, @dir, @king)).to be false
       end
     end
   end
+
 
   # Move Piece - Given a Piece, Start, and End, move the Piece from Start to End Cell
   describe '#move_piece' do

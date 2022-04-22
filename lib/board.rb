@@ -86,12 +86,7 @@ class Board
         
         break if cell.nil?
         
-        keep_cell = case piece
-        when Pawn
-          keep_pawn_move?(cell, dir, piece)
-        else
-          keep_piece_move?(cell, piece)
-        end
+        keep_cell = keep_piece_move?(cell, dir, piece)
 
         cells << cell if keep_cell
         break if cell.piece
@@ -127,7 +122,19 @@ class Board
   end
 
   # Given a Piece's possible end Cell, decide whether to keep it or not
-  def keep_piece_move?(cell, piece)
+  def keep_piece_move?(cell, dir, piece)
+    case piece
+    when Pawn
+      keep_pawn_move?(cell, dir, piece)
+    when King
+      keep_king_move?(cell, dir, piece)
+    else
+      keep_normal_move?(cell, piece)
+    end
+  end
+
+  # Given a normal Piece's end cell, decide whether that move is possible or not
+  def keep_normal_move?(cell, piece)
     cell.empty? || cell.has_enemy?(piece.color)
   end
 
@@ -149,10 +156,10 @@ class Board
     if direction.match?(/castle/)
       #castle possible?
     else
-      keep_piece_move?(cell, king)
+      keep_normal_move?(cell, king)
     end
   end
-
+  
   # King in Check? - Check if the given color's King is in danger (Check)
   def king_in_check?(king_color)
     king_cell = find_king_cell(king_color)
