@@ -111,16 +111,6 @@ class Board
     end
   end
 
-  # Keep each of the real Piece's @moves only if its clone equivalent also
-  # includes that move
-  def transfer_clone_moves(real_moves, clone_moves)
-    real_moves.each do | dir, cells |
-      cells.keep_if do | cell |
-        clone_moves[dir].find { |clone_cell| clone_cell.coords == cell.coords }
-      end
-    end
-  end
-
   # Given a Piece's possible end Cell, decide whether to keep it or not
   def keep_piece_move?(cell, dir, piece)
     case piece
@@ -159,7 +149,7 @@ class Board
       keep_normal_move?(cell, king)
     end
   end
-  
+
   # King in Check? - Check if the given color's King is in danger (Check)
   def king_in_check?(king_color)
     king_cell = find_king_cell(king_color)

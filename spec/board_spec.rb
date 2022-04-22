@@ -482,31 +482,6 @@ describe Board do
     end
   end
 
-  # Copy Clone Moves - Keep each of the real Piece's @moves only if its equivalent 
-  # clone @moves also contains that move
-  describe '#transfer_clone_moves' do
-    subject(:board_transfer_clone) { described_class.new }
-    before do
-      # Clone Cells
-      @clone_e3 = instance_double(Cell, coords: 'e3')
-      
-      # Real Cells
-      @cell_d3 = board_transfer_clone.find_cell('d3')
-      @cell_d4 = board_transfer_clone.find_cell('d4')
-      @cell_e3 = board_transfer_clone.find_cell('e3')
-
-      # Clone Moves
-      @clone_moves = { forward: [], initial: [], forward_left: [], forward_right: [@clone_e3] }
-      # Real Moves
-      @real_moves = { forward: [@cell_d3], initial: [@cell_d4], forward_left: [], forward_right: [@cell_e3] }
-    end
-
-    it 'filters the real_moves hash based on the clone_moves hash' do
-      filtered_moves = { forward: [], initial: [], forward_left: [], forward_right: [@cell_e3] }
-      expect(board_transfer_clone.transfer_clone_moves(@real_moves, @clone_moves)).to eq(filtered_moves)
-    end
-  end
-
   # Given a Piece's possible end Cell, decide whether to keep it or not - 
   # Is the Cell a valid Cell for the Piece to move to? (empty or has enemy)
   describe '#keep_normal_move?' do
