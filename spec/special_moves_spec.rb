@@ -310,6 +310,10 @@ describe SpecialMoves do
         allow(@cell_g1).to receive(:empty?).and_return(true)
         # King in Check? 
         allow(board_castle).to receive(:king_in_check?).and_return(false)
+        # Middle Cell Attacked?
+        intermediate_move = { middle: [@cell_f1] }
+        allow(board_castle).to receive(:verify_moves).and_return(intermediate_move)
+
         @dir = :castle_king
       end
 
@@ -352,8 +356,13 @@ describe SpecialMoves do
 
       # Adjacent Cell - the first Cell that King lands on when moving towards Rook
       context 'if the King would be in check by moving to the adjacent cell' do
+        before do
+          intermediate_move = { middle: [] }
+          allow(board_castle).to receive(:verify_moves).and_return(intermediate_move)
+        end
+
         it 'returns false' do
-          
+          expect(board_castle.castling_possible?(@king, @dir)).to be false
         end
       end
 

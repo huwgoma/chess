@@ -74,8 +74,9 @@ module Castling
     # King in Check?
     return false if king_in_check?(king.color)
     # Middle Cell Attacked?
-    # middle_cell = find_cell(king.position.column.shift(lane_dir), king.position.row.to_s)
-
+    middle_cell = find_cell(king.position.column.shift(lane_dir) + king.position.row.to_s)
+    return false if middle_cell_attacked?(king, middle_cell)
+    
     true
   end
 
