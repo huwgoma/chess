@@ -2,6 +2,8 @@
 require './lib/pieces/piece'
 
 class King < Piece
+  attr_reader :moved
+  
   MOVEMENT = { 
     infinite: false,
     top:          { column: 0, row: 1 },
@@ -15,4 +17,14 @@ class King < Piece
     castle_king:  { column: 2, row: 0 },
     castle_queen: { column: -2, row: 0 }
   }
+
+  def initialize(color, cell)
+    super
+    @moved = false
+  end
+
+  def update_position(cell)
+    super
+    @moved = true
+  end
 end

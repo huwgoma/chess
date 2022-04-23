@@ -144,7 +144,7 @@ class Board
   # Given a King's possible end Cell, decide whether that move is possible or not
   def keep_king_move?(cell, direction, king)
     if direction.match?(/castle/)
-      #castle possible?
+      castling_possible?(king, direction)
     else
       keep_normal_move?(cell, king)
     end

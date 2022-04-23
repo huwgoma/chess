@@ -51,7 +51,6 @@ class Game
   def game_loop
     loop do
       piece = select_active_piece
-      binding.pry
       # Return out of game_loop early if piece is a Symbol ('Q' entered)
       return send(piece) if piece.is_a?(Symbol)
 

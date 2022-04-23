@@ -2,6 +2,8 @@
 require './lib/pieces/piece'
 
 class Rook < Piece
+  attr_reader :moved
+  
   MOVEMENT = { 
     infinite: true,
     top:    { column: 0, row: 1 },
