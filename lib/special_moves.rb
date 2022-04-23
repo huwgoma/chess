@@ -74,7 +74,7 @@ module Castling
     # King in Check?
     return false if king_in_check?(king.color)
     # Middle Cell Attacked?
-
+    # middle_cell = find_cell(king.position.column.shift(lane_dir), king.position.row.to_s)
 
     true
   end
@@ -111,9 +111,10 @@ module Castling
     end
   end
 
-  # Check if the horizontal adjacent cell to the King (D1/F1 or D8/F8) is threatened
-  def adjacent_cell_attacked?(king, middle_cell)
-    
+  # Check if the middle cell (D1/F1 or D8/F8) is threatened
+  def middle_cell_attacked?(king, middle_cell)
+    intermediate_move = verify_moves(king, { middle: [middle_cell] })
+    intermediate_move[:middle].empty?
   end
 end
 

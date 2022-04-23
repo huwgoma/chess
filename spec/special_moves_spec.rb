@@ -535,18 +535,33 @@ describe SpecialMoves do
       end
     end
 
-    # Check if the horizontally adjacent cell (*D1* <- E1 -> *F1*) is under attack
+    # Check if the middle cell (*D1* <- E1 -> *F1*) is under attack
     # ie. If the King moves to this Cell, will it be in check?
-    describe '#adjacent_cell_attacked?' do
-      context 'when the horizontally adjacent cell is under attack' do
+    describe '#middle_cell_attacked?' do
+      subject(:board_middle) { Board.new }
+      before do
+        @middle_cell = @cell_f1
+        @king = instance_double(King)
+      end
+
+      # King cannot move to middle cell because it is under attack
+      context 'when the middle cell is under attack' do
+        before do
+          intermediate_move = { middle: [] }
+          allow(board_middle).to receive(:verify_moves).and_return(intermediate_move)
+        end
         it 'returns true' do
-          
+          expect(board_middle.middle_cell_attacked?(@king, @middle_cell)).to be true
         end
       end
 
-      context 'when the horizontally adjacent cell is safe' do
+      context 'when the middle cell is safe' do
+        before do
+          intermediate_move = { middle: [@middle_cell] }
+          allow(board_middle).to receive(:verify_moves).and_return(intermediate_move)
+        end
         it 'returns false' do
-          
+          expect(board_middle.middle_cell_attacked?(@king, @middle_cell)).to be false
         end
       end
     end
