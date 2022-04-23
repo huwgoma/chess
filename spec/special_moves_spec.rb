@@ -368,7 +368,7 @@ describe SpecialMoves do
 
       context 'if none of the above conditions are met' do
         it 'returns true' do
-          
+          expect(board_castle.castling_possible?(@king, @dir)).to be true
         end
       end
     end
