@@ -42,10 +42,6 @@ describe Piece do
     it "changes piece's @killed to true" do
       expect { piece_killed.is_killed }.to change { piece_killed.killed }.to true
     end
-
-    it "changes piece's @position to nil" do
-      expect { piece_killed.is_killed }.to change { piece_killed.position }.to nil
-    end
   end
 
   describe '#is_revived' do

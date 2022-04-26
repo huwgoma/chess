@@ -240,10 +240,10 @@ describe SpecialMoves do
         before do
           king_start = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
           allow(@king_piece).to receive_messages(position: king_start, color: :W)
-          king_end = instance_double(Cell, column: 'g', row: 1, coords: 'g1')
+          king_end = instance_double(Cell, column: 'g', row: 1, coords: 'g1', piece: nil)
 
           @rook_start = instance_double(Cell, column: 'h', row: 1, coords: 'h1', piece: @rook_piece)
-          @rook_end = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
+          @rook_end = instance_double(Cell, column: 'f', row: 1, coords: 'f1', piece: nil)
 
           cells = [king_start, @rook_end, king_end, @rook_start]
           board_move_castle.instance_variable_set(:@cells, cells)
@@ -269,10 +269,10 @@ describe SpecialMoves do
         before do
           king_start = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
           allow(@king_piece).to receive_messages(position: king_start, color: :B)
-          king_end = instance_double(Cell, column: 'c', row: 8, coords: 'c8')
+          king_end = instance_double(Cell, column: 'c', row: 8, coords: 'c8', piece: nil)
 
           @rook_start = instance_double(Cell, column: 'a', row: 8, coords: 'a8', piece: @rook_piece)
-          @rook_end = instance_double(Cell, column: 'd', row: 8, coords: 'd8')
+          @rook_end = instance_double(Cell, column: 'd', row: 8, coords: 'd8', piece: nil)
 
           cells = [@rook_start, king_end, @rook_end, king_start]
           board_move_castle.instance_variable_set(:@cells, cells)
@@ -571,6 +571,58 @@ describe SpecialMoves do
         end
         it 'returns false' do
           expect(board_middle.middle_cell_attacked?(@king, @middle_cell)).to be false
+        end
+      end
+    end
+  end
+
+  describe EnPassant do
+    # It finds and returns the enemy Pawn on the kill cell of an En Passant
+    # If that cell is empty, has an ally, or has a non-Pawn, it returns nil
+    # Kill Cell: The Cell directly BEHIND the Pawn's end cell
+    describe '#find_en_passant_kill' do
+      subject(:board_find_ep) { Board.new }
+      before do
+        @pawn = instance_double(Pawn, color: :W, forward: 1)
+        @pawn_end = instance_double(Cell, column: 'f', row: 6, coords: 'f6')
+
+        @ep_kill_pawn = instance_double(Pawn, color: :B, is_a?: true)
+        @ep_kill_cell = instance_double(Cell, coords: 'f5', piece: @ep_kill_pawn)
+        allow(@ep_kill_cell).to receive(:has_enemy?).with(:W).and_return(true)
+
+        @cells = [@pawn_end, @ep_kill_cell]
+        board_find_ep.instance_variable_set(:@cells, @cells)
+      end
+
+      context 'when the en passant kill cell is empty' do
+        it 'returns nil' do
+          allow(@ep_kill_cell).to receive(:piece).and_return(nil)
+          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to be nil
+        end
+      end
+
+      context 'when the en passant kill cell does not have an enemy on it' do
+        it 'returns nil' do
+          allow(@ep_kill_cell).to receive(:has_enemy?).with(:W).and_return(false)
+          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to be nil
+        end
+      end
+
+      context 'when the en passant kill cell has a non-Pawn piece on it' do
+        before do
+          piece = instance_double(Piece, is_a?: true)
+          allow(piece).to receive(:is_a?).with(Pawn).and_return(false)
+          allow(@ep_kill_cell).to receive(:piece).and_return(piece)
+        end
+        
+        it 'returns nil' do
+          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to be nil
+        end
+      end
+
+      context 'when the en passant kill cell has an enemy Pawn on it' do
+        it 'returns that Pawn' do
+          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to eq(@ep_kill_pawn)
         end
       end
     end

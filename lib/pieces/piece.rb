@@ -48,7 +48,6 @@ class Piece
 
   def is_killed
     @killed = true
-    @position = nil
   end
 
   def is_revived

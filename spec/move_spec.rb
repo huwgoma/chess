@@ -63,7 +63,7 @@ describe Move do
       # Piece's @position = @end cell
       allow(@piece).to receive(:position).and_return(@end)
       # Killed Piece
-      @kill = instance_double(Piece, 'killed', position: nil)
+      @kill = instance_double(Piece, 'killed', position: @end)
       allow(@kill).to receive(:update_position)
     end
 
@@ -79,28 +79,32 @@ describe Move do
       move_undo.undo
     end
 
-    context "if there is no killed piece" do
-      before do
-        # Set Move's @kill to nil
-        move_undo.instance_variable_set(:@kill, nil)
-      end
-      # Vacate the End Cell
-      it 'sends #update_piece with nil to @end cell' do
-        expect(@end).to receive(:update_piece).with(nil)
+    # Vacate the End Cell
+    it 'sends #update_piece with nil to @end_cell' do
+      expect(@end).to receive(:update_piece).with(nil)
+      move_undo.undo
+    end
+    
+    # If there was a Kill, place the Killed Piece back on its Cell
+    context 'if there is a killed piece' do
+      # Place the Killed Piece back on End Cell
+      it 'sends #update_piece with @kill to @end cell' do
+        expect(@end).to receive(:update_piece).with(@kill)
         move_undo.undo
       end
     end
-    
-    context 'if there is a killed piece in this Move' do
-      # Move the Killed Piece back to the End Cell
-      it 'sends #update_position with @end to @killed piece' do
-        expect(@kill).to receive(:update_position).with(@end)
-        move_undo.undo
+
+    # En Passant - The killed piece's cell is different from the 
+    # moving Pawn's end cell (eg. D5 -> E6; Kill at E5)
+    context 'if the killed Piece is NOT the same as the end cell' do
+      before do
+        # Different cell from end cell
+        @enemy_pawn_cell = instance_double(Cell)
+        allow(@kill).to receive(:position).and_return(@enemy_pawn_cell)
       end
 
-      # Place the Killed Piece back on End Cell
-      it 'sends #update_piece with @killed to @end cell' do
-        expect(@end).to receive(:update_piece).with(@kill)
+      it "sends #update_piece with @kill to @kill's cell" do
+        expect(@enemy_pawn_cell).to receive(:update_piece).with(@kill)
         move_undo.undo
       end
     end
