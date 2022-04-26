@@ -633,6 +633,7 @@ describe Board do
       before do
         allow(@end).to receive(:has_enemy?).and_return(true)
         allow(@end).to receive(:piece).and_return(@killed)
+        allow(@killed).to receive(:position).and_return(@end)
       end
 
       it 'kills the enemy piece' do
@@ -896,13 +897,13 @@ describe Board do
   describe '#kill_piece' do
     subject(:board_kill) { described_class.new }
     before do
-      # Place a White Piece on A1 and a Black Piece on A2 
-      @w_a1_piece = instance_double(Piece, 'w_a1', color: :W, killed: false)
+      # Place a White Piece on A1 and a Black Piece on A2
+      @cell_a1 = instance_double(Cell, 'a1', update_piece: nil)
+      @w_a1_piece = instance_double(Piece, 'w_a1', color: :W, killed: false, position: @cell_a1)
       allow(@w_a1_piece).to receive(:is_killed)
-      #@cell_a1 = board_kill.find_cell('a1')
-      #allow(@cell_a1).to receive_messages(empty?: false, piece: @w_a1_piece)
 
-      @b_a2_piece = instance_double(Piece, 'b_a2', color: :B, killed: false)
+      @cell_a2 = instance_double(Cell, 'a2', update_piece: nil)
+      @b_a2_piece = instance_double(Piece, 'b_a2', color: :B, killed: false, position: @cell_a2)
       allow(@b_a2_piece).to receive(:is_killed)
       # Create the Living Pieces Hash (with just 2 pieces on the board)
       @living_pieces = { W: [@w_a1_piece], B: [@b_a2_piece] }
@@ -914,6 +915,11 @@ describe Board do
       board_kill.kill_piece(@w_a1_piece)
     end
     
+    it "vacates the given Piece's cell" do
+      expect(@cell_a1).to receive(:update_piece).with(nil)
+      board_kill.kill_piece(@w_a1_piece)
+    end
+
     it 'deletes the killed piece from @living_pieces' do
       after_kill = { W: [], B: [@b_a2_piece] }
       expect { board_kill.kill_piece(@w_a1_piece) }.to change { board_kill.living_pieces }.to(after_kill) 

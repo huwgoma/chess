@@ -138,6 +138,8 @@ class Board
       pawn.initial && forward_cell.empty? && cell.empty?
     when :forward_left, :forward_right
       cell.has_enemy?(pawn.color)
+    when :en_passant_left, :en_passant_right
+      #true
     end
   end
 

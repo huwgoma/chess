@@ -6,10 +6,12 @@ class Pawn < Piece
 
   MOVEMENT = {
     infinite: false,
-    forward:       { column: 0, row: 1 },
-    initial:       { column: 0, row: 2 },
-    forward_left:  { column: -1, row: 1 },
-    forward_right: { column: 1, row: 1 }
+    forward:          { column: 0, row: 1 },
+    initial:          { column: 0, row: 2 },
+    forward_left:     { column: -1, row: 1 },
+    forward_right:    { column: 1, row: 1 },
+    en_passant_left:  { column: -1, row: 1 },
+    en_passant_right: { column: 1, row: 1 }
   }
 
   def initialize(color, cell)
