@@ -664,5 +664,34 @@ describe SpecialMoves do
         end
       end
     end
+
+    # Find out whether the given kill Pawn moved 2 spaces on the last move
+    describe '#last_move_initial?' do
+      # The pawn to be captured MUST have moved in the immediately preceding turn
+      context "when the last move's @piece was not the given Pawn" do
+        it 'returns false' do
+          
+        end
+      end
+
+      # The pawn to be captured must have moved 2 spaces (ie. initial) in one turn
+      context "when the last move's @dir was not :initial" do
+        it 'returns false' do
+          
+        end
+      end
+
+      context 'when there is no last move (first move of the game)' do
+        it 'returns false' do
+          
+        end
+      end
+
+      context "when the last move was the pawn to be captured, moving 2 spaces" do
+        it 'returns true' do
+          
+        end
+      end
+    end
   end
 end

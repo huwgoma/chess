@@ -121,6 +121,7 @@ end
 
 # Namespace for Methods concerning En Passant
 module EnPassant
+  # Find and return the Pawn to be captured by the En Passant
   def find_en_passant_kill(pawn_end, pawn)
     kill_cell = find_cell(pawn_end.column + (pawn_end.row - pawn.forward).to_s)
     kill_pawn = kill_cell.piece
@@ -128,10 +129,16 @@ module EnPassant
     return kill_pawn if kill_cell.has_enemy?(pawn.color) && kill_pawn.is_a?(Pawn) 
   end
 
+  # Is an En Passant possible?
   def en_passant_possible?(pawn_end, pawn)
     kill_pawn = find_en_passant_kill(pawn_end, pawn)
     return false unless kill_pawn
     true
+  end
+
+  # Did the Pawn (to be captured) move 2 spaces on the last move?
+  def last_move_initial?(kill_pawn)
+    
   end
 end
 
