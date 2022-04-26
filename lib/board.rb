@@ -205,9 +205,10 @@ class Board
     end
   end
 
-  # Kill the given Piece and remove it from @living_pieces
+  # Kill the given Piece, remove it from its Cell, and remove it from @living_pieces
   def kill_piece(piece)
     piece.is_killed
+    piece.position.update_piece(nil)
     @living_pieces[piece.color].delete(piece)
   end
 
