@@ -627,6 +627,35 @@ describe SpecialMoves do
       end
     end
 
-    
+    # Calculate whether an En Passant is possible or not
+    describe '#en_passant_possible?' do
+      subject(:board_en_passant) { Board.new }
+      
+      before do
+        @pawn = instance_double(Pawn, color: :W, forward: 1)
+        @pawn_end = instance_double(Cell, column: 'f', row: 6, piece: @pawn)
+        
+        @kill = instance_double(Pawn, color: :B, is_a?: true)
+        @kill_cell = instance_double(Cell, column: 'f', row: 5, piece: @kill, has_enemy?: true)
+      end
+
+      context 'when the en passant capture cell does not carry an enemy Pawn' do
+        it 'returns false' do
+          
+        end
+      end
+
+      context 'when the enemy Pawn did not move 2 spaces (initial) on the last move' do
+        it 'returns false' do
+          
+        end
+      end
+
+      context 'when neither of the above conditions are true' do
+        it 'returns true' do
+          
+        end
+      end
+    end
   end
 end

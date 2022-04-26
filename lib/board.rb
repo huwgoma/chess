@@ -139,7 +139,7 @@ class Board
     when :forward_left, :forward_right
       cell.has_enemy?(pawn.color)
     when :en_passant_left, :en_passant_right
-      #en_passant_possible?(cell, pawn)
+      en_passant_possible?(cell, pawn)
     end
   end
 

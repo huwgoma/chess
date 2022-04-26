@@ -127,6 +127,10 @@ module EnPassant
 
     return kill_pawn if kill_cell.has_enemy?(pawn.color) && kill_pawn.is_a?(Pawn) 
   end
+
+  def en_passant_possible?(pawn_end, pawn)
+    
+  end
 end
 
 
