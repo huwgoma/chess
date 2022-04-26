@@ -3,12 +3,13 @@
 class Move
   @@stack = []
 
-  attr_reader :start, :end, :piece, :kill, :rook_move
+  attr_reader :start, :end, :piece, :kill, :dir, :rook_move
 
-  def initialize(piece:, start_cell:, end_cell:, kill: nil, **castle)
+  def initialize(piece:, start_cell:, end_cell:, dir:, kill: nil, **castle)
     @piece = piece
     @start = start_cell
     @end = end_cell
+    @dir = dir
     @kill = kill
     
     @rook_move = castle[:rook_move] if castle[:rook_move]

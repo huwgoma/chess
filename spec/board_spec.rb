@@ -645,7 +645,7 @@ describe Board do
       # If a Killed Piece exists, send that Piece to Move#new
       it 'creates a new Move object with the Killed Piece' do
         move = class_double(Move).as_stubbed_const
-        expect(move).to receive(:new).with(piece: @piece, start_cell: @start, end_cell: @end, kill: @killed)
+        expect(move).to receive(:new).with(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir, kill: @killed)
         board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
       end
     end
@@ -658,10 +658,11 @@ describe Board do
     # If no Piece was killed, killed = nil is passed to Move#new
     it 'creates a new Move object' do
       move = class_double(Move).as_stubbed_const
-      expect(move).to receive(:new).with(piece: @piece, start_cell: @start, end_cell: @end, kill: nil)
+      expect(move).to receive(:new).with(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir, kill: nil)
       board_move.move_piece(piece: @piece, start_cell: @start, end_cell: @end, dir: @dir)
     end
 
+    # Castling
     context 'when the direction of the move is castle_king' do
       before do
         @dir = :castle_king
@@ -693,8 +694,6 @@ describe Board do
           allow(king).to receive(:===).with(@king_piece).and_return(true)
           allow(king).to receive(:===).with(@rook_piece).and_return(false)
 
-          
-          
           # Move King
           allow(@king_start).to receive(:update_piece)
           allow(@king_piece).to receive(:update_position)
@@ -716,10 +715,7 @@ describe Board do
 
       context 'when the type of the moving Piece is Rook' do
         it "sends #new to Move with the details of the castling Rook's move - secondary flag set to true" do
-          #rook = class_double(Rook).as_stubbed_const
-          #allow(rook).to receive(:===).with(@rook_piece).and_return(true)
-          
-          expect(@move).to receive(:new).with(piece: @rook_piece, start_cell: @rook_start, end_cell: @rook_end, secondary: true)
+          expect(@move).to receive(:new).with(piece: @rook_piece, start_cell: @rook_start, end_cell: @rook_end, dir: @dir, secondary: true)
           board_move.move_piece(piece: @rook_piece, start_cell: @rook_start, end_cell: @rook_end, dir: @dir)
         end
       end

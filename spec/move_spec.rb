@@ -10,8 +10,8 @@ describe Move do
   end
 
   before do
-    @move_1 = described_class.new(piece: 'WPawn', start_cell: 'd2', end_cell: 'd3')
-    @move_2 = described_class.new(piece: 'BRook',  start_cell: 'd7', end_cell: 'd3', kill: 'WPawn')
+    @move_1 = described_class.new(piece: 'WPawn', start_cell: 'd2', dir: :forward, end_cell: 'd3', )
+    @move_2 = described_class.new(piece: 'BRook',  start_cell: 'd7', end_cell: 'd3', dir: :bot, kill: 'WPawn')
     @stack = [@move_1, @move_2]
   end
 
@@ -22,7 +22,7 @@ describe Move do
     end
 
     it 'does not add Moves to @@stack if the Move has the secondary: true flag' do
-      move_3 = described_class.new(piece: 'WRook', start_cell: 'h1', end_cell: 'f1', secondary: true)
+      move_3 = described_class.new(piece: 'WRook', start_cell: 'h1', end_cell: 'f1', dir: :castle_king, secondary: true)
       expect(Move.stack).to eq(@stack)
     end
   end
@@ -48,7 +48,7 @@ describe Move do
 
   # Undo - Revert the changes made to Cell@piece and Piece@position
   describe '#undo' do
-    subject(:move_undo) { described_class.new(piece: @piece, start_cell: @start, end_cell: @end, kill: @kill) }
+    subject(:move_undo) { described_class.new(piece: @piece, start_cell: @start, end_cell: @end, dir: :forward, kill: @kill) }
 
     before do
       # Start Cell
@@ -110,7 +110,7 @@ describe Move do
         @rook_start = instance_double(Cell, update_piece: nil)
         @rook = instance_double(Piece, 'rook', update_position: @rook_start)
         @rook_end = instance_double(Cell, update_piece: nil)
-        rook_move = described_class.new(piece: @rook, start_cell: @rook_start, end_cell: @rook_end, secondary: true)
+        rook_move = described_class.new(piece: @rook, start_cell: @rook_start, end_cell: @rook_end, dir: :castle_king, secondary: true)
 
         # Give our primary Move a secondary @rook_move
         move_undo.instance_variable_set(:@rook_move, rook_move)
