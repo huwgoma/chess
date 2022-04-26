@@ -30,14 +30,16 @@ class Move
 
   # Revert the changes made to Cell/Piece states by the move
   def undo
+    # Move Piece back to Start Cell
     @piece.update_position(@start)
     @start.update_piece(@piece)
     
-    # @kill = nil or the piece that was killed 
-    @end.update_piece(@kill)
-    # If there was a Killed Piece, place it back on @end Cell
-    @kill.update_position(@end) if @kill
+    # Vacate End Cell
+    @end.update_piece(nil)
 
+    # If there was a kill, place that Piece back on its Cell
+    @kill.position.update_piece(@kill) if kill
+    
     # If the Move has a secondary @rook_move (ie. Castling), undo that as well
     @rook_move.undo if @rook_move
   end
