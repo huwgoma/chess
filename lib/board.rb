@@ -191,12 +191,12 @@ class Board
       case piece
       when King
         castle_move = move_castling_rook(piece, dir)
-        Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, rook_move: castle_move)
+        Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, dir: dir, rook_move: castle_move)
       when Rook
-        Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, secondary: true)
+        Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, dir: dir, secondary: true)
       end
     else
-      Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, kill: kill)
+      Move.new(piece: piece, start_cell: start_cell, end_cell: end_cell, dir: dir, kill: kill)
     end
   end
 
