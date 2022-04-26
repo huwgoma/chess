@@ -129,7 +129,9 @@ module EnPassant
   end
 
   def en_passant_possible?(pawn_end, pawn)
-    
+    kill_pawn = find_en_passant_kill(pawn_end, pawn)
+    return false unless kill_pawn
+    true
   end
 end
 

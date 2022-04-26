@@ -633,15 +633,22 @@ describe SpecialMoves do
       
       before do
         @pawn = instance_double(Pawn, color: :W, forward: 1)
-        @pawn_end = instance_double(Cell, column: 'f', row: 6, piece: @pawn)
+        @pawn_end = instance_double(Cell, column: 'f', row: 6, coords: 'f6', piece: @pawn)
         
         @kill = instance_double(Pawn, color: :B, is_a?: true)
-        @kill_cell = instance_double(Cell, column: 'f', row: 5, piece: @kill, has_enemy?: true)
+        @kill_cell = instance_double(Cell, column: 'f', row: 5, coords: 'f5', piece: @kill, has_enemy?: true)
+
+        cells = [@pawn_end, @kill_cell]
+        board_en_passant.instance_variable_set(:@cells, cells)
       end
 
       context 'when the en passant capture cell does not carry an enemy Pawn' do
+        before do
+          allow(@kill_cell).to receive(:piece).and_return(nil)
+        end
+
         it 'returns false' do
-          
+          expect(board_en_passant.en_passant_possible?(@pawn_end, @pawn)).to be false
         end
       end
 
