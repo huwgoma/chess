@@ -581,27 +581,48 @@ describe SpecialMoves do
     # If that cell is empty, has an ally, or has a non-Pawn, it returns nil
     # Kill Cell: The Cell directly BEHIND the Pawn's end cell
     describe '#find_en_passant_kill' do
+      subject(:board_find_ep) { Board.new }
+      before do
+        @pawn = instance_double(Pawn, color: :W, forward: 1)
+        @pawn_end = instance_double(Cell, column: 'f', row: 6, coords: 'f6')
+
+        @ep_kill_pawn = instance_double(Pawn, color: :B, is_a?: true)
+        @ep_kill_cell = instance_double(Cell, coords: 'f5', piece: @ep_kill_pawn)
+        allow(@ep_kill_cell).to receive(:has_enemy?).with(:W).and_return(true)
+
+        @cells = [@pawn_end, @ep_kill_cell]
+        board_find_ep.instance_variable_set(:@cells, @cells)
+      end
+
       context 'when the en passant kill cell is empty' do
         it 'returns nil' do
-          
+          allow(@ep_kill_cell).to receive(:piece).and_return(nil)
+          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to be nil
         end
       end
 
       context 'when the en passant kill cell does not have an enemy on it' do
         it 'returns nil' do
-          
+          allow(@ep_kill_cell).to receive(:has_enemy?).with(:W).and_return(false)
+          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to be nil
         end
       end
 
       context 'when the en passant kill cell has a non-Pawn piece on it' do
+        before do
+          piece = instance_double(Piece, is_a?: true)
+          allow(piece).to receive(:is_a?).with(Pawn).and_return(false)
+          allow(@ep_kill_cell).to receive(:piece).and_return(piece)
+        end
+        
         it 'returns nil' do
-          
+          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to be nil
         end
       end
 
       context 'when the en passant kill cell has an enemy Pawn on it' do
         it 'returns that Pawn' do
-          
+          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to eq(@ep_kill_pawn)
         end
       end
     end

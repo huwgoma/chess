@@ -122,7 +122,10 @@ end
 # Namespace for Methods concerning En Passant
 module EnPassant
   def find_en_passant_kill(pawn, pawn_end)
+    kill_cell = find_cell(pawn_end.column + (pawn_end.row - pawn.forward).to_s)
+    kill_pawn = kill_cell.piece
 
+    return kill_pawn if kill_cell.has_enemy?(pawn.color) && kill_pawn.is_a?(Pawn) 
   end
 end
 
@@ -142,5 +145,6 @@ end
 module SpecialMoves
   include PawnPromotion
   include Castling
+  include EnPassant
 end
 
