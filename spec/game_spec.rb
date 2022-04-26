@@ -10,9 +10,10 @@ require './lib/warnings'
 require 'pry'
 
 describe Game do
-  # before do
-  #   allow(STDOUT).to receive(:write)
-  # end
+  # Disable to enable pry?
+  before do
+    allow(STDOUT).to receive(:write)
+  end
 
   describe '#create_players' do
     subject(:game_players) { described_class.new }

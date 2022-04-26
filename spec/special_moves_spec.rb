@@ -597,14 +597,14 @@ describe SpecialMoves do
       context 'when the en passant kill cell is empty' do
         it 'returns nil' do
           allow(@ep_kill_cell).to receive(:piece).and_return(nil)
-          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to be nil
+          expect(board_find_ep.find_en_passant_kill(@pawn_end, @pawn)).to be nil
         end
       end
 
       context 'when the en passant kill cell does not have an enemy on it' do
         it 'returns nil' do
           allow(@ep_kill_cell).to receive(:has_enemy?).with(:W).and_return(false)
-          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to be nil
+          expect(board_find_ep.find_en_passant_kill(@pawn_end, @pawn)).to be nil
         end
       end
 
@@ -616,15 +616,17 @@ describe SpecialMoves do
         end
         
         it 'returns nil' do
-          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to be nil
+          expect(board_find_ep.find_en_passant_kill(@pawn_end, @pawn)).to be nil
         end
       end
 
       context 'when the en passant kill cell has an enemy Pawn on it' do
         it 'returns that Pawn' do
-          expect(board_find_ep.find_en_passant_kill(@pawn, @pawn_end)).to eq(@ep_kill_pawn)
+          expect(board_find_ep.find_en_passant_kill(@pawn_end, @pawn)).to eq(@ep_kill_pawn)
         end
       end
     end
+
+    
   end
 end

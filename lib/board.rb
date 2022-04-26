@@ -139,7 +139,7 @@ class Board
     when :forward_left, :forward_right
       cell.has_enemy?(pawn.color)
     when :en_passant_left, :en_passant_right
-      #true
+      #en_passant_possible?(cell, pawn)
     end
   end
 
@@ -187,7 +187,7 @@ class Board
     start_cell.update_piece(nil)
     piece.update_position(end_cell)
 
-    kill = dir.match?(/en_passant/) ? find_en_passant_kill(piece, end_cell) : end_cell.piece
+    kill = dir.match?(/en_passant/) ? find_en_passant_kill(end_cell, piece) : end_cell.piece
     kill_piece(kill) if kill
     
     end_cell.update_piece(piece)

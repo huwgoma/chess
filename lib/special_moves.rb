@@ -121,7 +121,7 @@ end
 
 # Namespace for Methods concerning En Passant
 module EnPassant
-  def find_en_passant_kill(pawn, pawn_end)
+  def find_en_passant_kill(pawn_end, pawn)
     kill_cell = find_cell(pawn_end.column + (pawn_end.row - pawn.forward).to_s)
     kill_pawn = kill_cell.piece
 
