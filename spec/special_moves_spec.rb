@@ -240,10 +240,10 @@ describe SpecialMoves do
         before do
           king_start = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
           allow(@king_piece).to receive_messages(position: king_start, color: :W)
-          king_end = instance_double(Cell, column: 'g', row: 1, coords: 'g1')
+          king_end = instance_double(Cell, column: 'g', row: 1, coords: 'g1', piece: nil)
 
           @rook_start = instance_double(Cell, column: 'h', row: 1, coords: 'h1', piece: @rook_piece)
-          @rook_end = instance_double(Cell, column: 'f', row: 1, coords: 'f1')
+          @rook_end = instance_double(Cell, column: 'f', row: 1, coords: 'f1', piece: nil)
 
           cells = [king_start, @rook_end, king_end, @rook_start]
           board_move_castle.instance_variable_set(:@cells, cells)
@@ -269,10 +269,10 @@ describe SpecialMoves do
         before do
           king_start = instance_double(Cell, column: 'e', row: 8, coords: 'e8')
           allow(@king_piece).to receive_messages(position: king_start, color: :B)
-          king_end = instance_double(Cell, column: 'c', row: 8, coords: 'c8')
+          king_end = instance_double(Cell, column: 'c', row: 8, coords: 'c8', piece: nil)
 
           @rook_start = instance_double(Cell, column: 'a', row: 8, coords: 'a8', piece: @rook_piece)
-          @rook_end = instance_double(Cell, column: 'd', row: 8, coords: 'd8')
+          @rook_end = instance_double(Cell, column: 'd', row: 8, coords: 'd8', piece: nil)
 
           cells = [@rook_start, king_end, @rook_end, king_start]
           board_move_castle.instance_variable_set(:@cells, cells)

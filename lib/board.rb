@@ -99,7 +99,7 @@ class Board
   def verify_moves(piece, moves = piece.moves)
     clone_board = Marshal.load(Marshal.dump(self))
     clone_piece = clone_board.find_cell(piece.position.coords).piece
-
+    
     moves.each do | dir, cells |
       cells.reject! do | cell |
         clone_board.move_piece(piece: clone_piece, start_cell: clone_piece.position, 
@@ -184,7 +184,10 @@ class Board
   def move_piece(piece: @active_piece, start_cell: @active_piece.position, end_cell:, dir:)
     start_cell.update_piece(nil)
     piece.update_position(end_cell)
-    kill = end_cell.has_enemy?(piece.color) ? kill_piece(end_cell.piece) : nil
+
+    kill = dir.match?(/en_passant/) ? find_en_passant_kill(piece, end_cell) : end_cell.piece
+    kill_piece(kill) if kill
+    
     end_cell.update_piece(piece)
 
     if dir.match?(/castle/)

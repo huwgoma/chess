@@ -317,7 +317,7 @@ describe Board do
       # Mock a White Pawn at E2
       @cell_e2 = board_verify.find_cell('e2')
       pawn_moves = { forward: [], initial: [], forward_left: [], forward_right: [] }
-      @w_pawn = instance_double(Pawn, class:Pawn, 
+      @w_pawn = instance_double(Pawn, 'wpawne2', class: Pawn, 
         moves: pawn_moves, initial: true, update_position: nil,
         position: @cell_e2, color: :W, forward: 1)
       allow(@w_pawn).to receive(:is_a?)
@@ -392,25 +392,21 @@ describe Board do
 
         # Place Enemy Pawn on F3
         allow(@cell_f3).to receive(:has_enemy?).and_return(true)
-        enemy_pawn = instance_double(Pawn, color: :B)
-        allow(enemy_pawn).to receive(:is_killed)
+        enemy_pawn = instance_double(Pawn, 'bpawnf3', color: :B, position: @cell_f3)
+        allow(enemy_pawn).to receive_messages(is_killed: nil, is_revived: nil)
         allow(@cell_f3).to receive(:piece).and_return(enemy_pawn)
         
-        # Pawn Moves to each Cell of @moves
+        # Pawn Moves
         board_verify.generate_moves(@w_pawn)
-        
-        allow(@cell_e3).to receive(:has_enemy?).with(:W).and_return(false)
-        allow(@cell_e4).to receive(:has_enemy?).with(:W).and_return(false)
-        allow(@cell_f3).to receive(:has_enemy?).with(:W).and_return(true)
         
         # Rook Moves to each Cell; empty? -> enemy? -> piece?
         allow(@cell_e4).to receive(:empty?).and_return(true, false, true)
         allow(@cell_e4).to receive(:has_enemy?).with(:B).and_return(true)
-        allow(@cell_e4).to receive(:piece).and_return(nil, @w_pawn, nil)
+        allow(@cell_e4).to receive(:piece).and_return(nil, nil, @w_pawn, nil)
 
         allow(@cell_e3).to receive(:empty?).and_return(false, true)
         allow(@cell_e3).to receive(:has_enemy?).with(:B).and_return(true)
-        allow(@cell_e3).to receive(:piece).and_return(@w_pawn, nil)
+        allow(@cell_e3).to receive(:piece).and_return(nil, @w_pawn, nil)
 
         allow(@cell_e2).to receive(:empty?).and_return(true)
         allow(@cell_e2).to receive(:piece).and_return(@w_pawn, nil)
@@ -440,8 +436,9 @@ describe Board do
           
           allow(@cell_e3).to receive(:empty?).and_return(false, true)
           allow(@cell_e3).to receive(:has_enemy?).with(:B).and_return(true)
-          allow(@cell_e3).to receive(:piece).and_return(@w_pawn, nil)
+          allow(@cell_e3).to receive(:piece).and_return(nil, @w_pawn, nil)
         end
+        
         it 'allows the Piece to capture OR block the Checking enemy piece' do
           pawn_moves = { forward: [@cell_e3], initial: [], forward_left: [@cell_d3], forward_right: [] }
           expect(board_verify.verify_moves(@w_pawn)).to eq(pawn_moves)
@@ -613,7 +610,7 @@ describe Board do
       @killed = instance_double(Piece, 'killed', color: :B)
       allow(@killed).to receive(:is_killed)
       # End Cell
-      @end = instance_double(Cell, 'end', piece: @killed, has_enemy?: false)
+      @end = instance_double(Cell, 'end', piece: nil, has_enemy?: false)
       allow(@end).to receive(:update_piece)
       # Direction
       @dir = :forward
@@ -635,6 +632,7 @@ describe Board do
     context "if the end cell already has an enemy piece occupying it" do
       before do
         allow(@end).to receive(:has_enemy?).and_return(true)
+        allow(@end).to receive(:piece).and_return(@killed)
       end
 
       it 'kills the enemy piece' do
@@ -671,7 +669,7 @@ describe Board do
         # Castling Rook
         @rook_piece = instance_double(Rook, color: :W)
         @rook_start = instance_double(Cell, coords: 'h1', piece: @rook_piece)
-        @rook_end = instance_double(Cell, coords: 'f1')
+        @rook_end = instance_double(Cell, coords: 'f1', piece: nil)
 
         # Move Rook
         allow(@rook_start).to receive(:update_piece)
@@ -688,7 +686,7 @@ describe Board do
           # King
           @king_start = instance_double(Cell, column: 'e', row: 1, coords: 'e1')
           @king_piece = instance_double(King, position: @king_start, color: :W)
-          @king_end = instance_double(Cell, coords: 'g1')
+          @king_end = instance_double(Cell, coords: 'g1', piece: nil)
           
           king = class_double(King).as_stubbed_const
           allow(king).to receive(:===).with(@king_piece).and_return(true)
