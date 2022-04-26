@@ -119,6 +119,22 @@ module Castling
   end
 end
 
+# Namespace for Methods concerning En Passant
+module EnPassant
+  def find_en_passant_kill(pawn, pawn_end)
+
+  end
+end
+
+
+
+
+
+
+
+
+
+
 
 
 

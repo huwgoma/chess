@@ -575,4 +575,35 @@ describe SpecialMoves do
       end
     end
   end
+
+  describe EnPassant do
+    # It finds and returns the enemy Pawn on the kill cell of an En Passant
+    # If that cell is empty, has an ally, or has a non-Pawn, it returns nil
+    # Kill Cell: The Cell directly BEHIND the Pawn's end cell
+    describe '#find_en_passant_kill' do
+      context 'when the en passant kill cell is empty' do
+        it 'returns nil' do
+          
+        end
+      end
+
+      context 'when the en passant kill cell does not have an enemy on it' do
+        it 'returns nil' do
+          
+        end
+      end
+
+      context 'when the en passant kill cell has a non-Pawn piece on it' do
+        it 'returns nil' do
+          
+        end
+      end
+
+      context 'when the en passant kill cell has an enemy Pawn on it' do
+        it 'returns that Pawn' do
+          
+        end
+      end
+    end
+  end
 end
