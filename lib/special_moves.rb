@@ -133,6 +133,7 @@ module EnPassant
   def en_passant_possible?(pawn_end, pawn)
     kill_pawn = find_en_passant_kill(pawn_end, pawn)
     return false unless kill_pawn
+    return false unless last_move_initial?(kill_pawn)
     true
   end
 

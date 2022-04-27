@@ -638,6 +638,9 @@ describe SpecialMoves do
         @kill = instance_double(Pawn, color: :B, is_a?: true)
         @kill_cell = instance_double(Cell, column: 'f', row: 5, coords: 'f5', piece: @kill, has_enemy?: true)
 
+        @last_move = instance_double(Move, piece: @kill, dir: :initial)
+        @move = class_double(Move, last: @last_move).as_stubbed_const
+
         cells = [@pawn_end, @kill_cell]
         board_en_passant.instance_variable_set(:@cells, cells)
       end
@@ -653,14 +656,17 @@ describe SpecialMoves do
       end
 
       context 'when the enemy Pawn did not move 2 spaces (initial) on the last move' do
+        before do
+          allow(@last_move).to receive(:dir).and_return(:forward)
+        end
         it 'returns false' do
-          
+          expect(board_en_passant.en_passant_possible?(@pawn_end, @pawn)).to be false
         end
       end
 
       context 'when neither of the above conditions are true' do
         it 'returns true' do
-          
+          expect(board_en_passant.en_passant_possible?(@pawn_end, @pawn)).to be true
         end
       end
     end
