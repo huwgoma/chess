@@ -150,19 +150,6 @@ module EnPassant
   end
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 module SpecialMoves
   include PawnPromotion
   include Castling

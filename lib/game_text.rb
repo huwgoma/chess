@@ -68,6 +68,13 @@ To begin, please select one of the following game options:
   def invalid_promotion_message
     "Invalid input! Please select one of the types above for your Pawn to promote to."
   end
+
+  def en_passant_message
+    <<-HEREDOC
+#{@current_player.name}, your selected Pawn can capture the Pawn that just moved (#{Move.last.end.coords}) via En Passant!
+If you do not capture En Passant now, you will not be able to do so later. 
+    HEREDOC
+  end
 end
 
 # Utility String Methods
