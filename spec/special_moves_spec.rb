@@ -667,29 +667,43 @@ describe SpecialMoves do
 
     # Find out whether the given kill Pawn moved 2 spaces on the last move
     describe '#last_move_initial?' do
+      before do
+        @kill_pawn = instance_double(Pawn)
+        @last_move = instance_double(Move, piece: @kill_pawn, dir: :initial)
+        @move = class_double(Move, last: @last_move).as_stubbed_const
+      end
       # The pawn to be captured MUST have moved in the immediately preceding turn
       context "when the last move's @piece was not the given Pawn" do
+        before do
+          allow(@last_move).to receive(:piece).and_return(instance_double(Piece))
+        end
         it 'returns false' do
-          
+          expect(last_move_initial?(@kill_pawn)).to be false
         end
       end
 
       # The pawn to be captured must have moved 2 spaces (ie. initial) in one turn
       context "when the last move's @dir was not :initial" do
+        before do
+          allow(@last_move).to receive(:dir).and_return(:forward)
+        end
         it 'returns false' do
-          
+          expect(last_move_initial?(@kill_pawn)).to be false
         end
       end
 
       context 'when there is no last move (first move of the game)' do
+        before do
+          allow(@move).to receive(:last).and_return(nil)
+        end
         it 'returns false' do
-          
+          expect(last_move_initial?(@kill_pawn)).to be false
         end
       end
 
       context "when the last move was the pawn to be captured, moving 2 spaces" do
         it 'returns true' do
-          
+          expect(last_move_initial?(@kill_pawn)).to be true
         end
       end
     end

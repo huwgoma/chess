@@ -138,7 +138,8 @@ module EnPassant
 
   # Did the Pawn (to be captured) move 2 spaces on the last move?
   def last_move_initial?(kill_pawn)
-    
+    last_move = Move.last
+    last_move&.piece == kill_pawn && last_move.dir == :initial
   end
 end
 
