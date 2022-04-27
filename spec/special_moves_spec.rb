@@ -577,6 +577,28 @@ describe SpecialMoves do
   end
 
   describe EnPassant do
+    # Given a Piece, check if that Piece 1) is a Pawn and 2) has an En Passant move available
+    describe '#en_passant_available?' do
+      context 'when the given Piece is not a Pawn' do
+        it 'returns false' do
+          
+        end
+      end
+
+      context 'when the given Piece is a Pawn' do
+        context 'when the given Piece cannot legally move En Passant' do
+          it 'returns false' do
+            
+          end
+        end
+
+        context 'when the given Piece CAN legally move En Passant' do
+          it 'returns true' do
+            
+          end
+        end
+      end
+    end
     # It finds and returns the enemy Pawn on the kill cell of an En Passant
     # If that cell is empty, has an ally, or has a non-Pawn, it returns nil
     # Kill Cell: The Cell directly BEHIND the Pawn's end cell
@@ -627,8 +649,8 @@ describe SpecialMoves do
       end
     end
 
-    # Calculate whether an En Passant is possible or not
-    describe '#en_passant_possible?' do
+    # Calculate whether an En Passant is legal or not (for a given end cell)
+    describe '#en_passant_legal?' do
       subject(:board_en_passant) { Board.new }
       
       before do
@@ -651,7 +673,7 @@ describe SpecialMoves do
         end
 
         it 'returns false' do
-          expect(board_en_passant.en_passant_possible?(@pawn_end, @pawn)).to be false
+          expect(board_en_passant.en_passant_legal?(@pawn_end, @pawn)).to be false
         end
       end
 
@@ -660,13 +682,13 @@ describe SpecialMoves do
           allow(@last_move).to receive(:dir).and_return(:forward)
         end
         it 'returns false' do
-          expect(board_en_passant.en_passant_possible?(@pawn_end, @pawn)).to be false
+          expect(board_en_passant.en_passant_legal?(@pawn_end, @pawn)).to be false
         end
       end
 
       context 'when neither of the above conditions are true' do
         it 'returns true' do
-          expect(board_en_passant.en_passant_possible?(@pawn_end, @pawn)).to be true
+          expect(board_en_passant.en_passant_legal?(@pawn_end, @pawn)).to be true
         end
       end
     end
