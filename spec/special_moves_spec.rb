@@ -580,21 +580,39 @@ describe SpecialMoves do
     # Given a Piece, check if that Piece 1) is a Pawn and 2) has an En Passant move available
     describe '#en_passant_available?' do
       context 'when the given Piece is not a Pawn' do
+        before do
+          @piece = instance_double(Piece)  
+        end
+
         it 'returns false' do
-          
+          expect(en_passant_available?(@piece)).to be false
         end
       end
 
       context 'when the given Piece is a Pawn' do
+        before do
+          @pawn = instance_double(Pawn, is_a?: true)  
+        end
+
         context 'when the given Piece cannot legally move En Passant' do
+          before do
+            moves = { forward: ['d3'], en_passant_left: [], en_passant_right: [] }
+            allow(@pawn).to receive(:moves).and_return(moves)
+          end
+
           it 'returns false' do
-            
+            expect(en_passant_available?(@pawn)).to be false
           end
         end
 
         context 'when the given Piece CAN legally move En Passant' do
+          before do
+            moves = { forward: ['d6'], en_passant_left: ['e6'], en_passant_right: [] }
+            allow(@pawn).to receive(:moves).and_return(moves)
+          end
+
           it 'returns true' do
-            
+            expect(en_passant_available?(@pawn)).to be true
           end
         end
       end

@@ -122,8 +122,9 @@ end
 # Namespace for Methods concerning En Passant
 module EnPassant
   # Does the given Piece have an En Passant available?
-  def en_passant_available?(pawn)
-
+  def en_passant_available?(piece)
+    return false unless piece.is_a?(Pawn)
+    piece.moves.select { |dir, cells| dir.match?(/en_passant/) }.values.flatten.any?
   end
 
   # Find and return the Pawn to be captured by the En Passant
