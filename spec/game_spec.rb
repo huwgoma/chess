@@ -313,7 +313,7 @@ describe Game do
 
   # Valid: Cell exists and has one of the current player's Pieces on it
   describe '#input_cell_valid?' do
-    subject(:game_input_cell) { described_class.new(@board, :W) }
+    subject(:game_input_cell) { described_class.new(@board) }
 
     before do
       @board = instance_double(Board)

@@ -6,22 +6,29 @@ class Game
   include GameTextable
   include SpecialMoves
 
-  def initialize(board = Board.new, current_color = :W)
+  def initialize(board = Board.new)
     @board = board
-    @current_color = current_color
+    @current_color = :W
     @resigned = false
   end
 
-  def play
-    create_players
+  def play(new_game: true)
+    prepare_game if new_game
+    
     set_current_player(@current_color)
-    @board.prepare_board
     @board.print_board
     game_loop
     game_end
   end
 
   ## Game Setup
+  def prepare_game
+    create_players
+    @players = Player.list
+    @moves = Move.stack
+    @board.prepare_board
+  end
+
   def create_players
     2.times do | player_count |
       puts "Player #{player_count+1}, please enter your name."
