@@ -6,7 +6,10 @@ module Serializable
   # file name?: 
   # save the current game (to saves/) then exit
 
-  
+  def create_file_name
+    time = Time.now.strftime("%Y-%m-%d %k:%M:%S")
+    "Chess - #{time}"
+  end
 
   # def create game list
   # create an array of files within saves/ directory
