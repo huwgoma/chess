@@ -132,15 +132,4 @@ class Game
     puts @resigned ? resigned_message : king_checkmate_message(@current_color.opposite) 
     puts replay_game_message
   end
-
-  def play_again?
-    loop do
-      input = gets.chomp
-      unless ['P', 'Q'].include?(input.upcase)
-        puts invalid_replay_input_warning
-        next
-      end
-      break input.upcase == 'P'
-    end
-  end
 end

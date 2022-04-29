@@ -16,11 +16,22 @@ end
 def create_game(mode)
   case mode
   when 1
-    game = Game.new
+    Game.new
   when 2
     # game = load_game
     #   load_game: display list of games -> select game to load -> deserialize game file
-    # game.play
+    # 
+  end
+end
+
+def play_again?
+  loop do
+    input = gets.chomp
+    unless ['P', 'Q'].include?(input.upcase)
+      puts invalid_replay_input_warning
+      next
+    end
+    break input.upcase == 'P'
   end
 end
 
@@ -28,14 +39,12 @@ loop do
   system 'clear'
   
   puts tutorial_message
-  puts game_mode_message
-  mode = select_game_mode
-# if game mode = 1, start a new game and play it
-# else if game mode = 2, load selected game (select later) and play that
-  game = create_game(mode)
-  game.play
   
-  unless game.play_again?
+  puts game_mode_message
+  game = create_game(select_game_mode)
+  game.play
+
+  unless play_again?
     puts 'Thanks for playing!'
     break
   end
