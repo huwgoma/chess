@@ -14,7 +14,6 @@ def clear_game_environment
 end
 
 loop do
-  clear_game_environment
   system 'clear'
   
   puts tutorial_message
@@ -29,6 +28,7 @@ loop do
     puts 'Thanks for playing!'
     break
   end
+  clear_game_environment
 end
 
 
