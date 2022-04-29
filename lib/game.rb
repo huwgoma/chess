@@ -13,10 +13,7 @@ class Game
   end
 
   def play(new_game: true)
-    prepare_new_game if new_game
-    #Move.class_variable_set(:@@stack, @moves)
-    
-
+    new_game ? prepare_new_game : load_game_environment
 
     set_current_player(@current_color)
     @board.print_board
@@ -35,8 +32,8 @@ class Game
   # In the event of a loaded game being played, point Move.stack and Player.list
   # to the game's @moves/@players
   def load_game_environment
-    # Move.set_stack(@moves)
-    # Player.set_list(@players)
+    Move.load_stack(@moves)
+    Player.load_list(@players)
   end
 
   def create_players
@@ -67,7 +64,6 @@ class Game
   ## Core Game Loop
   def game_loop
     loop do
-      binding.pry
       piece = select_active_piece
       # Return out of game_loop early if piece is a Symbol ('Q' entered)
       return send(piece) if piece.is_a?(Symbol)
