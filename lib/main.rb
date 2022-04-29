@@ -13,17 +13,28 @@ def clear_game_environment
   Player.list.clear
 end
 
+def create_game(mode)
+  case mode
+  when 1
+    game = Game.new
+  when 2
+    # game = load_game
+    #   load_game: display list of games -> select game to load -> deserialize game file
+    # game.play
+  end
+end
+
 loop do
   system 'clear'
   
   puts tutorial_message
   puts game_mode_message
-  select_game_mode
+  mode = select_game_mode
 # if game mode = 1, start a new game and play it
 # else if game mode = 2, load selected game (select later) and play that
-  game = Game.new
+  game = create_game(mode)
   game.play
-
+  
   unless game.play_again?
     puts 'Thanks for playing!'
     break

@@ -23,8 +23,8 @@ To begin, please select one of the following game options:
   end
 
   def select_game_mode
-    input = gets.chomp
-    return input if [1, 2].include?(input.to_i)
+    input = gets.chomp.to_i
+    return input if [1, 2].include?(input)
     
     puts "Input error! Please enter 1 (new game) or 2 (load game)."
     select_game_mode
