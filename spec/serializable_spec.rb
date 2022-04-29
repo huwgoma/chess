@@ -45,13 +45,15 @@ describe Serializable do
       end
     end
 
-    it 'writes the serialized string to the created File' do
-      string = Marshal.dump(game_save)
+    it 'opens a File' do
       file_path = "saves/Chess-#{Time.now.strftime("%Y-%m-%d%k:%M:%S")}"
+      expect(File).to receive(:open).with(file_path, 'w')
+      game_save.save_game
+    end
 
-      allow(File).to receive(:open).with(file_path, 'w') do | file |
-        expect(file).to receive(:puts).with(string)
-      end
+    it 'serializes (dumps) the game object where it is called' do
+      expect(Marshal).to receive(:dump).with(game_save)
+      game_save.save_game
     end
   end
 
@@ -64,10 +66,30 @@ describe Serializable do
     end
   end
 
+  describe '#load_game' do
+    subject(:game_load) { Game.new }
+
+    before do
+      file_list = ["Chess-2022-04-2917:29:38", "..", ".", "Chess-2022-04-2915:53:30"]
+      allow(Dir).to receive(:entries).with('saves').and_return(file_list)
+      allow(game_load).to receive(:gets).and_return('1')
+
+      @file_path = 'saves/Chess-2022-04-2917:29:38'
+    end
+
+    xit 'de-serializes and returns the game object stored in the selected file' do
+      expect(File).to receive(:open).with(@file_path, 'r') do | file |
+        expect(Marshal).to receive(:load).with(file)
+      end
+    end
+  end
+
   describe '#select_game_file' do
     subject(:game_select_file) { Game.new }
     
     before do
+      allow(STDOUT).to receive(:write)
+      
       file_list = ["Chess-2022-04-2917:29:38", "..", ".", "Chess-2022-04-2915:53:30"]
       allow(Dir).to receive(:entries).with('saves').and_return(file_list)
       allow(game_select_file).to receive(:gets).and_return('1')

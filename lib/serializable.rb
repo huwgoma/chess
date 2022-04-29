@@ -28,20 +28,9 @@ module Serializable
 
   # Load (De-serialize) Game
   def load_game
-    file = select_game_file
-    # select_game_file => game file
-    #   create file list -> display file list - DONE
-    #   select_file_number
-    #   game_file = file_list[file_number - 1]
-    # then deserialize contents of game file
-    
-    
-    
-    # print the list of games - add index [1] - file name
-    # select game file - gets.chomp, input must be between 1 and game_list.size
-    #   => return selected number
-    # find game file - game_list[returned number]
-    # deserialize the found game file (Marshal.load(file))
+    file = "saves/#{select_game_file}"
+    # open the file, read its contents
+    #binding.pry
   end
 
   # Create file list, display file list, prompt user to input a number,
@@ -62,6 +51,7 @@ module Serializable
 
   # Display each file in file_list, prepended with index + 1
   def display_file_list(file_list)
+    puts "Please select one of the following game files to load:"
     file_list.each_with_index do | file, index |
       puts "[#{index + 1}] - #{file}"
     end
