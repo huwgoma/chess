@@ -26,4 +26,12 @@ describe Serializable do
       
     end
   end
+
+  describe '#create_file_name' do
+    # Time.now.strftime("%Y-%m-%d %k:%M:%S")
+    # eg. Chess - 2022-04-28 23:25:12
+    it 'returns a string with Chess - current date and time' do
+      
+    end
+  end
 end
