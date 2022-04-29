@@ -64,26 +64,19 @@ describe Serializable do
     end
   end
 
-  # describe '#select_game_file' do
-  #   subject(:game_select_file) { Game.new }
+  describe '#select_game_file' do
+    subject(:game_select_file) { Game.new }
     
-  #   before do
-  #     file_list = ["Chess-2022-04-2917:29:38", "..", ".", "Chess-2022-04-2915:53:30"]
-  #     allow(Dir).to receive(:entries).with('saves').and_return(file_list)
-  #     allow(game_select_file).to receive(:gets).and_return('1')
-  #   end
+    before do
+      file_list = ["Chess-2022-04-2917:29:38", "..", ".", "Chess-2022-04-2915:53:30"]
+      allow(Dir).to receive(:entries).with('saves').and_return(file_list)
+      allow(game_select_file).to receive(:gets).and_return('1')
+    end
 
-  #   context 'if the saves/ directory is empty' do
-  #     before do
-  #       allow(Dir).to receive(:entries).with('saves').and_return(["..", "."])
-  #     end
-
-  #     it 'aborts early' do
-  #       expect(game_select_file).to receive(:abort)
-  #       game_select_file.select_game_file
-  #     end
-  #   end
-  # end
+    it "returns the filename corresponding to the user's input" do
+      expect(game_select_file.select_game_file).to eq("Chess-2022-04-2917:29:38")
+    end
+  end
 
   describe '#create_file_list' do
     before do

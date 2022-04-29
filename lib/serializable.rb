@@ -44,28 +44,34 @@ module Serializable
     # deserialize the found game file (Marshal.load(file))
   end
 
+  # Create file list, display file list, prompt user to input a number,
+  # return the file name corresponding to the inputted number
   def select_game_file
     file_list = create_file_list
     abort(no_saved_games_message) if file_list.empty?
 
     display_file_list(file_list)
-    select_file_number(file_list.size) #=> number (index)
+    file_num = select_file_number(file_list.size)
+    file_list[file_num - 1]
   end
 
+  # Create and return an array of the files (with 'Chess') in saves/ directory
   def create_file_list
     Dir.entries('saves').select { | file | file.include?('Chess') }
   end
 
+  # Display each file in file_list, prepended with index + 1
   def display_file_list(file_list)
     file_list.each_with_index do | file, index |
       puts "[#{index + 1}] - #{file}"
     end
   end
 
+  # Prompt user to input a number corresponding to a saved file
   def select_file_number(max_num)
     input = gets.chomp.to_i
     return input if input.between?(1, max_num)
-    
+
     puts invalid_file_number_message(max_num)
     select_file_number(max_num)
   end
