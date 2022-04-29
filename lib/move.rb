@@ -21,6 +21,10 @@ class Move
     @@stack
   end
 
+  def self.load_stack(stack)
+    @@stack = stack
+  end
+
   def self.pop
     @@stack.pop
   end

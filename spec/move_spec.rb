@@ -10,7 +10,7 @@ describe Move do
   end
 
   before do
-    @move_1 = described_class.new(piece: 'WPawn', start_cell: 'd2', dir: :forward, end_cell: 'd3', )
+    @move_1 = described_class.new(piece: 'WPawn', start_cell: 'd2', dir: :forward, end_cell: 'd3')
     @move_2 = described_class.new(piece: 'BRook',  start_cell: 'd7', end_cell: 'd3', dir: :bot, kill: 'WPawn')
     @stack = [@move_1, @move_2]
   end
@@ -24,6 +24,19 @@ describe Move do
     it 'does not add Moves to @@stack if the Move has the secondary: true flag' do
       move_3 = described_class.new(piece: 'WRook', start_cell: 'h1', end_cell: 'f1', dir: :castle_king, secondary: true)
       expect(Move.stack).to eq(@stack)
+    end
+  end
+
+  # Set Move's @@stack to the given array of moves (when a game is loaded)
+  describe '::load_stack' do
+    before do
+      alt_move_1 = described_class.new(piece: 'WPawn', start_cell: 'd2', dir: :forward, end_cell: 'd3')
+      alt_move_2 = described_class.new(piece: 'BRook',  start_cell: 'd7', end_cell: 'd3', dir: :bot, kill: 'WPawn')
+      @load_stack = [alt_move_1, alt_move_2]
+    end
+
+    it "updates Move's @@stack to the given array" do
+      expect{ Move.load_stack(@load_stack) }.to change { Move.stack }.to(@load_stack)
     end
   end
 
