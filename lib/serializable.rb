@@ -2,6 +2,8 @@
 
 module Serializable
   # def save game
+  # Dir.mkdir(saves) unless saves exists already
+  # file name?: 
   # save the current game (to saves/) then exit
 
   # def create game list
