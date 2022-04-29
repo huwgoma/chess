@@ -1,10 +1,12 @@
 # frozen_string_literal: true
-require './lib/game_prompts.rb'
+require './lib/game_prompts'
 require './lib/special_moves'
+require './lib/serializable'
 
 class Game
   include GamePrompts
   include SpecialMoves
+  include Serializable
 
   def initialize(board = Board.new)
     @board = board
@@ -14,7 +16,7 @@ class Game
 
   def play(new_game: true)
     new_game ? prepare_new_game : load_game_environment
-
+    
     set_current_player(@current_color)
     @board.print_board
     game_loop

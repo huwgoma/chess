@@ -124,6 +124,10 @@ To begin, please select one of the following game options:
 If you do not capture En Passant now, you will not be able to do so later. 
     HEREDOC
   end
+
+  def game_saved_message(file_path)
+    "Game saved! You can find it at #{file_path}."
+  end
 end
 
 # Utility String Methods

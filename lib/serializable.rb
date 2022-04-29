@@ -1,14 +1,29 @@
 # frozen_string_literal: true
 
+require 'pry'
+
 module Serializable
+  def save_game
+    dir = 'saves'
+    Dir.mkdir(dir) unless Dir.exist?(dir)
+    serialize = Marshal.dump(self)
+    
+    file_path = "#{dir}/#{create_file_name}"
+    File.open(file_path, 'w') do | file |
+      file.puts serialize
+    end
+
+    puts game_saved_message(file_path)
+    exit
+  end
   # def save game
   # Dir.mkdir(saves) unless saves exists already
   # file name?: 
   # save the current game (to saves/) then exit
 
   def create_file_name
-    time = Time.now.strftime("%Y-%m-%d %k:%M:%S")
-    "Chess - #{time}"
+    time = Time.now.strftime("%Y-%m-%d%k:%M:%S")
+    "Chess-#{time}"
   end
 
   # def create game list
