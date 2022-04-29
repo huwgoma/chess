@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-require './lib/game_text.rb'
+require './lib/game_prompts.rb'
 require './lib/special_moves'
 
 class Game
-  include GameTextable
+  include GamePrompts
   include SpecialMoves
 
   def initialize(board = Board.new)
@@ -48,15 +48,7 @@ class Game
   def set_current_player(color = @current_color)
     @current_player = Player.find(color)
   end
-
-  def select_color(player)
-    puts "#{player}, would you like to play as [B] Black or [W] White?"
-    input = gets.chomp.upcase
-    return input.to_sym if ['B', 'W'].include?(input)
-    puts 'Please enter [B] for Black or [W] for White!'
-    select_color(player)
-  end
-
+  
   def switch_current_color(next_color)
     @current_color = next_color
   end
@@ -94,23 +86,6 @@ class Game
     end
   end
 
-  # Select the Active Piece (Piece to be Moved)
-  def select_active_piece
-    puts "#{@current_player.name}, please enter the coordinates of the piece you want to move:"
-    puts "Enter [Q] to quit if you wish to resign."
-    input = verify_piece_input(gets.chomp)
-    case input 
-    when InputWarning # Invalid input 
-      puts input.to_s
-      select_active_piece
-    when Symbol # Quit
-      return input 
-    when String # Valid input
-      piece = @board.find_cell(input).piece
-      @board.set_active_piece(piece)
-    end
-  end
-
   def verify_piece_input(input)
     # Quit
     return :resign if input.upcase == 'Q'
@@ -134,20 +109,6 @@ class Game
     input_piece = @board.find_cell(input).piece
     @board.generate_legal_moves(input_piece)
     input_piece.has_moves?
-  end
-
-  # Select the Active Move (Cell to be moved to (by the Active Piece))
-  def select_active_move
-    puts "#{@current_player.name}, please enter the coordinates of the cell you want to move to:"
-    input = verify_move_input(gets.chomp)
-    if input.is_a?(InputWarning)
-      puts input.to_s
-      select_active_move
-    else
-      cell = @board.find_cell(input)
-      direction = @board.active_piece.moves.select { |dir, cells| cells.include?(cell) }.keys.first
-      { dir: direction, cell: cell }
-    end
   end
 
   def verify_move_input(input)

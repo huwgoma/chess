@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require './lib/game'
-require './lib/game_text'
+require './lib/game_prompts'
 require './lib/board'
 require './lib/cell'
 require './lib/player'

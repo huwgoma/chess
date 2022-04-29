@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InputWarning
-  include GameTextable
+  include GamePrompts
   def to_s; end
 end
 

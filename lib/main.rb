@@ -6,7 +6,7 @@ Dir.glob('./lib/*.rb').each { |file| require file unless file.include?('main') }
 Dir.glob(('./lib/pieces/*.rb'), &method(:require))
 
 
-extend GameTextable
+extend GamePrompts
 
 def clear_game_environment
   Move.stack.clear

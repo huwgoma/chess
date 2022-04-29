@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-require './lib/game_text'
+require './lib/game_prompts'
 
 # Namespace for Methods concerning Pawn Promotion
 module PawnPromotion
-  include GameTextable
+  include GamePrompts
 
   def promotion_possible?(last_move)
     return false unless last_move.piece.is_a?(Pawn)
