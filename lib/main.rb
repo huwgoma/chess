@@ -18,8 +18,8 @@ loop do
   system 'clear'
   
   puts tutorial_message
-# puts game_mode_message
-# select_game_mode
+  puts game_mode_message
+  select_game_mode
 # if game mode = 1, start a new game and play it
 # else if game mode = 2, load selected game (select later) and play that
   game = Game.new
