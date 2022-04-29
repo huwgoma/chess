@@ -15,6 +15,10 @@ class Player
     @@list
   end
 
+  def self.load_list(list)
+    @@list = list
+  end
+
   def self.find(color)
     @@list.find { | player | player.color == color }
   end

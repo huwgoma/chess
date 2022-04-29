@@ -15,6 +15,18 @@ describe Player do
     end
   end
 
+  describe '::load_list' do
+    before do
+      alt_player_one = described_class.new('Lei', :W)
+      alt_player_two = described_class.new('Hugo', :B)
+      @load_list = [alt_player_one, alt_player_two]
+    end
+
+    it "updates Player's @@list to the given list of Players" do
+      expect { Player.load_list(@load_list) }.to change { Player.list }.to(@load_list)
+    end
+  end
+
   describe '::find' do
     it 'returns the Player object with the matching color' do
       expect(Player.find(:W)).to eq(@player_one)
