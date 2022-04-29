@@ -6,6 +6,7 @@ require './lib/board'
 require './lib/cell'
 require './lib/player'
 require './lib/warnings'
+require './lib/pieces/piece'
 
 require 'pry'
 

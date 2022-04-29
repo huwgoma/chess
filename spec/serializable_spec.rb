@@ -4,16 +4,30 @@ require './lib/serializable'
 require './lib/game'
 require './lib/board'
 
-RSpec.configure do
+require 'pry'
+
+RSpec.configure do | rspec |
   include Serializable
+
+  # Suppress exit
+  rspec.around(:example) do | ex |
+    begin
+      ex.run
+    rescue SystemExit => e
+      puts 'Ignoring SystemExit'
+    end
+  end
 end
 
+
 describe Serializable do
+
   describe '#save_game' do
     subject(:game_save) { Game.new }
 
     before do
       allow(File).to receive(:open)
+      allow(STDOUT).to receive(:write)
     end
 
     context 'if the saves Directory does not exist yet' do
@@ -43,6 +57,19 @@ describe Serializable do
       time = Time.now.strftime("%Y-%m-%d%k:%M:%S")
       string = "Chess-#{time}"
       expect(create_file_name).to eq(string)
+    end
+  end
+
+  describe '#load_game' do
+    
+  end
+
+  describe '#create_file_list' do
+    before do
+      
+    end
+    it 'returns an array of files within the saves/ directory' do
+      create_file_list
     end
   end
 end

@@ -20,7 +20,7 @@ def create_game(mode)
   when 2
     # game = load_game
     #   load_game: display list of games -> select game to load -> deserialize game file
-    # 
+    # => deserialized game object
   end
 end
 
