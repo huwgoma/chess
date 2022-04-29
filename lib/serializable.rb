@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require './lib/game_prompts'
 require 'pry'
 
 module Serializable
+  include GamePrompts
+  
   # Save (Serialize) Game
   def save_game
     dir = 'saves'
@@ -25,8 +28,10 @@ module Serializable
 
   # Load (De-serialize) Game
   def load_game
-    # create a list of games within saves/ 
-    # - if list is empty, print warning; exit(?)
+    file_list = create_file_list
+    abort(no_saved_games_message) if file_list.empty?
+    
+    display_file_list(file_list)
     # print the list of games - add index [1] - file name
     # select game file - gets.chomp, input must be between 1 and game_list.size
     #   => return selected number
@@ -36,5 +41,11 @@ module Serializable
 
   def create_file_list
     Dir.entries('saves').select { | file | file.include?('Chess') }
+  end
+
+  def display_file_list(file_list)
+    file_list.each_with_index do | file, index |
+      puts "[#{index + 1}] - #{file}"
+    end
   end
 end

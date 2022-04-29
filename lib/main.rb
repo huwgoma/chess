@@ -7,6 +7,7 @@ Dir.glob(('./lib/pieces/*.rb'), &method(:require))
 
 
 extend GamePrompts
+extend Serializable
 
 def clear_game_environment
   Move.stack.clear
@@ -18,9 +19,7 @@ def create_game(mode)
   when 1
     Game.new
   when 2
-    # game = load_game
-    #   load_game: display list of games -> select game to load -> deserialize game file
-    # => deserialized game object
+    load_game
   end
 end
 

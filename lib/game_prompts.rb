@@ -128,6 +128,10 @@ If you do not capture En Passant now, you will not be able to do so later.
   def game_saved_message(file_path)
     "Game saved! You can find it at #{file_path}."
   end
+
+  def no_saved_games_message
+    "You have no saved games! Exiting..."
+  end
 end
 
 # Utility String Methods

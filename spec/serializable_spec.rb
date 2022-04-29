@@ -9,6 +9,11 @@ require 'pry'
 RSpec.configure do | rspec |
   include Serializable
 
+  # Suppress abort message
+  rspec.before(:each) do
+    allow(STDERR).to receive(:write)
+  end
+
   # Suppress exit
   rspec.around(:example) do | ex |
     begin
@@ -61,7 +66,16 @@ describe Serializable do
   end
 
   describe '#load_game' do
-    
+    subject(:game_load) { Game.new }
+    context 'if the saves/ directory is empty' do
+      before do
+        allow(Dir).to receive(:entries).with('saves').and_return(["..", "."])
+      end
+      it 'aborts early' do
+        expect(game_load).to receive(:abort)
+        game_load.load_game
+      end
+    end
   end
 
   describe '#create_file_list' do
