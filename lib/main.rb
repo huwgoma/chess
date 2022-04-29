@@ -40,8 +40,11 @@ loop do
   puts tutorial_message
   
   puts game_mode_message
-  game = create_game(select_game_mode)
-  game.play
+  mode = select_game_mode
+  new_game = mode == 1
+  
+  game = create_game(mode)
+  game.play(new_game: new_game)
 
   unless play_again?
     puts 'Thanks for playing!'

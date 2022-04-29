@@ -70,6 +70,8 @@ describe Serializable do
     subject(:game_load) { Game.new }
 
     before do
+      allow(STDOUT).to receive(:write)
+
       file_list = ["Chess-2022-04-2917:29:38", "..", ".", "Chess-2022-04-2915:53:30"]
       allow(Dir).to receive(:entries).with('saves').and_return(file_list)
       allow(game_load).to receive(:gets).and_return('1')
@@ -77,10 +79,14 @@ describe Serializable do
       @file_path = 'saves/Chess-2022-04-2917:29:38'
     end
 
-    xit 'de-serializes and returns the game object stored in the selected file' do
-      expect(File).to receive(:open).with(@file_path, 'r') do | file |
-        expect(Marshal).to receive(:load).with(file)
-      end
+    it 'opens the selected File' do
+      expect(File).to receive(:open).with(@file_path, 'r')
+      game_load.load_game
+    end
+
+    it 'deserializes the contents of the opened File' do
+      expect(Marshal).to receive(:load)
+      game_load.load_game
     end
   end
 

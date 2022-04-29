@@ -29,8 +29,9 @@ module Serializable
   # Load (De-serialize) Game
   def load_game
     file = "saves/#{select_game_file}"
-    # open the file, read its contents
-    #binding.pry
+    File.open(file, 'r') do | file |
+      Marshal.load(file)
+    end
   end
 
   # Create file list, display file list, prompt user to input a number,
