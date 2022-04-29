@@ -132,6 +132,10 @@ If you do not capture En Passant now, you will not be able to do so later.
   def no_saved_games_message
     "You have no saved games! Exiting..."
   end
+
+  def invalid_file_number_message(max_num)
+    "Invalid input! Please enter a number between [1] and [#{max_num}]."
+  end
 end
 
 # Utility String Methods
