@@ -16,10 +16,6 @@ module Serializable
     puts game_saved_message(file_path)
     exit
   end
-  # def save game
-  # Dir.mkdir(saves) unless saves exists already
-  # file name?: 
-  # save the current game (to saves/) then exit
 
   def create_file_name
     time = Time.now.strftime("%Y-%m-%d%k:%M:%S")

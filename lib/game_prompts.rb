@@ -41,7 +41,7 @@ To begin, please select one of the following game options:
   # Select the Active Piece (Piece to be Moved)
   def select_active_piece
     puts "#{@current_player.name}, please enter the coordinates of the piece you want to move:"
-    puts "Enter [Q] to quit if you wish to resign."
+    puts "Enter [Q] to quit, or [S] to save the current game."
     input = verify_piece_input(gets.chomp)
     case input 
     when InputWarning # Invalid input 

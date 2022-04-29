@@ -59,9 +59,9 @@ class Game
   def game_loop
     loop do
       piece = select_active_piece
-      # Return out of game_loop early if piece is a Symbol ('Q' entered)
+      # Return out of game_loop early if piece is a Symbol ('Q' or 'S' entered)
       return send(piece) if piece.is_a?(Symbol)
-      # piece_selected? => true
+
       @board.print_board(piece_selected: true)
 
       # En Passant Prompt
@@ -91,6 +91,7 @@ class Game
   def verify_piece_input(input)
     # Quit
     return :resign if input.upcase == 'Q'
+    return :save_game if input.upcase == 'S'
 
     return InvalidInputFormat.new unless input_format_valid?(input)
     return InvalidInputCell.new(@current_color) unless input_cell_valid?(input)
