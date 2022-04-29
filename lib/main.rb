@@ -14,11 +14,13 @@ def clear_game_environment
 end
 
 loop do
-  clear_game_environment
   system 'clear'
   
   puts tutorial_message
-# puts game_mode_message
+  
+  puts game_mode_message
+  # select_game_mode
+
   game = Game.new
   game.play
 
@@ -26,6 +28,7 @@ loop do
     puts 'Thanks for playing!'
     break
   end
+  clear_game_environment
 end
 
 
