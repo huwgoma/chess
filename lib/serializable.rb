@@ -35,6 +35,6 @@ module Serializable
   end
 
   def create_file_list
-
+    Dir.entries('saves').select { | file | file.include?('Chess') }
   end
 end

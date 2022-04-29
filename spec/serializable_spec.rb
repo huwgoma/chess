@@ -66,10 +66,12 @@ describe Serializable do
 
   describe '#create_file_list' do
     before do
-      
+      file_list = ["..", "Chess-2022-04-2914:49:17", "Chess-2022-04-2914:49:15", "."]
+      allow(Dir).to receive(:entries).with('saves').and_return(file_list)
     end
-    it 'returns an array of files within the saves/ directory' do
-      create_file_list
+    it "returns an array of files within the saves/ directory (with 'Chess' in its name)" do
+      chess_file_list = ["Chess-2022-04-2914:49:17", "Chess-2022-04-2914:49:15"]
+      expect(create_file_list).to eq(chess_file_list)
     end
   end
 end
