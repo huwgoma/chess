@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require './lib/game_prompts'
 
 # Namespace for Methods concerning Pawn Promotion
@@ -18,7 +19,7 @@ module PawnPromotion
     'R' => :Rook,
     'B' => :Bishop,
     'KN' => :Knight
-  }
+  }.freeze
 
   def promote_pawn(last_move)
     type = choose_promotion_type
@@ -43,6 +44,7 @@ module PawnPromotion
   def verify_promotion_input(input)
     input = input.upcase
     return InvalidPromotionInput.new unless promotion_input_valid?(input)
+
     input
   end
 
@@ -65,18 +67,22 @@ module Castling
   def castling_possible?(king, dir)
     # King Moved?
     return false if king.moved
+
     # Rook Moved?
     rook = find_castling_rook(king, dir)
     return false if rook&.moved || rook.nil?
+
     # Lane Clear?
     lane_dir = rook.position.coords <=> king.position.coords
     return false unless castle_lane_clear?(king.position, rook.position, lane_dir)
+
     # King in Check?
     return false if king_in_check?(king.color)
+
     # Middle Cell Attacked?
     middle_cell = find_cell(king.position.column.shift(lane_dir) + king.position.row.to_s)
     return false if middle_cell_attacked?(king, middle_cell)
-    
+
     true
   end
 
@@ -89,10 +95,6 @@ module Castling
 
   # Find and return a Hash of castling Rook's start/end cells
   def find_rook_cells(king, dir)
-    # Refactor - Extract below logic to a separate method (shared with PawnPromotion)
-    # minmax_rows = @board.rows.minmax.flatten.filter(&Integer.method(:===))
-    # end_row = last_move.piece.color.white? ? minmax_rows.max : minmax_rows.min
-
     row = king.color.white? ? 1 : 8
     start_col, end_col = dir.match?(/king/) ? ['h', 'f'] : ['a', 'd']
     rook_start = find_cell(start_col + row.to_s)
@@ -105,6 +107,7 @@ module Castling
     cell = find_cell(cell.column.shift(lane_dir) + cell.row.to_s)
     # Base case: If we make it to the rook cell
     return true if cell == rook_cell
+
     if cell.empty?
       castle_lane_clear?(cell, rook_cell, lane_dir)
     else
@@ -124,7 +127,8 @@ module EnPassant
   # Does the given Piece have an En Passant available?
   def en_passant_available?(piece)
     return false unless piece.is_a?(Pawn)
-    piece.moves.select { |dir, cells| dir.match?(/en_passant/) }.values.flatten.any?
+
+    piece.moves.select { |dir, _cells| dir.match?(/en_passant/) }.values.flatten.any?
   end
 
   # Find and return the Pawn to be captured by the En Passant
@@ -132,14 +136,16 @@ module EnPassant
     kill_cell = find_cell(pawn_end.column + (pawn_end.row - pawn.forward).to_s)
     kill_pawn = kill_cell.piece
 
-    return kill_pawn if kill_cell.has_enemy?(pawn.color) && kill_pawn.is_a?(Pawn) 
+    return kill_pawn if kill_cell.has_enemy?(pawn.color) && kill_pawn.is_a?(Pawn)
   end
 
   # Is an En Passant possible?
   def en_passant_legal?(pawn_end, pawn)
     kill_pawn = find_en_passant_kill(pawn_end, pawn)
     return false unless kill_pawn
+
     return false unless last_move_initial?(kill_pawn)
+
     true
   end
 
@@ -155,4 +161,3 @@ module SpecialMoves
   include Castling
   include EnPassant
 end
-

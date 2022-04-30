@@ -33,6 +33,7 @@ describe '#print_board' do
     context 'for the default Piece icons' do
       it "returns ♟ (Black Pawn) when the cell's @piece is a Black Pawn" do
         pawn_a2 = instance_double(Pawn, class: Pawn, position: @cell_a2, color: :B)
+        allow(Pawn).to receive(:===).with(pawn_a2).and_return(true)
         allow(@cell_a2).to receive(:piece).and_return(pawn_a2)
         piece_selected = false
         expect(set_string(@cell_a2, piece_selected)).to eq('♙')
@@ -40,6 +41,7 @@ describe '#print_board' do
   
       it "returns ♙.white (White Pawn) when the @piece is a White Pawn" do
         pawn_b2 = instance_double(Pawn, class: Pawn, position: @cell_b2, color: :W)
+        allow(Pawn).to receive(:===).with(pawn_b2).and_return(true)
         allow(@cell_b2).to receive(:piece).and_return(pawn_b2)
         piece_selected = false
         expect(set_string(@cell_b2, piece_selected)).to eq('♟')

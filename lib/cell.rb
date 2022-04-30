@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Cell Class - Represent each Cell on the Board (coordinates, piece)
 class Cell
   attr_reader :column, :row, :coords, :piece
 
@@ -21,11 +22,13 @@ class Cell
   # Does this cell have an enemy piece?
   def has_enemy?(foreign_color)
     return false if empty?
+
     @piece.color != foreign_color
   end
 
   def has_ally?(foreign_color)
     return false if empty?
+
     @piece.color == foreign_color
   end
 end

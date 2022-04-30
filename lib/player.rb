@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Player Class - Represent Players (name, color)
 class Player
   attr_reader :name, :color
 
@@ -20,7 +21,7 @@ class Player
   end
 
   def self.find(color)
-    @@list.find { | player | player.color == color }
+    @@list.find { |player| player.color == color }
   end
 
   def white?

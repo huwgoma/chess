@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Move Class - Store info about a Piece's move (Start -> End) in the form of Move objects
 class Move
   @@stack = []
 
@@ -11,7 +12,7 @@ class Move
     @end = end_cell
     @dir = dir
     @kill = kill
-    
+
     @rook_move = castle[:rook_move] if castle[:rook_move]
 
     @@stack << self unless castle[:secondary]
@@ -38,14 +39,14 @@ class Move
     # Move Piece back to Start Cell
     @piece.update_position(@start)
     @start.update_piece(@piece)
-    
+
     # Vacate End Cell
     @end.update_piece(nil)
 
     # If there was a kill, place that Piece back on its Cell
     @kill.position.update_piece(@kill) if kill
-    
+
     # If the Move has a secondary @rook_move (ie. Castling), undo that as well
-    @rook_move.undo if @rook_move
+    @rook_move&.undo
   end
 end

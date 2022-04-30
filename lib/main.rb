@@ -1,10 +1,7 @@
 # frozen_string_literal: true
-require 'pry'
-require 'yaml'
 
-Dir.glob('./lib/*.rb').each { |file| require file unless file.include?('main') }
-Dir.glob(('./lib/pieces/*.rb'), &method(:require))
-
+Dir.glob('./lib/*.rb').sort.each { |file| require file unless file.include?('main') }
+Dir.glob('./lib/pieces/*.rb').sort.each(&method(:require))
 
 extend GamePrompts
 extend Serializable
@@ -26,32 +23,25 @@ end
 def play_again?
   loop do
     input = gets.chomp
-    unless ['P', 'Q'].include?(input.upcase)
-      puts invalid_replay_input_warning
-      next
-    end
+    next puts invalid_replay_input_warning unless ['P', 'Q'].include?(input.upcase)
+
     break input.upcase == 'P'
   end
 end
 
 loop do
   system 'clear'
-  
   puts tutorial_message
-  
   puts game_mode_message
+
   mode = select_game_mode
+  # Mode = 1 => new game is true ; Mode = 2 => new game is false
   new_game = mode == 1
-  
+
   game = create_game(mode)
   game.play(new_game: new_game)
 
-  unless play_again?
-    puts 'Thanks for playing!'
-    break
-  end
+  break puts 'Thanks for playing!' unless play_again?
+
   clear_game_environment
 end
-
-
-

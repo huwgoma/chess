@@ -105,6 +105,7 @@ class Game
 
   def input_cell_valid?(input)
     input_cell = @board.find_cell(input)
+    # If input cell is nil, return nil => nil == true ? => false
     input_cell&.has_ally?(@current_color) == true
   end
 
