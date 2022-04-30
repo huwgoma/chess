@@ -84,9 +84,11 @@ describe Serializable do
       game_load.load_game
     end
 
-    it 'deserializes the contents of the opened File' do
-      expect(Marshal).to receive(:load)
-      game_load.load_game
+    it 'deserializes the selected file' do
+      temp_file = Tempfile.new('Chess-2022-04-2917:29:38', 'saves')
+      allow(File).to receive(:open).with(@file_path) do | file |
+        expect(Marshal).to receive(:load)
+      end
     end
   end
 
