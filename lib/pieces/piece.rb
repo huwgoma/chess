@@ -1,10 +1,12 @@
 # frozen_string_literal: true
+
 require 'yaml'
 
+# Piece Class - Parent class for Chess Pieces
 class Piece
   INITIAL_PIECES = YAML.load(YAML.load_file('lib/pieces/initial_pieces.yaml'))
 
-  MOVEMENT = { }
+  MOVEMENT = {}.freeze
 
   attr_reader :color, :position, :moves, :killed
 
@@ -14,7 +16,7 @@ class Piece
     @position = cell
     @moves = initialize_moves
   end
-  
+
   def self.select_factory(type)
     case type
     when :Pawn
@@ -38,11 +40,11 @@ class Piece
     @position = cell
   end
 
-  def initialize_moves 
-    self.class::MOVEMENT.keys.reduce({}) do | hash, direction |
-      next hash if direction == :infinite
-      hash[direction] = Array.new
-      hash
+  def initialize_moves
+    self.class::MOVEMENT.keys.each_with_object({}) do |direction, hash|
+      next if direction == :infinite
+
+      hash[direction] = []
     end
   end
 

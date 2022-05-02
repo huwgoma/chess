@@ -1,6 +1,8 @@
 # frozen_string_literal: true
+
 require './lib/pieces/piece'
 
+# Queen Class
 class Queen < Piece
   MOVEMENT = {
     infinite: true,
@@ -12,5 +14,5 @@ class Queen < Piece
     bot_left:   { column: -1, row: -1 },
     left:       { column: -1, row: 0 },
     top_left:   { column: -1, row: 1 }
-  }
+  }.freeze
 end

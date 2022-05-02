@@ -1,10 +1,12 @@
 # frozen_string_literal: true
+
 require './lib/pieces/piece'
 
+# King Class
 class King < Piece
   attr_reader :moved
-  
-  MOVEMENT = { 
+
+  MOVEMENT = {
     infinite: false,
     top:          { column: 0, row: 1 },
     top_right:    { column: 1, row: 1 },
@@ -16,7 +18,7 @@ class King < Piece
     top_left:     { column: -1, row: 1 },
     castle_king:  { column: 2, row: 0 },
     castle_queen: { column: -2, row: 0 }
-  }
+  }.freeze
 
   def initialize(color, cell)
     super

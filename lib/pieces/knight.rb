@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require './lib/pieces/piece'
 
+# Knight Class
 class Knight < Piece
-  MOVEMENT = { 
+  MOVEMENT = {
     infinite: false,
     top_right: { column: 1, row: 2 },
     right_top: { column: 2, row: 1 },
@@ -12,5 +14,5 @@ class Knight < Piece
     left_bot:  { column: -2, row: -1 },
     left_top:  { column: -2, row: 1 },
     top_left:  { column: -1, row: 2 }
-  }
+  }.freeze
 end

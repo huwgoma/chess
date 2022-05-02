@@ -1,6 +1,8 @@
 # frozen_string_literal: true
+
 require './lib/pieces/piece'
 
+# Pawn Class
 class Pawn < Piece
   attr_reader :forward, :initial
 
@@ -12,7 +14,7 @@ class Pawn < Piece
     forward_right:    { column: 1, row: 1 },
     en_passant_left:  { column: -1, row: 1 },
     en_passant_right: { column: 1, row: 1 }
-  }
+  }.freeze
 
   def initialize(color, cell)
     super
