@@ -63,7 +63,7 @@ module Displayable
       44 # Blue
     else
       # Black or White
-      (cell.row + cell.column.ord).even? ? 40 : 47
+      (cell.row + cell.column.ord).even? ? 40 : 100
     end
   end
 end
