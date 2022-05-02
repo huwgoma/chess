@@ -62,8 +62,12 @@ Piece: Represents information about individual Piece objects
   Piece information includes the Piece's @color, its @position (its Cell), its @moves, and whether it is @killed or not.
   Pawns have an additional @initial instance variable that tracks whether the initial 2-step jump is possible.
   Rooks and Kings have an additional @moved instance variable that tracks whether those pieces have ever been moved (for Castling).
-
+```
+A note on PieceFactory: While I was building the Piece initialization methods, I searched The Odin Project's Discord for inspiration, and I came across this link recommending the [Factory Method](https://refactoring.guru/design-patterns/factory-method) design pattern. Although this pattern is (probably) overkill for the purpose of creating Chess Pieces, I decided to try and implement it just to try and get my feet wet, as I currently do not have much experience with design patterns. 
+```
 Player: Represents information about each Player - their @name and their @color.
 
 Move: Represents information about each Move, and also keeps track of all moves made via its @@stack.
   Information about each Move includes the moving Piece, its start Cell, its end Cell, the killed Piece (if any), and the direction of the Move.
+```
+
