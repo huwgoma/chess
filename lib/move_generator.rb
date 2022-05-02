@@ -12,16 +12,16 @@ module MoveGenerator
   # - Does not account for the King's safety
   def generate_moves(piece)
     movement = piece.class::MOVEMENT
-    piece.moves.each do | dir, cells |
+    piece.moves.each do |dir, cells|
       cells.clear
       forward = piece.is_a?(Pawn) ? piece.forward : 1
-      
-      (1).upto(movement[:infinite] ? 7 : 1) do | i |
+
+      (1).upto(movement[:infinite] ? 7 : 1) do |i|
         column = piece.position.column.shift(i * movement[dir][:column])
         row = piece.position.row + (i * movement[dir][:row] * forward)
         cell = find_cell(column + row.to_s)
         break if cell.nil?
-        
+
         keep_cell = keep_piece_move?(cell, dir, piece)
         cells << cell if keep_cell
         break if cell.piece
@@ -29,16 +29,16 @@ module MoveGenerator
     end
   end
 
-  # Verify Moves - Given a Piece, verify its @moves Hash by checking whether 
+  # Verify Moves - Given a Piece, verify its @moves Hash by checking whether
   # each move can be made without putting the allied King into check
   def verify_moves(piece, moves = piece.moves)
     clone_board = Marshal.load(Marshal.dump(self))
     clone_piece = clone_board.find_cell(piece.position.coords).piece
-    
-    moves.each do | dir, cells |
-      cells.reject! do | cell |
-        clone_board.move_piece(piece: clone_piece, start_cell: clone_piece.position, 
-          end_cell: clone_board.find_cell(cell.coords), dir: dir)
+
+    moves.each do |dir, cells|
+      cells.reject! do |cell|
+        clone_board.move_piece(piece: clone_piece, start_cell: clone_piece.position,
+                               end_cell: clone_board.find_cell(cell.coords), dir: dir)
         reject_cell = clone_board.king_in_check?(piece.color)
         clone_board.undo_last_move
         reject_cell

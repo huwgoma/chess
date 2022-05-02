@@ -71,10 +71,10 @@ class Board
     king_cell = find_king_cell(king_color)
     enemy_color = king_color.opposite
     # Does ANY living enemy Piece...
-    @living_pieces[enemy_color].any? do | enemy_piece |
+    @living_pieces[enemy_color].any? do |enemy_piece|
       # Have ANY move...
       enemy_moves = generate_moves(enemy_piece)
-      enemy_moves.values.flatten.any? do | enemy_move | 
+      enemy_moves.values.flatten.any? do |enemy_move|
         # That lands on the same Cell as the King Cell?
         enemy_move == king_cell
       end
@@ -84,7 +84,7 @@ class Board
   # King in Checkmate? - Check if the given color's King is in Checkmate
   # True if none of the [color]'s Pieces have any legal moves
   def king_in_checkmate?(king_color)
-    @living_pieces[king_color].none? do | piece |
+    @living_pieces[king_color].none? do |piece|
       moves = generate_legal_moves(piece)
       moves.values.flatten.any?
     end
@@ -92,7 +92,7 @@ class Board
 
   # Given a Color, find and return that color's King's cell
   def find_king_cell(king_color)
-    @living_pieces[king_color].find { | piece | piece.is_a?(King) }.position
+    @living_pieces[king_color].find { |piece| piece.is_a?(King) }.position
   end
 
   # Given Piece, Start, and End, move the Piece from Start to End
@@ -103,7 +103,7 @@ class Board
 
     kill = dir.match?(/en_passant/) ? find_en_passant_kill(end_cell, piece) : end_cell.piece
     kill_piece(kill) if kill
-    
+
     end_cell.update_piece(piece)
 
     if dir.match?(/castle/)
@@ -133,10 +133,10 @@ class Board
     last_move.undo
     revive_piece(last_move.kill) if last_move.kill
   end
-  
+
   # Revive the given Piece and add it back to @living_pieces
   def revive_piece(piece)
     piece.is_revived
     @living_pieces[piece.color] << piece
-  end 
+  end
 end

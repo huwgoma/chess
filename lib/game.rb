@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require './lib/game_prompts'
 require './lib/special_moves'
 require './lib/serializable'
 
+# Game Class - Represents/oversees individual Chess Games
 class Game
   include GamePrompts
   include SpecialMoves
@@ -16,7 +18,7 @@ class Game
 
   def play(new_game: true)
     new_game ? prepare_new_game : load_game_environment
-    
+
     set_current_player(@current_color)
     @board.print_board
     game_loop
@@ -39,8 +41,8 @@ class Game
   end
 
   def create_players
-    2.times do | player_count |
-      puts "Player #{player_count+1}, please enter your name."
+    2.times do |player_count|
+      puts "Player #{player_count + 1}, please enter your name."
       name = gets.chomp
       color = player_count.zero? ? select_color(name) : Player.list[0].white? ? :B : :W
       Player.new(name, color)
@@ -50,7 +52,7 @@ class Game
   def set_current_player(color = @current_color)
     @current_player = Player.find(color)
   end
-  
+
   def switch_current_color(next_color)
     @current_color = next_color
   end
@@ -70,10 +72,10 @@ class Game
       dir_cell = select_active_move
       move = @board.move_piece(end_cell: dir_cell[:cell], dir: dir_cell[:dir])
 
-      # Pawn Promotion 
+      # Pawn Promotion
       if promotion_possible?(move)
         puts pawn_promotion_message
-        promote_pawn(move) 
+        promote_pawn(move)
       end
 
       @board.print_board
@@ -96,9 +98,10 @@ class Game
     return InvalidInputFormat.new unless input_format_valid?(input)
     return InvalidInputCell.new(@current_color) unless input_cell_valid?(input)
     return InvalidInputPiece.new unless input_piece_valid?(input)
+
     input
   end
-  
+
   def input_format_valid?(input)
     input.length == 2 && input.chars[1].numeric?
   end
@@ -118,6 +121,7 @@ class Game
   def verify_move_input(input)
     return InvalidInputFormat.new unless input_format_valid?(input)
     return InvalidInputMove.new unless input_move_valid?(input)
+
     input
   end
 
@@ -133,7 +137,7 @@ class Game
 
   # End of Game
   def game_end
-    puts @resigned ? resigned_message : king_checkmate_message(@current_color.opposite) 
+    puts @resigned ? resigned_message : king_checkmate_message(@current_color.opposite)
     puts replay_game_message
   end
 end
