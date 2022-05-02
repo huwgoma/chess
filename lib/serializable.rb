@@ -47,7 +47,11 @@ module Serializable
 
   # Create and return an array of the files (with 'Chess') in saves/ directory
   def create_file_list
-    Dir.entries('saves').select { |file| file.include?('Chess') }
+    begin 
+      Dir.entries('saves').select { |file| file.include?('Chess') }
+    rescue Errno::ENOENT
+      abort(no_saved_games_message)
+    end
   end
 
   # Display each file in file_list, prepended with index + 1
