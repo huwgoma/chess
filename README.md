@@ -38,3 +38,32 @@ Players will take turns moving their pieces; the game continues until one player
         - The Pawn being captured must have moved 2 spaces in the immediately preceding move.
         - The Pawn being captured must be adjacent to the moving Pawn's starting cell.
           - eg. If the moving Pawn is on Cell D5, there must be an enemy Pawn on either Cell E5 or C5.
+# Class Structure - Overview
+```
+Game: Represents each individual Chess game.
+  Handles Game initialization and setup; also contains the logic for each Chess turn and the exit conditions of the Game (eg. Checkmate).
+
+Board: Represents the Board on which the Chess game is played.
+Board is a central class that holds much of the information regarding the game state:
+    @cells: An array holding all 64 Cell objects that make up the board.
+    @living_pieces: A hash that tracks all currently living Pieces, sorted by color
+  The MoveGenerator module uses information from the Board to generate and verify moves of a given Piece.
+  Board is also responsible for determining if the King is in Check and/or Checkmate.
+  Lastly, Board also acts as a bridge between Cells and Pieces - it 'moves' Pieces by sending Cell/Piece info to the relevant Piece/Cells.
+    eg. Pawn(D2) -> Cell(D4): 
+    1) Board sends #update_piece to Cell(D2) with nil
+    2) Board sends #update_position to Pawn with Cell(D4)
+    3) Board sends #update_piece to Cell(D4) with Pawn
+
+Cell: Represents information about individual Cell objects.
+  Cell information includes the Cell's @coords (eg. 'd2'), @column ('d'), @row ('2'), and @piece (Pawn(d2)).
+
+Piece: Represents information about individual Piece objects
+  Piece information includes the Piece's @color, its @position (its Cell), its @moves, and whether it is @killed or not.
+  Pawns have an additional @initial instance variable that tracks whether the initial 2-step jump is possible.
+  Rooks and Kings have an additional @moved instance variable that tracks whether those pieces have ever been moved (for Castling).
+
+Player: Represents information about each Player - their @name and their @color.
+
+Move: Represents information about each Move, and also keeps track of all moves made via its @@stack.
+  Information about each Move includes the moving Piece, its start Cell, its end Cell, the killed Piece (if any), and the direction of the Move.
