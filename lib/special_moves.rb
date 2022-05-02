@@ -9,7 +9,7 @@ module PawnPromotion
   def promotion_possible?(last_move)
     return false unless last_move.piece.is_a?(Pawn)
 
-    minmax_rows = @board.rows.minmax.flatten.filter(&Integer.method(:===))
+    minmax_rows = @board.rows.minmax.flatten.select(&Integer.method(:===))
     end_row = last_move.piece.color.white? ? minmax_rows.max : minmax_rows.min
     last_move.end.row == end_row
   end
