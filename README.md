@@ -70,4 +70,13 @@ Player: Represents information about each Player - their @name and their @color.
 Move: Represents information about each Move, and also keeps track of all moves made via its @@stack.
   Information about each Move includes the moving Piece, its start Cell, its end Cell, the killed Piece (if any), and the direction of the Move.
 ```
+# Post-Project Thoughts (2022-05-02)
+This is by far the largest project that I have tackled to date. I struggled quite a bit, but I also learned quite a bit overall.
+## Some Things Learned:
+1) The importance of chunking:
+   - Chess is a relatively complicated game with many parts and intricacies to it. Throughout the entire project, I was able to break down the feature that I was currently working on into small, palatable chunks, and focus **only** on what the next step should be. This helped massively with not feeling too overwhelmed by the scope of the entire thing, and it helped me feel like I was making tangible progress by providing checkpoints at every step.
+2) The importance of pre-planning:
+   - I also came to really appreciate the importance of pre-planning. For many of my methods, and especially the larger, more complicated methods (eg. generate_moves, verify_moves, king_in_check?), I would plan out basically the entire method on paper first. I would map out what I wanted the method to do, what inputs I needed to give it, what I wanted it to output, and how it would interact with other parts of my program. This meant that when it was time to actually implement my solutions, it would be relatively painless(*); if there was something that broke, I could go back to my paper and, along with the stack trace, pinpoint the exact source of the faulty code.
+   - (*) More on this later, in the things to improve on section.
+## Things to Improve on:
 
