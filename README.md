@@ -8,6 +8,9 @@ git clone https://github.com/huwgoma/chess
 cd chess
 ruby lib/main.rb
 ```
+Alternatively, if you do not want to clone to your local machine, you can play online [here](https://replit.com/@huwgoma/chess); just click the green `run` button at the top right corner of the window. 
+- Note: It is harder to distinguish between the unicode Black and White Chess Pieces on Google Chrome compared to Firefox; I currently do not know the cause of this issue. 
+
 # Project Description
 This is a Chess game, adapted to the terminal; as such, all inputs will be through the keyboard. 
 Players will take turns moving their pieces; the game continues until one player's King is in checkmate, or until one player resigns. Each turn consists of 2 parts: 
